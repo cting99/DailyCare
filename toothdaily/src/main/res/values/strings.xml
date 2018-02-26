@@ -1,0 +1,7 @@
+<resources>
+    <string name="app_name">ToothDaily</string>
+    <string name="time_period_detail_title">2018/2/26</string>
+    <string name="time_period_start_time_hint">Start Time:</string>
+    <string name="time_period_end_time_hint">End Time:</string>
+    <string name="time_period_notes_hint">Notes:</string>
+</resources>

@@ -1,0 +1,9 @@
+<?xml version="1.0" encoding="utf-8"?>
+<resources>
+    <dimen name="time_period_time_width">96dp</dimen>
+    <dimen name="time_period_time_margin_top">60dp</dimen>
+    <dimen name="daily_record_notes_margin_top">20dp</dimen>
+    <dimen name="time_period_container_margin_top">20dp</dimen>
+    <dimen name="daily_record_title_size">19sp</dimen>
+    <dimen name="daily_record_scroll_view_margin_vertical">8dp</dimen>
+</resources>
