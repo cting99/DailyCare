@@ -2,7 +2,6 @@ package cting.com.robin.toothdaily.model;
 
 import android.databinding.BaseObservable;
 import android.databinding.Bindable;
-import android.util.Log;
 
 import cting.com.robin.toothdaily.BR;
 import cting.com.robin.toothdaily.utils.FormatHelper;

@@ -6,10 +6,13 @@
     <data>
 
         <import type="cting.com.robin.toothdaily.model.DailyRecord" />
+
         <import type="android.view.View.OnClickListener" />
+
         <variable
             name="record"
             type="DailyRecord" />
+
         <variable
             name="clickListener"
             type="OnClickListener" />
@@ -40,13 +43,13 @@
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:layout_marginStart="8dp"
-            tools:text="20h 20m"
             android:text="@{record.totalCost}"
             app:layout_constraintBottom_toBottomOf="@+id/title"
             app:layout_constraintEnd_toEndOf="parent"
             app:layout_constraintHorizontal_bias="0.96"
             app:layout_constraintStart_toEndOf="@+id/title"
-            app:layout_constraintTop_toTopOf="@+id/title" />
+            app:layout_constraintTop_toTopOf="@+id/title"
+            tools:text="20h 20m" />
 
         <android.support.design.widget.TextInputLayout
             android:id="@+id/notes_text"
@@ -62,8 +65,8 @@
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
                 android:hint="@string/time_period_notes_hint"
-                android:lines="5"
                 android:inputType="text"
+                android:lines="5"
                 android:text="@{record.notes}"
                 tools:text="清洁牙套" />
         </android.support.design.widget.TextInputLayout>
@@ -76,8 +79,7 @@
             android:layout_marginTop="@dimen/daily_record_scroll_view_margin_vertical"
             android:minHeight="20dp"
             app:layout_constraintBottom_toTopOf="@+id/add_btn"
-            app:layout_constraintEnd_toEndOf="@+id/title"
-            app:layout_constraintHorizontal_bias="0.0"
+            app:layout_constraintEnd_toEndOf="parent"
             app:layout_constraintStart_toStartOf="@+id/title"
             app:layout_constraintTop_toBottomOf="@+id/notes_text"
             app:layout_constraintVertical_bias="0.037">
@@ -95,13 +97,12 @@
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:clickable="true"
+            android:onClick="@{clickListener::onClick}"
             app:layout_constraintBottom_toBottomOf="parent"
             app:layout_constraintEnd_toEndOf="parent"
             app:layout_constraintHorizontal_bias="0.975"
             app:layout_constraintStart_toStartOf="parent"
-            android:onClick="@{clickListener::onClick}"
             app:srcCompat="@android:drawable/ic_input_add" />
-
 
 
     </android.support.constraint.ConstraintLayout>

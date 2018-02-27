@@ -5,6 +5,7 @@
       <module fileurl="file://$PROJECT_DIR$/DailyCare.iml" filepath="$PROJECT_DIR$/DailyCare.iml" />
       <module fileurl="file://$PROJECT_DIR$/app/app.iml" filepath="$PROJECT_DIR$/app/app.iml" />
       <module fileurl="file://$PROJECT_DIR$/robin-support-commom-tools/robin-support-commom-tools.iml" filepath="$PROJECT_DIR$/robin-support-commom-tools/robin-support-commom-tools.iml" />
+      <module fileurl="file://$PROJECT_DIR$/robin-support-recyclerview/robin-support-recyclerview.iml" filepath="$PROJECT_DIR$/robin-support-recyclerview/robin-support-recyclerview.iml" />
       <module fileurl="file://$PROJECT_DIR$/toothdaily/toothdaily.iml" filepath="$PROJECT_DIR$/toothdaily/toothdaily.iml" />
     </modules>
   </component>

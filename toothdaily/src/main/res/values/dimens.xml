@@ -6,4 +6,5 @@
     <dimen name="time_period_container_margin_top">20dp</dimen>
     <dimen name="daily_record_title_size">19sp</dimen>
     <dimen name="daily_record_scroll_view_margin_vertical">8dp</dimen>
+    <dimen name="fab_margin">16dp</dimen>
 </resources>

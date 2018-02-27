@@ -1,0 +1,12 @@
+<?xml version="1.0" encoding="utf-8"?>
+<manifest xmlns:android="http://schemas.android.com/apk/res/android"
+    package="cting.com.robin.support.recyclerview">
+
+    <application>
+        <activity
+            android:name=".sample.SimpleRobinListActivity"
+            android:label="@string/title_activity_robin_list"
+            android:theme="@style/AppTheme.NoActionBar"></activity>
+    </application>
+
+</manifest>

@@ -2,7 +2,6 @@ package cting.com.robin.toothdaily.model;
 
 import android.databinding.BaseObservable;
 import android.databinding.Bindable;
-import android.util.Log;
 
 import java.util.ArrayList;
 
@@ -85,6 +84,14 @@ public class DailyRecord extends BaseObservable {
     public void setPeriodList(ArrayList<TimePeriod> periodList) {
         this.periodList = periodList;
         notifyPropertyChanged(BR.periodList);
+    }
+
+    public long getTotalTime() {
+        long totalTime = 0;
+        for (TimePeriod timePeriod : periodList) {
+            totalTime += FormatHelper.getDuration(timePeriod.getStartTime(), timePeriod.getEndTime());
+        }
+        return totalTime;
     }
 
     @Bindable

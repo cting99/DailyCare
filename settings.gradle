@@ -1,1 +1,1 @@
-include ':app',":toothdaily", ':robin-support-commom-tools'
+include ':app', ':robin-support-recyclerview',":toothdaily", ':robin-support-commom-tools'

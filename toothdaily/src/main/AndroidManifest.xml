@@ -3,6 +3,7 @@
     package="cting.com.robin.toothdaily">
 
     <uses-permission android:name="android.permission.WRITE_EXTERNAL_STORAGE" />
+
     <application
         android:allowBackup="true"
         android:icon="@mipmap/ic_launcher"
@@ -10,7 +11,23 @@
         android:roundIcon="@mipmap/ic_launcher_round"
         android:supportsRtl="true"
         android:theme="@style/AppTheme">
-        <activity android:name=".activities.DailyRecordActivity">
+        <activity
+            android:name=".activities.DailyRecordActivity"
+            android:label="@string/title_activity_daily_record">
+            <intent-filter>
+                <action android:name="android.intent.action.MAIN" />
+
+                <category android:name="android.intent.category.LAUNCHER" />
+            </intent-filter>
+        </activity>
+        <activity
+            android:name=".datagenerator.ToolActivity"
+            android:exported="true"
+            android:label="@string/title_activity_tool" />
+        <activity
+            android:name=".activities.ProgressListActivity"
+            android:label="@string/title_activity_progress_list"
+            android:theme="@style/AppTheme.NoActionBar">
             <intent-filter>
                 <action android:name="android.intent.action.MAIN" />
 
@@ -19,8 +36,10 @@
         </activity>
 
         <activity
-            android:name=".datagenerator.ToolActivity"
-            android:exported="true" />
+            android:name="cting.com.robin.support.recyclerview.sample.SimpleRobinListActivity"
+            android:label="@string/title_activity_robin_list"
+            android:exported="true"
+            android:theme="@style/AppTheme.NoActionBar" />
     </application>
 
 </manifest>

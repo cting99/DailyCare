@@ -2,17 +2,12 @@ package cting.com.robin.toothdaily.datagenerator;
 
 import android.support.annotation.NonNull;
 import android.text.TextUtils;
-import android.util.Log;
 
 import java.io.BufferedReader;
 import java.io.FileInputStream;
-import java.io.IOException;
 import java.io.InputStream;
 import java.io.InputStreamReader;
 import java.util.ArrayList;
-import java.util.Arrays;
-import java.util.Collections;
-import java.util.Comparator;
 import java.util.HashMap;
 import java.util.Map;
 
@@ -20,10 +15,6 @@ import cting.com.robin.support.commom.utils.FileHelper;
 import cting.com.robin.support.commom.utils.StringHelper;
 import cting.com.robin.toothdaily.model.DailyRecord;
 import cting.com.robin.toothdaily.model.TimePeriod;
-
-/**
- * Created by cting on 2018/2/26.
- */
 
 public class RecordDatas {
 

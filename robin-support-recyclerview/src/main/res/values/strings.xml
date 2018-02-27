@@ -1,0 +1,5 @@
+<resources>
+    <string name="app_name">robin-support-recyclerview</string>
+    <string name="title_activity_robin_list">Robin List</string>
+    <string name="action_settings">Settings</string>
+</resources>
