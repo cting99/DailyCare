@@ -72,11 +72,10 @@ public class RecordDatas {
 //                Log.i(TAG, "readFile: read items="+ Arrays.toString(items));
             if (isCategoryLine(items)) {
                 category = readCategory(items[0]);
+                map.put(category, new ArrayList<DailyRecord>());
             } else if (isDeailyRecordLine(items)) {
                 dailyRecord = readDailyRecord(items);
-            }
-            if (category >= 0 && dailyRecord != null) {
-                addDailyRecordToMap(map, Integer.valueOf(category), dailyRecord);
+                map.get(category).add(dailyRecord);
             }
         }
         in.close();

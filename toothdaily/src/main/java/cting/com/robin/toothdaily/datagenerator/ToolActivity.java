@@ -23,12 +23,15 @@ public class ToolActivity extends TextActivity {
 
             for (Object category : keySetArray) {
                 appendMessage(category + ":\n");
+                Log.i(TAG, category + ":\n");
                 for (DailyRecord record : map.get(category)) {
                     appendMessage(record + "\n");
+                    Log.i(TAG, record + "\n");
                 }
                 appendMessage("\n\n");
             }
         }
+
 
     }
 }
