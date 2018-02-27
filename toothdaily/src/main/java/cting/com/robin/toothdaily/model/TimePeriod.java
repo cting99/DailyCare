@@ -23,7 +23,7 @@ public class TimePeriod extends BaseObservable {
 
     public void setStartTime(String startTime) {
         this.startTime = startTime;
-        Log.i(TAG, "setStartTime: " + startTime);
+//        Log.i(TAG, "setStartTime: " + startTime);
         notifyPropertyChanged(BR.startTime);
         notifyPropertyChanged(BR.timeDuration);
         notifyPropertyChanged(BR.totalCost);
@@ -50,9 +50,8 @@ public class TimePeriod extends BaseObservable {
 
     @Override
     public String toString() {
-        return "{" +
-                "startTime='" + startTime + '\'' +
-                ", endTime='" + endTime + '\'' +
+        return "{" + startTime +
+                "," + endTime +
                 '}';
     }
 }

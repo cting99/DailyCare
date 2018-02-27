@@ -13,7 +13,9 @@ import cting.com.robin.toothdaily.utils.FormatHelper;
 public class DailyRecord extends BaseObservable {
 
     public static final String TAG = "cting/tooth/DailyRecord";
+
     String date;
+    String totalDuration;
     String notes;
     ArrayList<TimePeriod> periodList;
 
@@ -56,6 +58,16 @@ public class DailyRecord extends BaseObservable {
     }
 
     @Bindable
+    public String getTotalDuration() {
+        return totalDuration;
+    }
+
+    public void setTotalDuration(String totalDuration) {
+        this.totalDuration = totalDuration;
+        notifyPropertyChanged(BR.totalDuration);
+    }
+
+    @Bindable
     public String getNotes() {
         return notes;
     }
@@ -81,8 +93,18 @@ public class DailyRecord extends BaseObservable {
         for (TimePeriod timePeriod : periodList) {
             totalCost += FormatHelper.getDuration(timePeriod.getStartTime(), timePeriod.getEndTime());
         }
-        Log.i(TAG, "getTotalCost: " + totalCost);
+//        Log.i(TAG, "getTotalCost: " + totalCost);
         return FormatHelper.formatDuration(totalCost);
     }
 
+
+    @Override
+    public String toString() {
+        return "DailyRecord{" +
+                "date='" + date + '\'' +
+                ", totalDuration='" + totalDuration + '\'' +
+                ", notes='" + notes + '\'' +
+                ", periodList=" + periodList +
+                '}';
+    }
 }
