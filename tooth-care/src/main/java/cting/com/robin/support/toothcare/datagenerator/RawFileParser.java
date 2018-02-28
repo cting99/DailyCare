@@ -8,7 +8,8 @@ import java.io.FileInputStream;
 import java.io.InputStream;
 import java.io.InputStreamReader;
 import java.util.ArrayList;
-import java.util.Arrays;
+import java.util.Collections;
+import java.util.Comparator;
 
 import cting.com.robin.support.commom.utils.FileHelper;
 import cting.com.robin.support.commom.utils.StringHelper;
@@ -28,34 +29,41 @@ public class RawFileParser {
         InputStream in = new FileInputStream(FILE_INVISALIGN);
         BufferedReader reader = new BufferedReader(new InputStreamReader(in));
         String line;
-        int progressIndex = -1;
         ProgressRecord progressRecord = null;
         DailyRecord dailyRecord = null;
+        int currentProgressIndex=-1;
         Log.i(TAG, "readFile: " + FILE_INVISALIGN);
 
         while ((line = reader.readLine()) != null) {
             String[] items = line.split("\t");
-//            Log.i(TAG, "readFile: read items="+ Arrays.toString(items));
+//            Log.i(TAG, "readFile: read items=" + Arrays.toString(items));
             if (isProgressLine(items)) {
-                progressIndex = readProgress(items[0]);
+                currentProgressIndex = readProgressIndex(items[0]);
                 progressRecord = new ProgressRecord();
-                progressRecord.setProgressIndex(progressIndex);
+                progressRecord.setProgressIndex(currentProgressIndex);
                 progressRecords.add(progressRecord);
-                Log.i(TAG, "readFile: add progress " + progressIndex);
+//                Log.i(TAG, "readFile: add progress " + progressIndex);
             } else if (isDeailyRecordLine(items)) {
                 dailyRecord = readDailyRecord(items);
                 dailyRecords.add(dailyRecord);
-                Log.i(TAG, "readFile: add daily " + dailyRecord.getDate());
+//                Log.i(TAG, "readFile: add daily " + dailyRecord.getDate());
                 if (progressRecord != null) {
-                    if (progressIndex != -1) {
+                    if (currentProgressIndex != -1) {
                         progressRecord.setStartDate(dailyRecord.getDate());
-                        progressIndex = -1;
+                        currentProgressIndex = -1;
                     }
                     progressRecord.setEndDate(dailyRecord.getDate());
                 }
             }
         }
         in.close();
+
+        Collections.sort(dailyRecords, new Comparator<DailyRecord>() {
+            @Override
+            public int compare(DailyRecord o1, DailyRecord o2) {
+                return o2.getDayIndex() - o1.getDayIndex();
+            }
+        });
     }
 
     public static final ArrayList<DailyRecord> getDailyRecords() {
@@ -63,7 +71,7 @@ public class RawFileParser {
             try {
                 readFile();
             } catch (Exception e) {
-                Log.i(TAG, "getDailyRecords: "+e.getLocalizedMessage());
+                Log.i(TAG, "getDailyRecords: " + e.getLocalizedMessage());
                 e.printStackTrace();
             }
         }
@@ -75,7 +83,7 @@ public class RawFileParser {
             try {
                 readFile();
             } catch (Exception e) {
-                Log.i(TAG, "getProgressRecords: "+e.getLocalizedMessage());
+                Log.i(TAG, "getProgressRecords: " + e.getLocalizedMessage());
                 e.printStackTrace();
             }
         }
@@ -85,9 +93,9 @@ public class RawFileParser {
     private static final boolean isProgressLine(String[] lineItems) {
         return lineItems != null && lineItems.length == 2;
     }
-    private static final int readProgress(String categoryStr) {
-        int index = StringHelper.getNumbers(categoryStr);
-        return index;
+
+    private static final int readProgressIndex(String categoryStr) {
+        return StringHelper.getNumbers(categoryStr);
     }
 
     private static boolean isDeailyRecordLine(String[] lineItems) {
@@ -98,8 +106,9 @@ public class RawFileParser {
         DailyRecord record = new DailyRecord();
         int count = lineItems.length;
 
+        record.setDayIndex(dailyRecords.size() + 1);
         record.setDate(lineItems[1]);
-        record.setTotalTime(lineItems[2]);
+//        record.setTotalTime(lineItems[2]);
         record.setNotes(lineItems[3]);
 
         ArrayList<TimeSlice> periods = new ArrayList<>(count - 4);
@@ -110,17 +119,17 @@ public class RawFileParser {
             if (TextUtils.isEmpty(item)) {
                 continue;
             }
-            if (timeSlice == null) {
-                timeSlice = new TimeSlice();
-                timeSlice.setStartTime(item);
+            timeSlice = new TimeSlice();
+            timeSlice.setStartTime(item);
+            if (i + 1 >= count) {
+                timeSlice.setEndTime("24:00");
             } else {
-                if ("0:00".equals(item)) {
-                    item = "24:00";
-                }
-                timeSlice.setEndTime(item);
-                periods.add(timeSlice);
-                timeSlice = null;
+                item = lineItems[++i];
+                timeSlice.setEndTime("0:00".equals(item) ? "24:00" : item);
             }
+//            Log.i(TAG, "readDailyRecord: add TimeSlice:" + timeSlice);
+            periods.add(timeSlice);
+
         }
         record.setTimeSliceList(periods);
 

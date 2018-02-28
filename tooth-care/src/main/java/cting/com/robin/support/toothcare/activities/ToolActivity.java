@@ -1,4 +1,4 @@
-package cting.com.robin.support.toothcare;
+package cting.com.robin.support.toothcare.activities;
 
 import android.util.Log;
 

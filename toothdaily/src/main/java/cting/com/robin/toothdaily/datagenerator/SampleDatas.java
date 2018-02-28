@@ -1,26 +1,22 @@
-package cting.com.robin.support.toothcare.datagenerator;
+package cting.com.robin.toothdaily.datagenerator;
 
 import android.util.Log;
 
 import java.util.ArrayList;
 import java.util.Arrays;
+import java.util.Map;
 
-import cting.com.robin.support.toothcare.models.DailyRecord;
-import cting.com.robin.support.toothcare.models.ProgressRecord;
+import cting.com.robin.toothdaily.model.DailyRecord;
+import cting.com.robin.toothdaily.model.ProgressDetailItem;
+import cting.com.robin.toothdaily.model.ProgressItem;
+import cting.com.robin.toothdaily.utils.FormatHelper;
 
 
 public class SampleDatas {
 
+    private static Map<Integer, ArrayList<DailyRecord>> map;
     public static final String TAG = "cting/tooth/SampleDatas";
 
-    public static final ArrayList<DailyRecord> getDailyRecords() {
-        return RawFileParser.getDailyRecords();
-    }
-
-    public static final ArrayList<ProgressRecord> getProgressRecords() {
-        return RawFileParser.getProgressRecords();
-    }
-/*
     public static final Map<Integer, ArrayList<DailyRecord>> getFullRecordsMap() {
         try {
             if (map == null || map.size() == 0) {
@@ -30,11 +26,11 @@ public class SampleDatas {
             e.printStackTrace();
         }
         //test
-        *//*if (map != null && map.size() > 0) {
+        /*if (map != null && map.size() > 0) {
             for (Integer category : map.keySet()) {
                 Log.i(TAG, category+":"+map.get(category));
             }
-        }*//*
+        }*/
         return map;
     }
 
@@ -61,7 +57,7 @@ public class SampleDatas {
                 for (DailyRecord record : records) {
                     progressTimeCount += record.getTotalTime();
                 }
-                item.setTotalTime(TimeFormatHelper.formatDuration(progressTimeCount));
+                item.setTotalTime(FormatHelper.formatDuration(progressTimeCount));
                 list.add(item);
             }
         }
@@ -106,5 +102,5 @@ public class SampleDatas {
             records.add(new DailyRecord("2018/2/26", "", "0:00,8:36,9:25,11:46,12:20,18:07,19:20,24:00"));
         }
         return records;
-    }*/
+    }
 }

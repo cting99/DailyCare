@@ -1,21 +1,22 @@
 <?xml version="1.0" encoding="utf-8"?>
+
 <layout xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:app="http://schemas.android.com/apk/res-auto"
     xmlns:tools="http://schemas.android.com/tools">
 
     <data>
 
-        <import type="cting.com.robin.toothdaily.model.ProgressDetailItem" />
+        <import type="cting.com.robin.support.toothcare.models.DailyRecord" />
 
         <variable
-            name="detail"
-            type="ProgressDetailItem" />
+            name="dailyRecord"
+            type="DailyRecord" />
     </data>
 
     <android.support.constraint.ConstraintLayout
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
-        android:padding="8dp">
+        android:padding="@dimen/list_item_layout_container_padding">
 
 
         <TextView
@@ -23,23 +24,23 @@
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:layout_marginStart="16dp"
+            android:text="@{@string/daily_record_day_index(dailyRecord.dayIndex)}"
+            android:textSize="19sp"
+            android:textStyle="bold"
             app:layout_constraintBottom_toBottomOf="parent"
             app:layout_constraintStart_toStartOf="parent"
             app:layout_constraintTop_toTopOf="parent"
-            android:text="@{@string/progress_detail_item_day_index(detail.dayIndex)}"
             tools:text="Day 1" />
 
         <TextView
             android:id="@+id/date_text"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
-            android:layout_marginBottom="8dp"
             android:layout_marginStart="32dp"
-            app:layout_constraintBottom_toBottomOf="@+id/day_index_text"
+            android:text="@{dailyRecord.date}"
+            app:layout_constraintBottom_toBottomOf="parent"
             app:layout_constraintStart_toEndOf="@+id/day_index_text"
-            app:layout_constraintTop_toTopOf="@+id/day_index_text"
-            app:layout_constraintVertical_bias="0.0"
-            android:text="@{detail.date}"
+            app:layout_constraintTop_toTopOf="parent"
             tools:text="2017/10/30" />
 
         <TextView
@@ -47,11 +48,10 @@
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:layout_marginEnd="8dp"
-            app:layout_constraintBottom_toBottomOf="@+id/date_text"
+            android:text="@{dailyRecord.totalTime}"
             app:layout_constraintEnd_toEndOf="parent"
-            app:layout_constraintTop_toTopOf="@+id/date_text"
-            app:layout_constraintVertical_bias="0.0"
-            android:text="@{detail.totalTime}"
+            app:layout_constraintTop_toTopOf="parent"
+            app:layout_constraintBottom_toBottomOf="parent"
             tools:text="12h" />
     </android.support.constraint.ConstraintLayout>
 </layout>

@@ -1,7 +1,7 @@
-package cting.com.robin.toothdaily.activities;
+package cting.com.robin.support.toothcare.activities;
 
 import cting.com.robin.support.recyclerview.activities.RobinListActivity;
-import cting.com.robin.toothdaily.fragments.ProgressListFragment;
+import cting.com.robin.support.toothcare.fragments.ProgressListFragment;
 
 public class ProgressListActivity extends RobinListActivity {
 
@@ -10,5 +10,4 @@ public class ProgressListActivity extends RobinListActivity {
         super.onPermissionReady();
         addFragment(new ProgressListFragment());
     }
-
 }

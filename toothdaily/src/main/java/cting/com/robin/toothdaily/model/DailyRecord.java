@@ -5,11 +5,12 @@ import android.databinding.Bindable;
 
 import java.util.ArrayList;
 
+import cting.com.robin.support.recyclerview.model.IRobinListItem;
 import cting.com.robin.toothdaily.BR;
 import cting.com.robin.toothdaily.utils.FormatHelper;
 
 
-public class DailyRecord extends BaseObservable {
+public class DailyRecord extends BaseObservable implements IRobinListItem {
 
     public static final String TAG = "cting/tooth/DailyRecord";
 

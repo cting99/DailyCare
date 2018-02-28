@@ -15,7 +15,7 @@ import cting.com.robin.toothdaily.databinding.TimePeriodItemBinding;
 import cting.com.robin.toothdaily.model.DailyRecord;
 import cting.com.robin.toothdaily.model.TimePeriod;
 import cting.com.robin.toothdaily.utils.FormatHelper;
-import cting.com.robin.toothdaily.datagenerator.RecordDatas;
+import cting.com.robin.toothdaily.datagenerator.SampleDatas;
 
 public class DailyRecordActivity extends BasePermissionCheckActivity implements View.OnClickListener {
 
@@ -37,7 +37,7 @@ public class DailyRecordActivity extends BasePermissionCheckActivity implements 
 
         binding = DataBindingUtil.setContentView(this, R.layout.daily_record_layout);
 
-        DailyRecord record = RecordDatas.getData().get(0);
+        DailyRecord record = SampleDatas.getDailyRecord().get(0);
         if (record == null) {
             Toast.makeText(this, "record null!", Toast.LENGTH_SHORT).show();
             finish();

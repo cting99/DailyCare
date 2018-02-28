@@ -16,43 +16,17 @@ import cting.com.robin.support.commom.utils.StringHelper;
 import cting.com.robin.toothdaily.model.DailyRecord;
 import cting.com.robin.toothdaily.model.TimePeriod;
 
-public class RecordDatas {
+/**
+ * Created by cting on 2018/2/28.
+ */
 
-//    private static Map<Integer, ArrayList<DailyRecord>> maps;
-    public static final String TAG = "cting/tooth/RecordDatas";
+public class RawFileParser {
+
     public static final String FILE_INVISALIGN = FileHelper.DIR + "invisalign_raw.txt";
 
 
-    public static final ArrayList<DailyRecord> getData() {
-        ArrayList<DailyRecord> records = new ArrayList<>();
-        Map<Integer, ArrayList<DailyRecord>> map = readInvisalignFile();
-        if (map != null && map.size() > 0) {
-            records = map.get(2);
-        } else {
-            records.add(new DailyRecord("2018/2/25", "", "0:00,8:30,9:22,11:45,12:45,18:19,19:15,24:00"));
-            records.add(new DailyRecord("2018/2/26", "", "0:00,8:36,9:25,11:46,12:20,18:07,19:20,24:00"));
-        }
-        return records;
-    }
-
-    public static Map<Integer, ArrayList<DailyRecord>> readInvisalignFile() {
-        Map<Integer, ArrayList<DailyRecord>> map = null;
-        try {
-            map = readFile(FILE_INVISALIGN);
-        } catch (Exception e) {
-            e.printStackTrace();
-        }
-        //test
-        /*if (map != null && map.size() > 0) {
-            for (Integer category : map.keySet()) {
-                Log.i(TAG, category+":"+map.get(category));
-            }
-        }*/
-        return map;
-    }
-
-    private static Map<Integer, ArrayList<DailyRecord>> readFile(@NonNull String fileName) throws Exception {
-        InputStream in = new FileInputStream(fileName);
+    public static Map<Integer, ArrayList<DailyRecord>> readFile() throws Exception {
+        InputStream in = new FileInputStream(FILE_INVISALIGN);
         BufferedReader reader = new BufferedReader(new InputStreamReader(in));
         String line;
         Map<Integer, ArrayList<DailyRecord>> map=new HashMap<>();

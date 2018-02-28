@@ -1,6 +1,7 @@
 package cting.com.robin.support.toothcare.models;
 
 import cting.com.robin.support.recyclerview.model.IRobinListItem;
+import cting.com.robin.support.toothcare.utils.TimeFormatHelper;
 
 /**
  * Created by cting on 2018/2/28.
@@ -10,7 +11,7 @@ public class ProgressRecord implements IRobinListItem {
     private int progressIndex;
     private String startDate;
     private String endDate;
-    private String dayCount;
+    private int dayCount;
     private String totalTime;
 
     public ProgressRecord() {
@@ -41,20 +42,22 @@ public class ProgressRecord implements IRobinListItem {
     }
 
     public String getDayCount() {
-        return dayCount;
+        dayCount = TimeFormatHelper.getDayCountByDate(startDate, endDate);
+        return String.valueOf(dayCount);
     }
 
+/*
     public void setDayCount(String dayCount) {
         this.dayCount = dayCount;
-    }
+    }*/
 
     public String getTotalTime() {
         return totalTime;
     }
-
+/*
     public void setTotalTime(String totalTime) {
         this.totalTime = totalTime;
-    }
+    }*/
 
     @Override
     public String toString() {

@@ -22,7 +22,7 @@ public abstract class RobinListFragment<I extends IRobinListItem, B extends View
 
     public static final String TAG = "cting/list/fragment";
 
-    RecyclerView mRecyclerView;
+    protected RecyclerView mRecyclerView;
 
     protected ArrayList<I> mDataList;
     protected RobinListAdapter<I, B> mAdapter;
@@ -36,18 +36,22 @@ public abstract class RobinListFragment<I extends IRobinListItem, B extends View
     public View onCreateView(LayoutInflater inflater, ViewGroup container,
                              Bundle savedInstanceState) {
         View view = inflater.inflate(R.layout.fragment_robin_list, container, false);
-        mRecyclerView = view.findViewById(R.id.recycler_view);
+        setupRecyclerView((RecyclerView) view.findViewById(R.id.recycler_view));
+        return view;
+    }
+
+    protected void setupRecyclerView(RecyclerView recyclerView) {
+        mRecyclerView = recyclerView;
         mRecyclerView.setLayoutManager(new LinearLayoutManager(getContext()));
         mRecyclerView.addItemDecoration(new DividerItemDecoration(getContext(), DividerItemDecoration.VERTICAL));
         updateApapter();
-        return view;
     }
 
     protected void updateApapter() {
         if (mAdapter == null) {
             mAdapter = newAdapter();
             mAdapter.setCallbacks(this);
-            mAdapter.setDataList(newData());
+            mDataList = newData();
             mRecyclerView.setAdapter(mAdapter);
         }
         if (mDataList != null) {

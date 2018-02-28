@@ -3,4 +3,5 @@
     <string name="app_name">隐适美佩戴记录</string>
     <string name="title_activity_progress_list">隐适美佩戴记录</string>
     <string name="progress_index">第<xliff:g id="progressIndex">%s</xliff:g>副（<xliff:g id="dayCount">%s</xliff:g>天）</string>
+    <string name="progress_detail_item_day_index">第<xliff:g id="dayIndex">%s</xliff:g>天</string>
 </resources>

@@ -1,4 +1,4 @@
-package cting.com.robin.toothdaily.datagenerator;
+package cting.com.robin.toothdaily.activities;
 
 import android.util.Log;
 
@@ -6,6 +6,7 @@ import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.Map;
 import cting.com.robin.support.commom.activities.TextActivity;
+import cting.com.robin.toothdaily.datagenerator.SampleDatas;
 import cting.com.robin.toothdaily.model.DailyRecord;
 
 public class ToolActivity extends TextActivity {
@@ -15,7 +16,7 @@ public class ToolActivity extends TextActivity {
     protected void onPermissionReady() {
         super.onPermissionReady();
 
-        Map<Integer, ArrayList<DailyRecord>> map = RecordDatas.readInvisalignFile();
+        Map<Integer, ArrayList<DailyRecord>> map = SampleDatas.getFullRecordsMap();
         if (map != null && map.size() > 0) {
             Object[] keySetArray = map.keySet().toArray();
             Arrays.sort(keySetArray);

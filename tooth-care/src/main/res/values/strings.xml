@@ -1,3 +1,8 @@
-<resources>
+<resources xmlns:xliff="urn:oasis:names:tc:xliff:document:1.2">
     <string name="app_name">toothcare</string>
+    <string name="progress_record_day_index">No.<xliff:g id="progressIndex">%s</xliff:g> (<xliff:g id="dayCount">%s</xliff:g> Days)</string>
+    <string name="daily_record_day_index">Day <xliff:g id="dayIndex">%s</xliff:g></string>
+    <string name="activity_label_progress_list">隐适美佩戴记录</string>
+    <string name="activity_label_daily_record_list">隐适美每日记录</string>
+    <string name="activity_label_daily_record_detail">每日记录</string>
 </resources>
