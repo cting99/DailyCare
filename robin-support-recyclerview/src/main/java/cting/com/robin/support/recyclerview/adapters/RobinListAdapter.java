@@ -89,7 +89,6 @@ public class RobinListAdapter<I extends IRobinListItem, B extends ViewDataBindin
             super(binding.getRoot());
             this.binding = binding;
             if (binding.getRoot().getBackground() == null) {
-                Log.i(TAG, "ViewHolder: setBackground");
                 binding.getRoot().setBackgroundResource(backgroundResId);
             }
             binding.getRoot().setOnClickListener(this);
