@@ -1,6 +1,11 @@
 package cting.com.robin.support.toothcare.models;
 
+import android.os.Bundle;
+
+import java.util.ArrayList;
+
 import cting.com.robin.support.recyclerview.model.IRobinListItem;
+import cting.com.robin.support.toothcare.datagenerator.SampleDatas;
 import cting.com.robin.support.toothcare.utils.TimeFormatHelper;
 
 /**
@@ -8,11 +13,14 @@ import cting.com.robin.support.toothcare.utils.TimeFormatHelper;
  */
 
 public class ProgressRecord implements IRobinListItem {
+    public static final String PROGRESS_INDEX = "PROGRESS_INDEX";
+    public static final String DAILYRECORDS = "DAILYRECORDS";
     private int progressIndex;
-    private String startDate;
-    private String endDate;
-    private int dayCount;
-    private String totalTime;
+    //    private String startDate;
+//    private String endDate;
+//    private int dayCount;
+//    private String totalTime;
+    private ArrayList<DailyRecord> dailyRecords=new ArrayList<>();
 
     public ProgressRecord() {
     }
@@ -26,24 +34,25 @@ public class ProgressRecord implements IRobinListItem {
     }
 
     public String getStartDate() {
-        return startDate;
+        return dailyRecords.get(0).getDate();
     }
-
+/*
     public void setStartDate(String startDate) {
         this.startDate = startDate;
-    }
+    }*/
 
     public String getEndDate() {
-        return endDate;
+        return dailyRecords.get(dailyRecords.size() - 1).getDate();
     }
-
+/*
     public void setEndDate(String endDate) {
         this.endDate = endDate;
-    }
+    }*/
 
-    public String getDayCount() {
-        dayCount = TimeFormatHelper.getDayCountByDate(startDate, endDate);
-        return String.valueOf(dayCount);
+    public int getDayCount() {
+        return dailyRecords.size();
+        /*dayCount = TimeFormatHelper.getDayCountByDate(startDate, endDate);
+        return String.valueOf(dayCount);*/
     }
 
 /*
@@ -52,21 +61,49 @@ public class ProgressRecord implements IRobinListItem {
     }*/
 
     public String getTotalTime() {
-        return totalTime;
+        long totalTimeMillions = 0;
+        for (DailyRecord record : dailyRecords) {
+            totalTimeMillions += record.getTotalTimeMillions();
+        }
+        return TimeFormatHelper.formatDuration(totalTimeMillions);
     }
 /*
     public void setTotalTime(String totalTime) {
         this.totalTime = totalTime;
     }*/
 
+    public ArrayList<DailyRecord> getDailyRecords() {
+        return dailyRecords;
+    }
+/*
+    public void setDailyRecords(ArrayList<DailyRecord> dailyRecords) {
+        this.dailyRecords = dailyRecords;
+    }*/
+
     @Override
     public String toString() {
         return "ProgressRecord{" +
                 "progressIndex=" + progressIndex +
-                ", startDate='" + startDate + '\'' +
-                ", endDate='" + endDate + '\'' +
-                ", dayCount='" + dayCount + '\'' +
-                ", totalTime='" + totalTime + '\'' +
+                ", dailyRecords='" + dailyRecords +
+//                ", startDate='" + startDate + '\'' +
+//                ", endDate='" + endDate + '\'' +
+//                ", dayCount='" + dayCount + '\'' +
+//                ", totalTime='" + totalTime + '\'' +
                 '}';
+    }
+
+
+    public ProgressRecord(Bundle bundle) {
+        if (bundle != null) {
+            this.progressIndex = bundle.getInt(PROGRESS_INDEX);
+            this.dailyRecords = bundle.getParcelableArrayList(DAILYRECORDS);
+        }
+    }
+
+    public Bundle toBundle() {
+        Bundle bundle = new Bundle();
+        bundle.putInt(PROGRESS_INDEX, progressIndex);
+        bundle.putParcelableArrayList(DAILYRECORDS, dailyRecords);
+        return bundle;
     }
 }

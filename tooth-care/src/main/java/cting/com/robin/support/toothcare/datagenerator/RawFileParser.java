@@ -32,6 +32,7 @@ public class RawFileParser {
         ProgressRecord progressRecord = null;
         DailyRecord dailyRecord = null;
         int currentProgressIndex=-1;
+        ArrayList<DailyRecord> singleDailyRecords = null;
         Log.i(TAG, "readFile: " + FILE_INVISALIGN);
 
         while ((line = reader.readLine()) != null) {
@@ -40,24 +41,37 @@ public class RawFileParser {
             if (isProgressLine(items)) {
                 currentProgressIndex = readProgressIndex(items[0]);
                 progressRecord = new ProgressRecord();
+                singleDailyRecords = new ArrayList<>();
                 progressRecord.setProgressIndex(currentProgressIndex);
+//                progressRecord.setDailyRecords(new ArrayList<DailyRecord>());
                 progressRecords.add(progressRecord);
 //                Log.i(TAG, "readFile: add progress " + progressIndex);
             } else if (isDeailyRecordLine(items)) {
                 dailyRecord = readDailyRecord(items);
                 dailyRecords.add(dailyRecord);
 //                Log.i(TAG, "readFile: add daily " + dailyRecord.getDate());
+
+                if (progressRecord!=null) {
+                    progressRecord.getDailyRecords().add(dailyRecord);
+                }/*
                 if (progressRecord != null) {
                     if (currentProgressIndex != -1) {
                         progressRecord.setStartDate(dailyRecord.getDate());
                         currentProgressIndex = -1;
                     }
                     progressRecord.setEndDate(dailyRecord.getDate());
-                }
+                }*/
             }
         }
         in.close();
 
+
+        Collections.sort(progressRecords, new Comparator<ProgressRecord>() {
+            @Override
+            public int compare(ProgressRecord o1, ProgressRecord o2) {
+                return o2.getProgressIndex() - o1.getProgressIndex();
+            }
+        });
         Collections.sort(dailyRecords, new Comparator<DailyRecord>() {
             @Override
             public int compare(DailyRecord o1, DailyRecord o2) {

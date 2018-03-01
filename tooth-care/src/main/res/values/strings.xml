@@ -5,4 +5,7 @@
     <string name="activity_label_progress_list">隐适美佩戴记录</string>
     <string name="activity_label_daily_record_list">隐适美每日记录</string>
     <string name="activity_label_daily_record_detail">每日记录</string>
+    <string name="progress_detail_title">隐适美 第<xliff:g id="progressIndex">%s</xliff:g>副</string>
+    <string name="progress_detail_daycount_and_totaltime">你已经带了<xliff:g id="dayCount">%s</xliff:g>天，共<xliff:g id="totalTime">%s</xliff:g>个小时</string>
+    <string name="activity_label_progress_detail">牙套</string>
 </resources>

@@ -42,7 +42,10 @@
             android:name=".activities.DailyRecordDetailActivity"
             android:label="@string/activity_label_daily_record_detail"
             android:theme="@style/AppTheme.NoActionBar" />
-
+        <activity
+            android:name=".activities.ProgressDetailActivity"
+            android:label="@string/activity_label_progress_detail"
+            android:theme="@style/AppTheme.NoActionBar" />
     </application>
 
 </manifest>
