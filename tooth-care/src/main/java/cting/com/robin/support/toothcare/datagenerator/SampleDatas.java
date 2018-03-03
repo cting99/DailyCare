@@ -21,4 +21,12 @@ public class SampleDatas {
     public static final ArrayList<ProgressRecord> getProgressRecords(Context context) {
         return RawFileParser.getProgressRecords(context);
     }
+
+    public static final int getDayIndex(Context context) {
+        return getDailyRecords(context).size();
+    }
+
+    public static final int getProgressIndex(Context context) {
+        return getProgressRecords(context).size();
+    }
 }

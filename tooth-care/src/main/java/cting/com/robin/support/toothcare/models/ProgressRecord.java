@@ -81,4 +81,11 @@ public class ProgressRecord implements IRobinListItem {
         bundle.putParcelableArrayList(DAILYRECORDS, dailyRecords);
         return bundle;
     }
+
+    public static ProgressRecord newRecord(int progressIndex) {
+        ProgressRecord record = new ProgressRecord();
+        record.setProgressIndex(progressIndex);
+        return record;
+
+    }
 }

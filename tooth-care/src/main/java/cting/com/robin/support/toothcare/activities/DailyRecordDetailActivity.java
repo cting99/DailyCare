@@ -8,7 +8,6 @@ import cting.com.robin.support.recyclerview.activities.RobinListActivity;
 import cting.com.robin.support.recyclerview.fragments.RobinListFragment;
 import cting.com.robin.support.toothcare.fragments.DailyRecordDetailFragment;
 
-
 public class DailyRecordDetailActivity extends RobinListActivity {
 
     public static final String DAILY_RECORD_BUNDLE = "DAILY_RECORD_BUNDLE";

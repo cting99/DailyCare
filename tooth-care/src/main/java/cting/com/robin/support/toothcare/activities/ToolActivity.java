@@ -1,9 +1,5 @@
 package cting.com.robin.support.toothcare.activities;
 
-import android.util.Log;
-
-import java.util.List;
-
 import cting.com.robin.support.commom.activities.TextActivity;
 import cting.com.robin.support.toothcare.datagenerator.SampleDatas;
 

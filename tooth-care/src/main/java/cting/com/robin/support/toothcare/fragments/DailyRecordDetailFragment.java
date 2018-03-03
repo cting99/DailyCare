@@ -17,6 +17,7 @@ import cting.com.robin.support.toothcare.databinding.DailyRecordDetailBinding;
 import cting.com.robin.support.toothcare.databinding.TimeSliceItemBinding;
 import cting.com.robin.support.toothcare.models.DailyRecord;
 import cting.com.robin.support.toothcare.models.TimeSlice;
+import cting.com.robin.support.toothcare.utils.TimeFormatHelper;
 
 public class DailyRecordDetailFragment extends RobinListFragment<TimeSlice,TimeSliceItemBinding> {
 
@@ -33,6 +34,8 @@ public class DailyRecordDetailFragment extends RobinListFragment<TimeSlice,TimeS
             dailyRecord = new DailyRecord(bundle);
         }
         Log.i(TAG, "onCreate: dailyRecord=" + dailyRecord);
+
+        setHasOptionsMenu(true);
     }
 
     @Override
@@ -54,5 +57,16 @@ public class DailyRecordDetailFragment extends RobinListFragment<TimeSlice,TimeS
     @Override
     public int getItemLayoutId() {
         return R.layout.time_slice_item;
+    }
+
+    @Override
+    protected void addNewItem() {
+        TimeSlice timeSlice = new TimeSlice();
+        String startTime = TimeFormatHelper.formatNow();
+        Log.i(TAG, "addNewItem: " + startTime);
+        timeSlice.setStartTime(startTime);
+        mDataList.add(timeSlice);
+        setDataList(mDataList);
+
     }
 }

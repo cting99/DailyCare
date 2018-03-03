@@ -58,4 +58,10 @@ public class ProgressListFragment extends RobinListFragment<ProgressRecord, Prog
         Toast.makeText(getContext(), "write to " + EXPORT_FILE_NAME + ": " + (ret ? "successful" : "failed"), Toast.LENGTH_SHORT).show();
     }
 
+    @Override
+    protected void addNewItem() {
+        int progressIndex = SampleDatas.getProgressIndex(getContext());
+        ProgressRecord record = ProgressRecord.newRecord(progressIndex + 1);
+        ProgressDetailActivity.launchWithBundle(getContext(), record.toBundle());
+    }
 }

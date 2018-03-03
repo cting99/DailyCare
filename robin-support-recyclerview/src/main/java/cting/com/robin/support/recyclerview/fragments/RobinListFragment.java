@@ -57,7 +57,8 @@ public abstract class RobinListFragment<I extends IRobinListItem, B extends View
             exportData(mDataList);
         } else if (i == R.id.action_import) {
             importData();
-//            mAdapter.notifyDataSetChanged();
+        } else if (i == R.id.action_add) {
+            addNewItem();
         }
         return true;
     }
@@ -66,6 +67,9 @@ public abstract class RobinListFragment<I extends IRobinListItem, B extends View
     }
 
     protected void importData() {
+    }
+
+    protected void addNewItem() {
     }
 
     protected void setupRecyclerView(RecyclerView recyclerView) {

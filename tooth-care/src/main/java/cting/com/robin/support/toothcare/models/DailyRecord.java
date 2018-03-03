@@ -10,6 +10,7 @@ import com.google.gson.annotations.Expose;
 import java.util.ArrayList;
 
 import cting.com.robin.support.recyclerview.model.IRobinListItem;
+import cting.com.robin.support.toothcare.datagenerator.SampleDatas;
 import cting.com.robin.support.toothcare.utils.TimeFormatHelper;
 
 public class DailyRecord implements IRobinListItem, Parcelable {
@@ -86,7 +87,6 @@ public class DailyRecord implements IRobinListItem, Parcelable {
         this.timeSliceList = timeSliceList;
     }
 
-
     public long getTotalTimeMillions() {
         long totalTimeMillions = 0;
         if (timeSliceList != null) {
@@ -137,6 +137,22 @@ public class DailyRecord implements IRobinListItem, Parcelable {
         bundle.putParcelableArrayList(TIME_SLICE_LIST, this.timeSliceList);
         bundle.putString(TOTAL_TIME, this.totalTime);
         return bundle;
+    }
+
+    public static DailyRecord newRecord(int dayIndex) {
+        DailyRecord today = new DailyRecord();
+        today.setDayIndex(dayIndex);
+        today.setDate(TimeFormatHelper.formatToday());
+        today.startTime();
+        return today;
+    }
+
+    public void startTime() {
+        TimeSlice slice = new TimeSlice();
+        slice.setStartTime("00:00");
+        slice.setEndTime("00:00");
+        timeSliceList = new ArrayList<>();
+        timeSliceList.add(slice);
     }
 
     @Override

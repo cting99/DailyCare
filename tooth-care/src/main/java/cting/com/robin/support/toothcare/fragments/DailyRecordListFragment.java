@@ -2,6 +2,7 @@ package cting.com.robin.support.toothcare.fragments;
 
 
 import android.os.Bundle;
+import android.support.annotation.Nullable;
 
 import java.util.ArrayList;
 
@@ -18,6 +19,12 @@ public class DailyRecordListFragment extends RobinListFragment<DailyRecord, Dail
     }
 
     @Override
+    public void onCreate(@Nullable Bundle savedInstanceState) {
+        super.onCreate(savedInstanceState);
+        setHasOptionsMenu(true);
+    }
+
+    @Override
     public void onItemClick(DailyRecord item) {
         Bundle b = item.toBundle();
         DailyRecordDetailActivity.launchWithBundle(getContext(),b);
@@ -31,5 +38,12 @@ public class DailyRecordListFragment extends RobinListFragment<DailyRecord, Dail
     @Override
     public int getItemLayoutId() {
         return R.layout.daily_record_list_item;
+    }
+
+    @Override
+    protected void addNewItem() {
+        int dayIndex = SampleDatas.getDayIndex(getContext());
+        DailyRecord record = DailyRecord.newRecord(dayIndex + 1);
+        DailyRecordDetailActivity.launchWithBundle(getContext(), record.toBundle());
     }
 }

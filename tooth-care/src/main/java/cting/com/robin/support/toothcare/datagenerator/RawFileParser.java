@@ -118,7 +118,8 @@ public class RawFileParser {
 
         ArrayList<TimeSlice> periods = new ArrayList<>(count - 4);
         TimeSlice timeSlice = null;
-        String item = null;for (int i = 4; i < count; i++) {
+        String item = null;
+        for (int i = 4; i < count; i++) {
             item = lineItems[i];
             if (TextUtils.isEmpty(item)) {
                 continue;

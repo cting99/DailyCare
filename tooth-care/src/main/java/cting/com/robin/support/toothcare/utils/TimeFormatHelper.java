@@ -12,11 +12,26 @@ public class TimeFormatHelper {
 
     public static final String TIME_FORMAT = "HH:mm";
     public static final String TIME_FORMAT_ERROR = "--";
+    public static final String DATA_FORMAT = "yyyy/MM/dd";
+
+    private static final String format(long time, String pattern) {
+        return new SimpleDateFormat(pattern).format(new Date(time));
+    }
 
     public static final String formatTime(long time) {
-        SimpleDateFormat dateFormat = new SimpleDateFormat(TIME_FORMAT);
-        Date date = new Date(time);
-        return dateFormat.format(date);
+        return format(time, TIME_FORMAT);
+    }
+
+    public static final String formatNow() {
+        return formatTime(System.currentTimeMillis());
+    }
+
+    public static final String formatData(long time) {
+        return format(time, DATA_FORMAT);
+    }
+
+    public static final String formatToday() {
+        return formatData(System.currentTimeMillis());
     }
 
     public static final long getDuration(String startTimeText, String endTimeText) {
@@ -62,7 +77,7 @@ public class TimeFormatHelper {
     }
 
     public static int getDayCountByDate(String startDateText, String endDateText) {
-        return getDayCountByDate(startDateText, endDateText, "yyyy/MM/dd");
+        return getDayCountByDate(startDateText, endDateText, DATA_FORMAT);
     }
 
     public static int getDayCountByDate(String startDateText, String endDateText, String format) {
