@@ -9,7 +9,7 @@
         <import type="cting.com.robin.support.toothcare.models.ProgressRecord" />
 
         <variable
-            name="progressRecord"
+            name="item"
             type="ProgressRecord" />
     </data>
 
@@ -25,7 +25,7 @@
             android:layout_marginEnd="8dp"
             android:layout_marginStart="8dp"
             android:layout_marginTop="8dp"
-            android:text="@{@string/progress_detail_title(progressRecord.progressIndex)}"
+            android:text="@{@string/progress_detail_title(item.progressIndex)}"
             android:textSize="25sp"
             app:layout_constraintEnd_toEndOf="parent"
             app:layout_constraintHorizontal_bias="0.502"
@@ -41,7 +41,7 @@
             android:layout_marginEnd="8dp"
             android:layout_marginStart="8dp"
             android:layout_marginTop="16dp"
-            android:text="@{@string/progress_detail_daycount_and_totaltime(progressRecord.dayCount,progressRecord.totalTime)}"
+            android:text="@{@string/progress_detail_daycount_and_totaltime(item.dayCount,item.totalTime)}"
             app:layout_constraintBottom_toTopOf="@+id/recycler_view"
             app:layout_constraintEnd_toEndOf="parent"
             app:layout_constraintStart_toStartOf="parent"

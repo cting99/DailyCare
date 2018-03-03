@@ -12,6 +12,7 @@ import android.view.ViewGroup;
 
 import java.util.ArrayList;
 
+import cting.com.robin.support.recyclerview.BR;
 import cting.com.robin.support.recyclerview.model.IClickItem;
 import cting.com.robin.support.recyclerview.model.IRobinListItem;
 
@@ -57,12 +58,14 @@ public class RobinListAdapter<I extends IRobinListItem, B extends ViewDataBindin
     @Override
     public ViewHolder onCreateViewHolder(ViewGroup parent, int viewType) {
         B binding = DataBindingUtil.inflate(inflater, callbacks.getItemLayoutId(), parent, false);
+//                ProgressListItemBinding b = ProgressListItemBinding.bind(view);
         return new ViewHolder(binding);
     }
 
     @Override
     public void onBindViewHolder(ViewHolder holder, int position) {
         I item = getItem(position);
+        holder.binding.setVariable(BR.item, item);
         callbacks.bindItemData(item, holder.binding);
         holder.binding.executePendingBindings();
     }

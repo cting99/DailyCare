@@ -26,7 +26,7 @@ public class SimpleRobinListFragment extends RobinListFragment<SimpleListItem,Si
 
     @Override
     public void bindItemData(SimpleListItem item, SimpleRobinListItemBinding binding) {
-        binding.setItem(item);
+//        binding.setItem(item);
 
     }
 

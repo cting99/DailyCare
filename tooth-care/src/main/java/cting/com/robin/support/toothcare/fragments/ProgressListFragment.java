@@ -17,11 +17,6 @@ public class ProgressListFragment extends RobinListFragment<ProgressRecord, Prog
     }
 
     @Override
-    public boolean onItemLongClick(ProgressRecord item) {
-        return false;
-    }
-
-    @Override
     protected ArrayList<ProgressRecord> newData() {
         return SampleDatas.getProgressRecords(getContext());
     }
@@ -31,8 +26,4 @@ public class ProgressListFragment extends RobinListFragment<ProgressRecord, Prog
         return R.layout.progress_list_item;
     }
 
-    @Override
-    public void bindItemData(ProgressRecord item, ProgressListItemBinding binding) {
-        binding.setProgressRecord(item);
-    }
 }

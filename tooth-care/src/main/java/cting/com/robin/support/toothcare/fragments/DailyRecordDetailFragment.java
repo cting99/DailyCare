@@ -3,7 +3,6 @@ package cting.com.robin.support.toothcare.fragments;
 import android.databinding.DataBindingUtil;
 import android.os.Bundle;
 import android.support.annotation.Nullable;
-import android.support.v4.app.Fragment;
 import android.support.v7.widget.LinearLayoutManager;
 import android.util.Log;
 import android.view.LayoutInflater;
@@ -42,18 +41,9 @@ public class DailyRecordDetailFragment extends RobinListFragment<TimeSlice,TimeS
         binding.setDailyRecord(dailyRecord);
         mRecyclerView = binding.recyclerView;
         mRecyclerView.setLayoutManager(new LinearLayoutManager(getContext()));
-        updateApapter();
+        setDefaultAdapter(this);
+        setDataList(newData());
         return binding.getRoot();
-    }
-
-    @Override
-    public void onItemClick(TimeSlice item) {
-
-    }
-
-    @Override
-    public boolean onItemLongClick(TimeSlice item) {
-        return false;
     }
 
     @Override
@@ -64,10 +54,5 @@ public class DailyRecordDetailFragment extends RobinListFragment<TimeSlice,TimeS
     @Override
     public int getItemLayoutId() {
         return R.layout.time_slice_item;
-    }
-
-    @Override
-    public void bindItemData(TimeSlice item, TimeSliceItemBinding binding) {
-        binding.setTimeSlice(item);
     }
 }

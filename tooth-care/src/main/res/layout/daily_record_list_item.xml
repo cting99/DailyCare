@@ -9,7 +9,7 @@
         <import type="cting.com.robin.support.toothcare.models.DailyRecord" />
 
         <variable
-            name="dailyRecord"
+            name="item"
             type="DailyRecord" />
     </data>
 
@@ -24,7 +24,7 @@
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:layout_marginStart="16dp"
-            android:text="@{@string/daily_record_day_index(dailyRecord.dayIndex)}"
+            android:text="@{@string/daily_record_day_index(item.dayIndex)}"
             android:textSize="19sp"
             android:textStyle="bold"
             app:layout_constraintBottom_toBottomOf="parent"
@@ -37,7 +37,7 @@
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:layout_marginStart="32dp"
-            android:text="@{dailyRecord.date}"
+            android:text="@{item.date}"
             app:layout_constraintBottom_toBottomOf="parent"
             app:layout_constraintStart_toEndOf="@+id/day_index_text"
             app:layout_constraintTop_toTopOf="parent"
@@ -48,7 +48,7 @@
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:layout_marginEnd="8dp"
-            android:text="@{dailyRecord.totalTime}"
+            android:text="@{item.totalTime}"
             app:layout_constraintEnd_toEndOf="parent"
             app:layout_constraintTop_toTopOf="parent"
             app:layout_constraintBottom_toBottomOf="parent"

@@ -24,11 +24,6 @@ public class DailyRecordListFragment extends RobinListFragment<DailyRecord, Dail
     }
 
     @Override
-    public boolean onItemLongClick(DailyRecord item) {
-        return false;
-    }
-
-    @Override
     protected ArrayList<DailyRecord> newData() {
         return SampleDatas.getDailyRecords(getContext());
     }
@@ -36,10 +31,5 @@ public class DailyRecordListFragment extends RobinListFragment<DailyRecord, Dail
     @Override
     public int getItemLayoutId() {
         return R.layout.daily_record_list_item;
-    }
-
-    @Override
-    public void bindItemData(DailyRecord item, DailyRecordListItemBinding binding) {
-        binding.setDailyRecord(item);
     }
 }

@@ -1,8 +1,8 @@
 package cting.com.robin.support.recyclerview.fragments;
 
 import android.databinding.ViewDataBinding;
-import android.support.v4.app.Fragment;
 import android.os.Bundle;
+import android.support.v4.app.Fragment;
 import android.support.v7.widget.DividerItemDecoration;
 import android.support.v7.widget.LinearLayoutManager;
 import android.support.v7.widget.RecyclerView;
@@ -23,10 +23,8 @@ public abstract class RobinListFragment<I extends IRobinListItem, B extends View
     public static final String TAG = "cting/list/fragment";
 
     protected RecyclerView mRecyclerView;
-
+    protected RobinListAdapter<I,B> mAdapter;
     protected ArrayList<I> mDataList;
-    protected RobinListAdapter<I, B> mAdapter;
-
     protected abstract ArrayList<I> newData();
 
     public RobinListFragment() {
@@ -37,6 +35,8 @@ public abstract class RobinListFragment<I extends IRobinListItem, B extends View
                              Bundle savedInstanceState) {
         View view = inflater.inflate(R.layout.fragment_robin_list, container, false);
         setupRecyclerView((RecyclerView) view.findViewById(R.id.recycler_view));
+        setDefaultAdapter(this);
+        setDataList(newData());
         return view;
     }
 
@@ -44,22 +44,37 @@ public abstract class RobinListFragment<I extends IRobinListItem, B extends View
         mRecyclerView = recyclerView;
         mRecyclerView.setLayoutManager(new LinearLayoutManager(getContext()));
         mRecyclerView.addItemDecoration(new DividerItemDecoration(getContext(), DividerItemDecoration.VERTICAL));
-        updateApapter();
     }
 
-    protected void updateApapter() {
-        if (mAdapter == null) {
-            mAdapter = newAdapter();
-            mAdapter.setCallbacks(this);
-            mDataList = newData();
-            mRecyclerView.setAdapter(mAdapter);
-        }
-        if (mDataList != null) {
-            mAdapter.setDataList(mDataList);
-        }
+    protected void setupAdapter(RobinListAdapter adapter, RobinListAdapter.Callbacks callback) {
+        mAdapter = adapter;
+        mAdapter.setCallbacks(callback);
+        mRecyclerView.setAdapter(mAdapter);
     }
 
-    protected RobinListAdapter newAdapter() {
-        return new RobinListAdapter(getContext());
+    protected void setDefaultAdapter(RobinListAdapter.Callbacks<I,B> callback) {
+        setupAdapter(new RobinListAdapter(getContext()), callback);
     }
+
+    protected void setDataList(ArrayList<I> dataList) {
+        mDataList = dataList;
+        mAdapter.setDataList(mDataList);
+        mAdapter.notifyDataSetChanged();
+    }
+
+    @Override
+    public void onItemClick(I item) {
+
+    }
+
+    @Override
+    public boolean onItemLongClick(I item) {
+        return false;
+    }
+
+    @Override
+    public void bindItemData(I item, B binding) {
+
+    }
+
 }

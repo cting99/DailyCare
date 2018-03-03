@@ -3,7 +3,6 @@ package cting.com.robin.support.toothcare.fragments;
 import android.databinding.DataBindingUtil;
 import android.os.Bundle;
 import android.support.annotation.Nullable;
-import android.support.v4.app.Fragment;
 import android.support.v7.widget.LinearLayoutManager;
 import android.util.Log;
 import android.view.LayoutInflater;
@@ -17,7 +16,6 @@ import cting.com.robin.support.toothcare.R;
 import cting.com.robin.support.toothcare.activities.DailyRecordDetailActivity;
 import cting.com.robin.support.toothcare.databinding.DailyRecordListItemBinding;
 import cting.com.robin.support.toothcare.databinding.ProgressDetailBinding;
-import cting.com.robin.support.toothcare.datagenerator.SampleDatas;
 import cting.com.robin.support.toothcare.models.DailyRecord;
 import cting.com.robin.support.toothcare.models.ProgressRecord;
 
@@ -40,21 +38,17 @@ public class ProgressDetailFragment extends RobinListFragment<DailyRecord, Daily
     @Override
     public View onCreateView(LayoutInflater inflater, ViewGroup container, Bundle savedInstanceState) {
         ProgressDetailBinding binding = DataBindingUtil.inflate(getLayoutInflater(), R.layout.progress_detail, container, false);
-        binding.setProgressRecord(progressRecord);
+        binding.setItem(progressRecord);
         mRecyclerView = binding.recyclerView;
         mRecyclerView.setLayoutManager(new LinearLayoutManager(getContext()));
-        updateApapter();
+        setDefaultAdapter(this);
+        setDataList(newData());
         return binding.getRoot();
     }
 
     @Override
     public void onItemClick(DailyRecord item) {
         DailyRecordDetailActivity.launchWithBundle(getContext(),item.toBundle());
-    }
-
-    @Override
-    public boolean onItemLongClick(DailyRecord item) {
-        return false;
     }
 
     @Override
@@ -65,10 +59,5 @@ public class ProgressDetailFragment extends RobinListFragment<DailyRecord, Daily
     @Override
     public int getItemLayoutId() {
         return R.layout.daily_record_list_item;
-    }
-
-    @Override
-    public void bindItemData(DailyRecord item, DailyRecordListItemBinding binding) {
-        binding.setDailyRecord(item);
     }
 }
