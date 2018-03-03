@@ -32,6 +32,7 @@
             android:text="@{dailyRecord.date}"
             android:textSize="18sp"
             android:textStyle="bold"
+            android:focusedByDefault="true"
             app:layout_constraintStart_toStartOf="parent"
             app:layout_constraintTop_toTopOf="parent"
             tools:text="2018/02/28" />

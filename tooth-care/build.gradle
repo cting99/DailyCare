@@ -40,4 +40,5 @@ dependencies {
     compile project(path: ':robin-support-commom-tools')
     compile project(path: ':robin-support-recyclerview')
     compile 'org.greenrobot:eventbus:3.1.1'
+    compile 'com.google.code.gson:gson:2.8.2'
 }

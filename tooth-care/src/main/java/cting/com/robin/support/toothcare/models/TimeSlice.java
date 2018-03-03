@@ -3,11 +3,17 @@ package cting.com.robin.support.toothcare.models;
 import android.os.Parcel;
 import android.os.Parcelable;
 
+import com.google.gson.annotations.Expose;
+
 import cting.com.robin.support.recyclerview.model.IRobinListItem;
 import cting.com.robin.support.toothcare.utils.TimeFormatHelper;
 
 public class TimeSlice implements IRobinListItem,Parcelable{
+
+    @Expose
     private String startTime;
+
+    @Expose
     private String endTime;
 
     public TimeSlice() {

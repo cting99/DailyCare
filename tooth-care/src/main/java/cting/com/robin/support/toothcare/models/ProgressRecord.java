@@ -2,6 +2,8 @@ package cting.com.robin.support.toothcare.models;
 
 import android.os.Bundle;
 
+import com.google.gson.annotations.Expose;
+
 import java.util.ArrayList;
 
 import cting.com.robin.support.recyclerview.model.IRobinListItem;
@@ -15,12 +17,12 @@ import cting.com.robin.support.toothcare.utils.TimeFormatHelper;
 public class ProgressRecord implements IRobinListItem {
     public static final String PROGRESS_INDEX = "PROGRESS_INDEX";
     public static final String DAILYRECORDS = "DAILYRECORDS";
+
+    @Expose
     private int progressIndex;
-    //    private String startDate;
-//    private String endDate;
-//    private int dayCount;
-//    private String totalTime;
-    private ArrayList<DailyRecord> dailyRecords=new ArrayList<>();
+
+    @Expose
+    private ArrayList<DailyRecord> dailyRecords = new ArrayList<>();
 
     public ProgressRecord() {
     }
@@ -36,29 +38,14 @@ public class ProgressRecord implements IRobinListItem {
     public String getStartDate() {
         return dailyRecords.get(0).getDate();
     }
-/*
-    public void setStartDate(String startDate) {
-        this.startDate = startDate;
-    }*/
 
     public String getEndDate() {
         return dailyRecords.get(dailyRecords.size() - 1).getDate();
     }
-/*
-    public void setEndDate(String endDate) {
-        this.endDate = endDate;
-    }*/
 
     public int getDayCount() {
         return dailyRecords.size();
-        /*dayCount = TimeFormatHelper.getDayCountByDate(startDate, endDate);
-        return String.valueOf(dayCount);*/
     }
-
-/*
-    public void setDayCount(String dayCount) {
-        this.dayCount = dayCount;
-    }*/
 
     public String getTotalTime() {
         long totalTimeMillions = 0;
@@ -67,28 +54,16 @@ public class ProgressRecord implements IRobinListItem {
         }
         return TimeFormatHelper.formatDuration(totalTimeMillions);
     }
-/*
-    public void setTotalTime(String totalTime) {
-        this.totalTime = totalTime;
-    }*/
 
     public ArrayList<DailyRecord> getDailyRecords() {
         return dailyRecords;
     }
-/*
-    public void setDailyRecords(ArrayList<DailyRecord> dailyRecords) {
-        this.dailyRecords = dailyRecords;
-    }*/
 
     @Override
     public String toString() {
         return "ProgressRecord{" +
                 "progressIndex=" + progressIndex +
                 ", dailyRecords='" + dailyRecords +
-//                ", startDate='" + startDate + '\'' +
-//                ", endDate='" + endDate + '\'' +
-//                ", dayCount='" + dayCount + '\'' +
-//                ", totalTime='" + totalTime + '\'' +
                 '}';
     }
 

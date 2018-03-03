@@ -5,6 +5,8 @@ import android.os.Parcel;
 import android.os.Parcelable;
 import android.util.Log;
 
+import com.google.gson.annotations.Expose;
+
 import java.util.ArrayList;
 
 import cting.com.robin.support.recyclerview.model.IRobinListItem;
@@ -18,10 +20,15 @@ public class DailyRecord implements IRobinListItem, Parcelable {
     public static final String TIME_SLICE_LIST = "TIME_SLICE_LIST";
     public static final String TOTAL_TIME = "TOTAL_TIME";
 
+    @Expose
     private int dayIndex;
+    @Expose
     private String date;
+    @Expose
     private String notes;
+    @Expose
     private ArrayList<TimeSlice> timeSliceList;
+    @Expose
     private String totalTime;
 
     public DailyRecord() {

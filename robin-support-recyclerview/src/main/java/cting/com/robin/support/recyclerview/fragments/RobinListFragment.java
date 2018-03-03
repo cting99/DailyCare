@@ -6,7 +6,11 @@ import android.support.v4.app.Fragment;
 import android.support.v7.widget.DividerItemDecoration;
 import android.support.v7.widget.LinearLayoutManager;
 import android.support.v7.widget.RecyclerView;
+import android.support.v7.widget.SearchView;
 import android.view.LayoutInflater;
+import android.view.Menu;
+import android.view.MenuInflater;
+import android.view.MenuItem;
 import android.view.View;
 import android.view.ViewGroup;
 
@@ -38,6 +42,30 @@ public abstract class RobinListFragment<I extends IRobinListItem, B extends View
         setDefaultAdapter(this);
         setDataList(newData());
         return view;
+    }
+
+    @Override
+    public void onCreateOptionsMenu(Menu menu, MenuInflater inflater) {
+        super.onCreateOptionsMenu(menu, inflater);
+        inflater.inflate(R.menu.menu_robin_list, menu);
+    }
+
+    @Override
+    public boolean onOptionsItemSelected(MenuItem item) {
+        int i = item.getItemId();
+        if (i == R.id.action_export) {
+            exportData(mDataList);
+        } else if (i == R.id.action_import) {
+            importData();
+//            mAdapter.notifyDataSetChanged();
+        }
+        return true;
+    }
+
+    protected void exportData(ArrayList<I>dataList) {
+    }
+
+    protected void importData() {
     }
 
     protected void setupRecyclerView(RecyclerView recyclerView) {
