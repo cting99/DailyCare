@@ -1,12 +1,15 @@
 package cting.com.robin.support.commom.utils;
 
+import android.content.Context;
 import android.os.Environment;
 import android.support.annotation.NonNull;
+import android.support.annotation.RawRes;
 import android.util.Log;
 
 import java.io.BufferedReader;
 import java.io.File;
 import java.io.FileInputStream;
+import java.io.FileNotFoundException;
 import java.io.FileOutputStream;
 import java.io.IOException;
 import java.io.InputStream;
@@ -14,13 +17,13 @@ import java.io.InputStreamReader;
 import java.io.OutputStream;
 
 public class FileHelper {
-    private static final String TAG="cting/util/file";
+    private static final String TAG = "cting/util/file";
 
     public static final String DIR_ROBIN_TOOL = "/RobinTool/";
     public static final String DIR = Environment.getExternalStorageDirectory() + DIR_ROBIN_TOOL;
 
 
-    public static final File makeDirIfNotExist(String fileName) {
+    private static final File makeDirIfNotExist(String fileName) {
         File file = new File(fileName);
         File dir = file.getParentFile();
         if (!dir.exists()) {
@@ -30,7 +33,7 @@ public class FileHelper {
     }
 
 
-    public static boolean writeFile(@NonNull String content, @NonNull String fileName) {
+    public static boolean writeToExternal(@NonNull String fileName, @NonNull String content) {
         OutputStream out = null;
         try {
             File file = makeDirIfNotExist(fileName);
@@ -38,7 +41,7 @@ public class FileHelper {
             out.write(content.getBytes());
             return true;
         } catch (IOException e) {
-            Log.w(TAG, "exportToFile,exception1: " + e.getMessage());
+            Log.w(TAG, "exportToFile,exception1: " + e.getLocalizedMessage());
             e.printStackTrace();
             return false;
         } finally {
@@ -47,33 +50,93 @@ public class FileHelper {
                     out.close();
                 }
             } catch (Exception e) {
-                Log.w(TAG, "exportToFile,exception2: " + e.getMessage());
+                Log.w(TAG, "exportToFile,exception2: " + e.getLocalizedMessage());
                 e.printStackTrace();
             }
         }
     }
 
-    public static String readFile(@NonNull String fileName) {
-        StringBuilder sb = new StringBuilder();
-        InputStream in = null;
+    public static final boolean writeToInternal(Context context, @NonNull String fileName, @NonNull String content) {
+        OutputStream out = null;
         try {
-            in = new FileInputStream(fileName);
-            BufferedReader reader = new BufferedReader(new InputStreamReader(in));
+            out = context.openFileOutput(fileName, Context.MODE_PRIVATE);
+            out.write(content.getBytes());
+            return true;
+        } catch (IOException e) {
+            Log.w(TAG, "exportToFile,exception1: " + e.getLocalizedMessage());
+            e.printStackTrace();
+            return false;
+        } finally {
+            try {
+                if (out != null) {
+                    out.close();
+                }
+            } catch (Exception e) {
+                Log.w(TAG, "exportToFile,exception2: " + e.getLocalizedMessage());
+                e.printStackTrace();
+            }
+        }
+    }
+
+    private static String readFromInputStream(InputStream inputStream) {
+        StringBuilder sb = new StringBuilder();
+        try {
+            BufferedReader reader = new BufferedReader(new InputStreamReader(inputStream));
             String line;
             while ((line = reader.readLine()) != null) {
                 sb.append(line).append("\n");
             }
         } catch (IOException e) {
+            Log.e(TAG, "readFromInputStream,exception1:" + e.getLocalizedMessage());
             e.printStackTrace();
         } finally {
-            if (in != null) {
+            if (inputStream != null) {
                 try {
-                    in.close();
+                    inputStream.close();
                 } catch (IOException e) {
+                    Log.e(TAG, "readFromInputStream,exception2:" + e.getLocalizedMessage());
                     e.printStackTrace();
                 }
             }
         }
         return sb.toString();
+    }
+
+    public static String readFromRaw(Context context, @RawRes int rawId) {
+        InputStream inputStream = context.getResources().openRawResource(rawId);
+        return readFromInputStream(inputStream);
+    }
+
+    public static String readFromAssets(Context context, @NonNull String rawFileName) {
+        try {
+            InputStream inputStream = context.getResources().getAssets().open(rawFileName);
+            return readFromInputStream(inputStream);
+        } catch (IOException e) {
+            Log.e(TAG, "readFromRaw,exception:" + e.getMessage());
+            e.printStackTrace();
+            return null;
+        }
+    }
+
+    public static String readFromExternal(@NonNull String fileName) {
+        try {
+            InputStream inputStream = new FileInputStream(fileName);
+            return readFromInputStream(inputStream);
+        } catch (FileNotFoundException e) {
+            Log.e(TAG, "readFromExternal,exception:" + e.getLocalizedMessage());
+            e.printStackTrace();
+            return null;
+        }
+    }
+
+    public static String readFromInternal(Context context, @NonNull String fileName) {
+        try {
+            InputStream inputStream = context.openFileInput(fileName);
+            return readFromInputStream(inputStream);
+        } catch (FileNotFoundException e) {
+            Log.e(TAG, "readFromInternal,exception=" + e.getLocalizedMessage());
+            e.printStackTrace();
+            return null;
+        }
     }
 }

@@ -23,7 +23,7 @@ public class ProgressListFragment extends RobinListFragment<ProgressRecord, Prog
 
     @Override
     protected ArrayList<ProgressRecord> newData() {
-        return SampleDatas.getProgressRecords();
+        return SampleDatas.getProgressRecords(getContext());
     }
 
     @Override

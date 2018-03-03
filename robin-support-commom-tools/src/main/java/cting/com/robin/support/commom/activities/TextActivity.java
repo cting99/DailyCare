@@ -5,6 +5,7 @@ import android.content.Intent;
 import android.os.Bundle;
 import android.support.v7.app.AppCompatActivity;
 import android.text.TextUtils;
+import android.widget.ScrollView;
 import android.widget.TextView;
 
 import cting.com.robin.support.commom.R;
@@ -13,7 +14,7 @@ public class TextActivity extends BasePermissionCheckActivity {
 
     public static final String KEY_MESSAGE = "message";
 
-    TextView mTextContent;
+    protected TextView mTextContent;
 
     public static void startShowMessage(Context context, String message) {
         Intent intent = new Intent(context, TextActivity.class);

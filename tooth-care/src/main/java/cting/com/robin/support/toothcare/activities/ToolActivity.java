@@ -14,7 +14,7 @@ public class ToolActivity extends TextActivity {
     protected void onPermissionReady() {
         super.onPermissionReady();
 
-        appendMessage("progress list:\n" + SampleDatas.getProgressRecords() + "\n\n");
-        appendMessage("daily record list:\n" + SampleDatas.getDailyRecords() + "\n\n");
+        appendMessage("progress list:\n" + SampleDatas.getProgressRecords(this) + "\n\n");
+        appendMessage("daily record list:\n" + SampleDatas.getDailyRecords(this) + "\n\n");
     }
 }

@@ -30,7 +30,7 @@ public class DailyRecordListFragment extends RobinListFragment<DailyRecord, Dail
 
     @Override
     protected ArrayList<DailyRecord> newData() {
-        return SampleDatas.getDailyRecords();
+        return SampleDatas.getDailyRecords(getContext());
     }
 
     @Override

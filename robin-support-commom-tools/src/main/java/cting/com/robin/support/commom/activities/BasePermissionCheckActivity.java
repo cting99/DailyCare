@@ -8,11 +8,14 @@ import cting.com.robin.support.commom.utils.PermissionHelper;
 
 public class BasePermissionCheckActivity extends AppCompatActivity {
 
+    protected static final String TAG = "cting/act";
+    private boolean mPermissionReady;
+
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
-        boolean permissionAllGranted = PermissionHelper.getInstance().checkPermission(this, getRequestPermission());
-        if (permissionAllGranted) {
+        mPermissionReady = PermissionHelper.getInstance().checkPermission(this, getRequestPermission());
+        if (mPermissionReady) {
             onPermissionReady();
         }
     }

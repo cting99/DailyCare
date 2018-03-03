@@ -39,4 +39,5 @@ dependencies {
     androidTestImplementation 'com.android.support.test.espresso:espresso-core:3.0.1'
     compile project(path: ':robin-support-commom-tools')
     compile project(path: ':robin-support-recyclerview')
+    compile 'org.greenrobot:eventbus:3.1.1'
 }
