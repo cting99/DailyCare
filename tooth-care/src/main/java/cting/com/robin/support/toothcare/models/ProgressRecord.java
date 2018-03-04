@@ -7,7 +7,6 @@ import com.google.gson.annotations.Expose;
 import java.util.ArrayList;
 
 import cting.com.robin.support.recyclerview.model.IRobinListItem;
-import cting.com.robin.support.toothcare.datagenerator.SampleDatas;
 import cting.com.robin.support.toothcare.utils.TimeFormatHelper;
 
 /**

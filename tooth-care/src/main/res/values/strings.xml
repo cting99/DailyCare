@@ -9,4 +9,14 @@
     <string name="progress_detail_daycount_and_totaltime">你已经带了<xliff:g id="dayCount">%s</xliff:g>天，时长 <xliff:g id="totalTime">%s</xliff:g></string>
     <string name="activity_label_progress_detail">牙套</string>
     <string name="activity_label_today">今天隐适美</string>
+    <string name="title_activity_all_in_one">AllInOneActivity</string>
+
+    <string name="navigation_drawer_open">Open navigation drawer</string>
+    <string name="navigation_drawer_close">Close navigation drawer</string>
+
+    <string name="action_settings">Settings</string>
+    <string name="drawer_nav_today_title">今天</string>
+    <string name="drawer_nav_progress_list_title">牙套进度</string>
+    <string name="drawer_nav_daily_record_list_title">隐适美每一天</string>
+    <string name="drawer_nav_backup_title">备份数据</string>
 </resources>

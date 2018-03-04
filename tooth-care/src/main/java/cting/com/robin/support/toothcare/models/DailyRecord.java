@@ -3,14 +3,12 @@ package cting.com.robin.support.toothcare.models;
 import android.os.Bundle;
 import android.os.Parcel;
 import android.os.Parcelable;
-import android.util.Log;
 
 import com.google.gson.annotations.Expose;
 
 import java.util.ArrayList;
 
 import cting.com.robin.support.recyclerview.model.IRobinListItem;
-import cting.com.robin.support.toothcare.datagenerator.SampleDatas;
 import cting.com.robin.support.toothcare.utils.TimeFormatHelper;
 
 public class DailyRecord implements IRobinListItem, Parcelable {

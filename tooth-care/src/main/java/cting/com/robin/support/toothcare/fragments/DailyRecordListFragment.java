@@ -12,7 +12,7 @@ import cting.com.robin.support.recyclerview.fragments.RobinListFragment;
 import cting.com.robin.support.toothcare.R;
 import cting.com.robin.support.toothcare.activities.DailyRecordDetailActivity;
 import cting.com.robin.support.toothcare.databinding.DailyRecordListItemBinding;
-import cting.com.robin.support.toothcare.datagenerator.SampleDatas;
+import cting.com.robin.support.toothcare.datagenerator.SampleData;
 import cting.com.robin.support.toothcare.models.DailyRecord;
 
 public class DailyRecordListFragment extends RobinListFragment<DailyRecord, DailyRecordListItemBinding> {
@@ -34,7 +34,7 @@ public class DailyRecordListFragment extends RobinListFragment<DailyRecord, Dail
 
     @Override
     protected void selectMenuAdd() {
-//        int dayIndex = SampleDatas.getDayIndex(getContext());
+//        int dayIndex = SampleData.getDayIndex(getContext());
 //        DailyRecord record = DailyRecord.newRecord(dayIndex + 1);
 //        DailyRecordDetailActivity.launchWithBundle(getContext(), record.toBundle());
     }
@@ -47,7 +47,7 @@ public class DailyRecordListFragment extends RobinListFragment<DailyRecord, Dail
 
     @Override
     protected ArrayList<DailyRecord> newData() {
-        return SampleDatas.getInstance(getContext()).getDailyRecords();
+        return SampleData.getInstance().getDailyRecords();
     }
 
     @Override

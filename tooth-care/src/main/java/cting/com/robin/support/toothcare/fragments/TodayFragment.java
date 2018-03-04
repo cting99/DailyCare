@@ -18,7 +18,7 @@ import cting.com.robin.support.recyclerview.fragments.RobinListFragment;
 import cting.com.robin.support.toothcare.R;
 import cting.com.robin.support.toothcare.databinding.TimeSliceAddLayoutBinding;
 import cting.com.robin.support.toothcare.databinding.TodayFragmentBinding;
-import cting.com.robin.support.toothcare.datagenerator.SampleDatas;
+import cting.com.robin.support.toothcare.datagenerator.SampleData;
 import cting.com.robin.support.toothcare.models.DailyRecord;
 import cting.com.robin.support.toothcare.models.TimeSlice;
 import cting.com.robin.support.toothcare.utils.TimeFormatHelper;
@@ -32,7 +32,7 @@ public class TodayFragment extends RobinListFragment<TimeSlice, TimeSliceAddLayo
     public void onCreate(@Nullable Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
 
-        DailyRecord lastRecord = SampleDatas.getInstance(getContext()).getLastDailyRecord();
+        DailyRecord lastRecord = SampleData.getInstance().getLastDailyRecord();
         String todayData = TimeFormatHelper.formatToday();
         Log.i(TAG, "onCreate: last record day is " + lastRecord.getDate() + ", today is " + todayData);
         if (lastRecord != null) {
@@ -47,7 +47,7 @@ public class TodayFragment extends RobinListFragment<TimeSlice, TimeSliceAddLayo
         }
 
         if (mTodayRecord != lastRecord) {
-            SampleDatas.getInstance(getContext()).addDailyRecord(mTodayRecord);
+            SampleData.getInstance().addDailyRecord(mTodayRecord);
         }
 
         Log.i(TAG, "onCreate: today is Day[" + mTodayRecord.getDayIndex() + "]: " + mTodayRecord.getDate());
@@ -61,7 +61,7 @@ public class TodayFragment extends RobinListFragment<TimeSlice, TimeSliceAddLayo
 
     @Override
     protected void selectMenuSave() {
-        SampleDatas.getInstance(getContext()).save(getContext());
+        SampleData.getInstance().save(getContext());
     }
 
     @Override

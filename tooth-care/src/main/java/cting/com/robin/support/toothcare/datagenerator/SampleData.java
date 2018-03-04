@@ -1,6 +1,7 @@
 package cting.com.robin.support.toothcare.datagenerator;
 
 import android.content.Context;
+import android.util.Log;
 
 import java.util.ArrayList;
 
@@ -8,31 +9,29 @@ import cting.com.robin.support.toothcare.models.DailyRecord;
 import cting.com.robin.support.toothcare.models.ProgressRecord;
 
 
-public class SampleDatas {
+public class SampleData {
 
-    public static final String TAG = "cting/tooth/SampleDatas";
+    public static final String TAG = "cting/tooth/SampleData";
 
     private static DataFactory mDataFactory;
-    private static final SampleDatas mInstance = new SampleDatas();
+    private static final SampleData mInstance = new SampleData();
 
-    private SampleDatas() {
+    private SampleData() {
     }
 /*
-    public static SampleDatas getInstance() {
+    public static SampleData getInstance() {
         return mInstance;
     }*/
 
-    public static SampleDatas getInstance(Context context) {
-        if (mDataFactory == null) {
-//            setDataFactory(new RawFileParser(context));
-            setDataFactory(new JsonFileParser(context));
-        }
+    public static SampleData getInstance() {
         return mInstance;
     }
 
-    public static void setDataFactory(DataFactory dataFactory) {
+    public void load(DataFactory dataFactory) {
         mDataFactory = dataFactory;
+        Log.i(TAG, "load,start--");
         mDataFactory.load();
+        Log.i(TAG, "load,end--");
     }
 
     // daily record begin
