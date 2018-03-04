@@ -35,9 +35,4 @@ public class JsonFileParser extends DataFactory {
         }
         sortDes();
     }
-
-    @Override
-    public void addDailyItem(DailyRecord dailyRecord) {
-
-    }
 }

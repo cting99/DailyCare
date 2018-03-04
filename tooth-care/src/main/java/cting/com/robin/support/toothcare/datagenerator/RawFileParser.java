@@ -35,13 +35,6 @@ public class RawFileParser extends DataFactory {
         }
     }
 
-    @Override
-    public void addDailyItem(DailyRecord dailyRecord) {
-        dailyRecords.add(dailyRecord);
-        progressRecords.get(0).addRecord(dailyRecord);
-    }
-
-
     public void readFile() throws Exception {
         InputStream in = context.getAssets().open(FILE_INVISALIGN_ASSET);
         BufferedReader reader = new BufferedReader(new InputStreamReader(in));

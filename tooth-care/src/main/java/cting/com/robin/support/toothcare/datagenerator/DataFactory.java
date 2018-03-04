@@ -46,6 +46,7 @@ public abstract class DataFactory {
     }
 
 
+    // progress record begin
     public ArrayList<ProgressRecord> getProgressRecords() {
         return progressRecords;
     }
@@ -58,7 +59,17 @@ public abstract class DataFactory {
         }
     }
 
+    public ProgressRecord getLastProgress() {
+        return progressRecords.get(0);
+    }
 
+    public int getLastProgressIndex() {
+        return getLastProgress().getProgressIndex();
+    }
+    // progress record end
+
+
+    // daily record begin
     public ArrayList<DailyRecord> getDailyRecords() {
         return dailyRecords;
     }
@@ -71,11 +82,16 @@ public abstract class DataFactory {
         }
     }
 
+    public void addDailyItem(DailyRecord dailyRecord) {
+        dailyRecords.add(dailyRecord);
+        getLastProgress().addRecord(dailyRecord);
+    }
+    // daily record end
+
 
     public boolean save(Context context) {
         return GsonHelper.writeToGson(context, progressRecords);
     }
 
     public abstract void load();
-    public abstract void addDailyItem(DailyRecord dailyRecord);
 }

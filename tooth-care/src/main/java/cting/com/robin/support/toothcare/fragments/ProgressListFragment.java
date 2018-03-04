@@ -24,6 +24,7 @@ public class ProgressListFragment extends RobinListFragment<ProgressRecord, Prog
     @Override
     public void onCreate(@Nullable Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
+        getActivity().setTitle(R.string.fragment_title_progress_list);
         setHasOptionsMenu(true);
     }
 

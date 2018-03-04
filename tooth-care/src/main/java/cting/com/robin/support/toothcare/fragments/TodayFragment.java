@@ -20,6 +20,7 @@ import cting.com.robin.support.toothcare.databinding.TimeSliceAddLayoutBinding;
 import cting.com.robin.support.toothcare.databinding.TodayFragmentBinding;
 import cting.com.robin.support.toothcare.datagenerator.SampleData;
 import cting.com.robin.support.toothcare.models.DailyRecord;
+import cting.com.robin.support.toothcare.models.ProgressRecord;
 import cting.com.robin.support.toothcare.models.TimeSlice;
 import cting.com.robin.support.toothcare.utils.TimeFormatHelper;
 
@@ -49,6 +50,14 @@ public class TodayFragment extends RobinListFragment<TimeSlice, TimeSliceAddLayo
         if (mTodayRecord != lastRecord) {
             SampleData.getInstance().addDailyRecord(mTodayRecord);
         }
+
+        // set title
+        int progress = SampleData.getInstance().getProgressIndex();
+        ProgressRecord lastProgress = SampleData.getInstance().getLastProgressRecord();
+        getActivity().setTitle(getString(
+                R.string.fragment_title_today,
+                progress,
+                lastProgress.getDayCount()));
 
         Log.i(TAG, "onCreate: today is Day[" + mTodayRecord.getDayIndex() + "]: " + mTodayRecord.getDate());
         setHasOptionsMenu(true);

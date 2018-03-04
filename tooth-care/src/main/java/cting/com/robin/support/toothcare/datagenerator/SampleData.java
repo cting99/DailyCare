@@ -63,7 +63,7 @@ public class SampleData {
     }
 
     public int getProgressIndex() {
-        return getProgressRecords().size();
+        return mDataFactory.getLastProgressIndex();
     }
     // progress end
 

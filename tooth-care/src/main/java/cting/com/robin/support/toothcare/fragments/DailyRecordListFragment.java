@@ -23,6 +23,7 @@ public class DailyRecordListFragment extends RobinListFragment<DailyRecord, Dail
     @Override
     public void onCreate(@Nullable Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
+        getActivity().setTitle(R.string.fragment_title_daily_list);
         setHasOptionsMenu(true);
     }
 

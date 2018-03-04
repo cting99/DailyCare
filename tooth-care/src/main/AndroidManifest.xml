@@ -59,7 +59,7 @@
 
         <activity
             android:name=".activities.AllInOneActivity"
-            android:label="@string/title_activity_all_in_one"
+            android:label="@string/activity_label_all_in_one"
             android:theme="@style/AppTheme.NoActionBar">
             <intent-filter>
                 <action android:name="android.intent.action.MAIN" />
