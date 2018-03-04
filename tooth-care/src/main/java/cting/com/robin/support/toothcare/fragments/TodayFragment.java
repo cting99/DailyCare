@@ -70,7 +70,9 @@ public class TodayFragment extends RobinListFragment<TimeSlice, TimeSliceAddLayo
 
     @Override
     protected void selectMenuSave() {
+        validationTimeSlice();
         SampleData.getInstance().save(getContext());
+        mAdapter.notifyDataSetChanged();
     }
 
     @Override
@@ -93,7 +95,21 @@ public class TodayFragment extends RobinListFragment<TimeSlice, TimeSliceAddLayo
 
     @Override
     protected ArrayList<TimeSlice> newData() {
+        validationTimeSlice();
         return mTodayRecord.getTimeSliceList();
+    }
+
+    private void validationTimeSlice() {
+        int count = mTodayRecord.getTimeSliceList().size();
+        TimeSlice slice;
+        for (int i = 0; i < count; i++) {
+            slice = mTodayRecord.getTimeSliceList().get(i);
+            if (slice.isEmpty()) {
+                mTodayRecord.getTimeSliceList().remove(slice);
+                count -= 1;
+            }
+
+        }
     }
 
     @Override

@@ -4,6 +4,8 @@ import android.databinding.BaseObservable;
 import android.databinding.Bindable;
 import android.os.Parcel;
 import android.os.Parcelable;
+import android.text.TextUtils;
+
 import com.google.gson.annotations.Expose;
 import cting.com.robin.support.recyclerview.model.IRobinListItem;
 import cting.com.robin.support.toothcare.BR;
@@ -81,6 +83,9 @@ public class TimeSlice extends BaseObservable implements IRobinListItem,Parcelab
         String startTime = TimeFormatHelper.formatNow();
         timeSlice.setStartTime(startTime);
         return timeSlice;
+    }
+    public boolean isEmpty() {
+        return TextUtils.isEmpty(startTime) && TextUtils.isEmpty(endTime);
     }
 
     @Override
