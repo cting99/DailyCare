@@ -88,4 +88,8 @@ public class ProgressRecord implements IRobinListItem {
         return record;
 
     }
+
+    public void addRecord(DailyRecord dailyRecord) {
+        dailyRecords.add(dailyRecord);
+    }
 }

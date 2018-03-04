@@ -5,4 +5,5 @@
     <string name="ic_menu_title_export">export</string>
     <string name="ic_menu_title_import">import</string>
     <string name="ic_menu_title_add">add</string>
+    <string name="ic_menu_title_save">save</string>
 </resources>

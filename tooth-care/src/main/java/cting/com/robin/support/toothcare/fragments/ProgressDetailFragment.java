@@ -8,7 +8,6 @@ import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
-import android.widget.Toast;
 
 import java.util.ArrayList;
 
@@ -22,7 +21,6 @@ import cting.com.robin.support.toothcare.models.DailyRecord;
 import cting.com.robin.support.toothcare.models.ProgressRecord;
 
 public class ProgressDetailFragment extends RobinListFragment<DailyRecord, DailyRecordListItemBinding> {
-    public static final String EXPORT_FILE_NAME = FileHelper.DIR + "tooth_daily.json";
     private ProgressRecord progressRecord;
 
     public ProgressDetailFragment() {
@@ -35,7 +33,7 @@ public class ProgressDetailFragment extends RobinListFragment<DailyRecord, Daily
         if (bundle != null && bundle.containsKey(ProgressRecord.PROGRESS_INDEX)) {
             progressRecord = new ProgressRecord(bundle);
         }
-        Log.i(TAG, "onCreate: progressRecord=" + progressRecord);
+//        Log.i(TAG, "onCreate: progressRecord=" + progressRecord);
         setHasOptionsMenu(true);
     }
 

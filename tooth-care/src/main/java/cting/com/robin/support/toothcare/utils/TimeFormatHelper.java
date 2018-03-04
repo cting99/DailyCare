@@ -34,6 +34,7 @@ public class TimeFormatHelper {
         return formatData(System.currentTimeMillis());
     }
 
+
     public static final long getDuration(String startTimeText, String endTimeText) {
         return getDuration(startTimeText, endTimeText, "HH:mm");
     }

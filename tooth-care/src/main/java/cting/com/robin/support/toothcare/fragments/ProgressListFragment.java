@@ -3,12 +3,7 @@ package cting.com.robin.support.toothcare.fragments;
 
 import android.os.Bundle;
 import android.support.annotation.Nullable;
-import android.util.Log;
 import android.widget.Toast;
-
-import com.google.gson.Gson;
-import com.google.gson.GsonBuilder;
-import com.google.gson.annotations.Expose;
 
 import java.util.ArrayList;
 
@@ -19,12 +14,9 @@ import cting.com.robin.support.toothcare.activities.ProgressDetailActivity;
 import cting.com.robin.support.toothcare.databinding.ProgressListItemBinding;
 import cting.com.robin.support.toothcare.datagenerator.SampleDatas;
 import cting.com.robin.support.toothcare.models.ProgressRecord;
-import cting.com.robin.support.toothcare.models.TimeSlice;
 import cting.com.robin.support.toothcare.utils.GsonHelper;
 
 public class ProgressListFragment extends RobinListFragment<ProgressRecord, ProgressListItemBinding> {
-
-    public static final String EXPORT_FILE_NAME = FileHelper.DIR + "tooth_daily.json";
 
     public ProgressListFragment() {
     }
@@ -42,7 +34,7 @@ public class ProgressListFragment extends RobinListFragment<ProgressRecord, Prog
 
     @Override
     protected ArrayList<ProgressRecord> newData() {
-        return SampleDatas.getProgressRecords(getContext());
+        return SampleDatas.getInstance(getContext()).getProgressRecords();
     }
 
     @Override
@@ -52,16 +44,14 @@ public class ProgressListFragment extends RobinListFragment<ProgressRecord, Prog
 
     @Override
     protected void exportData(ArrayList<ProgressRecord> dataList) {
-        super.exportData(mDataList);
+        GsonHelper.writeToGson(getContext(), dataList);
 
-        boolean ret = GsonHelper.writeToGson(EXPORT_FILE_NAME, dataList);
-        Toast.makeText(getContext(), "write to " + EXPORT_FILE_NAME + ": " + (ret ? "successful" : "failed"), Toast.LENGTH_SHORT).show();
     }
 
     @Override
     protected void addNewItem() {
-        int progressIndex = SampleDatas.getProgressIndex(getContext());
-        ProgressRecord record = ProgressRecord.newRecord(progressIndex + 1);
-        ProgressDetailActivity.launchWithBundle(getContext(), record.toBundle());
+//        int progressIndex = SampleDatas.getInstance().getProgressIndex(getContext());
+//        ProgressRecord record = ProgressRecord.newRecord(progressIndex + 1);
+//        ProgressDetailActivity.launchWithBundle(getContext(), record.toBundle());
     }
 }

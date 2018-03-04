@@ -19,6 +19,11 @@
         android:title="@string/ic_menu_title_import"
         app:showAsAction="never"/>
     <item
+        android:id="@+id/action_save"
+        android:icon="@android:drawable/ic_menu_save"
+        android:title="@string/ic_menu_title_save"
+        app:showAsAction="always"/>
+    <item
         android:id="@+id/action_add"
         android:icon="@android:drawable/ic_menu_add"
         android:title="@string/ic_menu_title_add"

@@ -5,36 +5,56 @@ import android.text.TextUtils;
 import android.util.Log;
 
 import java.io.BufferedReader;
-import java.io.FileInputStream;
 import java.io.InputStream;
 import java.io.InputStreamReader;
 import java.util.ArrayList;
-import java.util.Arrays;
-import java.util.Collections;
-import java.util.Comparator;
 
-import cting.com.robin.support.commom.utils.FileHelper;
 import cting.com.robin.support.commom.utils.StringHelper;
 import cting.com.robin.support.toothcare.models.DailyRecord;
 import cting.com.robin.support.toothcare.models.ProgressRecord;
 import cting.com.robin.support.toothcare.models.TimeSlice;
+import cting.com.robin.support.toothcare.utils.GsonHelper;
 
-public class RawFileParser {
+public class RawFileParser extends DataFactory {
+    public static final String FILE_INVISALIGN_ASSET = "invisalign_raw.txt";
 
     public static final String TAG = "cting/tooth/data";
-    public static final String FILE_INVISALIGN = "invisalign_raw.txt";
 
-    private static ArrayList<ProgressRecord> progressRecords = new ArrayList<>();
-    private static ArrayList<DailyRecord> dailyRecords = new ArrayList<>();
+    public RawFileParser(Context context) {
+        super(context);
+    }
 
-    public static void readFile(Context context) throws Exception {
-        InputStream in = context.getAssets().open(FILE_INVISALIGN);
+    @Override
+    public void load() {
+        // should only call once in case of context invalidate
+        try {
+            readFile();
+            sortDes();
+        } catch (Exception e) {
+            e.printStackTrace();
+        }
+    }
+
+    @Override
+    public void addDailyItem(DailyRecord dailyRecord) {
+        dailyRecords.add(dailyRecord);
+        progressRecords.get(0).addRecord(dailyRecord);
+    }
+
+    @Override
+    public boolean save(Context context) {
+        return GsonHelper.writeToGson(context, progressRecords);
+    }
+
+
+    public void readFile() throws Exception {
+        InputStream in = context.getAssets().open(FILE_INVISALIGN_ASSET);
         BufferedReader reader = new BufferedReader(new InputStreamReader(in));
         String line;
         ProgressRecord progressRecord = null;
         DailyRecord dailyRecord = null;
         int currentProgressIndex=-1;
-        Log.i(TAG, "readFile: " + FILE_INVISALIGN);
+        Log.i(TAG, "readFile: " + FILE_INVISALIGN_ASSET);
 
         while ((line = reader.readLine()) != null) {
             String[] items = line.split("\t");
@@ -45,7 +65,7 @@ public class RawFileParser {
                 progressRecord.setProgressIndex(currentProgressIndex);
                 progressRecords.add(progressRecord);
 //                Log.i(TAG, "readFile: add progress " + progressIndex);
-            } else if (isDeailyRecordLine(items)) {
+            } else if (isDailyRecordLine(items)) {
                 dailyRecord = readDailyRecord(items);
                 dailyRecords.add(dailyRecord);
 //                Log.i(TAG, "readFile: add daily " + dailyRecord.getDate());
@@ -55,59 +75,21 @@ public class RawFileParser {
             }
         }
         in.close();
-
-
-        Collections.sort(progressRecords, new Comparator<ProgressRecord>() {
-            @Override
-            public int compare(ProgressRecord o1, ProgressRecord o2) {
-                return o2.getProgressIndex() - o1.getProgressIndex();
-            }
-        });
-        Collections.sort(dailyRecords, new Comparator<DailyRecord>() {
-            @Override
-            public int compare(DailyRecord o1, DailyRecord o2) {
-                return o2.getDayIndex() - o1.getDayIndex();
-            }
-        });
     }
 
-    public static final ArrayList<DailyRecord> getDailyRecords(Context context) {
-        if (dailyRecords == null || dailyRecords.size() == 0) {
-            try {
-                readFile(context);
-            } catch (Exception e) {
-                Log.i(TAG, "getDailyRecords: " + e.getLocalizedMessage());
-                e.printStackTrace();
-            }
-        }
-        return dailyRecords;
-    }
-
-    public static final ArrayList<ProgressRecord> getProgressRecords(Context context) {
-        if (progressRecords == null || progressRecords.size() == 0) {
-            try {
-                readFile(context);
-            } catch (Exception e) {
-                Log.i(TAG, "getProgressRecords: " + e.getLocalizedMessage());
-                e.printStackTrace();
-            }
-        }
-        return progressRecords;
-    }
-
-    private static final boolean isProgressLine(String[] lineItems) {
+    private boolean isProgressLine(String[] lineItems) {
         return lineItems != null && lineItems.length == 2;
     }
 
-    private static final int readProgressIndex(String categoryStr) {
+    private int readProgressIndex(String categoryStr) {
         return StringHelper.getNumbers(categoryStr);
     }
 
-    private static boolean isDeailyRecordLine(String[] lineItems) {
+    private boolean isDailyRecordLine(String[] lineItems) {
         return lineItems != null && lineItems.length > 0 && TextUtils.isDigitsOnly(lineItems[0]);
     }
 
-    private static DailyRecord readDailyRecord(String[] lineItems) {
+    private DailyRecord readDailyRecord(String[] lineItems) {
         DailyRecord record = new DailyRecord();
         int count = lineItems.length;
 
@@ -134,7 +116,6 @@ public class RawFileParser {
             }
 //            Log.i(TAG, "readDailyRecord: add TimeSlice:" + timeSlice);
             periods.add(timeSlice);
-
         }
         record.setTimeSliceList(periods);
 

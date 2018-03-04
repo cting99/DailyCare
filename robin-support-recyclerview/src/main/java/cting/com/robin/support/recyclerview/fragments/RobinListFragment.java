@@ -24,7 +24,7 @@ public abstract class RobinListFragment<I extends IRobinListItem, B extends View
         extends Fragment
         implements RobinListAdapter.Callbacks<I, B> {
 
-    public static final String TAG = "cting/list/fragment";
+    public String TAG = "cting/list/";
 
     protected RecyclerView mRecyclerView;
     protected RobinListAdapter<I,B> mAdapter;
@@ -32,6 +32,7 @@ public abstract class RobinListFragment<I extends IRobinListItem, B extends View
     protected abstract ArrayList<I> newData();
 
     public RobinListFragment() {
+        TAG += getClass().getSimpleName();
     }
 
     @Override
@@ -59,6 +60,8 @@ public abstract class RobinListFragment<I extends IRobinListItem, B extends View
             importData();
         } else if (i == R.id.action_add) {
             addNewItem();
+        } else if (i == R.id.action_save) {
+            saveData();
         }
         return true;
     }
@@ -70,6 +73,9 @@ public abstract class RobinListFragment<I extends IRobinListItem, B extends View
     }
 
     protected void addNewItem() {
+    }
+
+    protected void saveData(){
     }
 
     protected void setupRecyclerView(RecyclerView recyclerView) {

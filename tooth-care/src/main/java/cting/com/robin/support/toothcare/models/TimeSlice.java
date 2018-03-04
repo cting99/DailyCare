@@ -1,14 +1,15 @@
 package cting.com.robin.support.toothcare.models;
 
+import android.databinding.BaseObservable;
+import android.databinding.Bindable;
 import android.os.Parcel;
 import android.os.Parcelable;
-
 import com.google.gson.annotations.Expose;
-
 import cting.com.robin.support.recyclerview.model.IRobinListItem;
+import cting.com.robin.support.toothcare.BR;
 import cting.com.robin.support.toothcare.utils.TimeFormatHelper;
 
-public class TimeSlice implements IRobinListItem,Parcelable{
+public class TimeSlice extends BaseObservable implements IRobinListItem,Parcelable {
 
     @Expose
     private String startTime;
@@ -36,22 +37,29 @@ public class TimeSlice implements IRobinListItem,Parcelable{
         }
     };
 
+    @Bindable
     public String getStartTime() {
         return startTime;
     }
 
     public void setStartTime(String startTime) {
         this.startTime = startTime;
+        notifyPropertyChanged(BR.startTime);
+        notifyPropertyChanged(BR.duration);
     }
 
+    @Bindable
     public String getEndTime() {
         return endTime;
     }
 
     public void setEndTime(String endTime) {
         this.endTime = endTime;
+        notifyPropertyChanged(BR.endTime);
+        notifyPropertyChanged(BR.duration);
     }
 
+    @Bindable
     public String getDuration() {
         return TimeFormatHelper.formatDuration(startTime, endTime);
     }
@@ -66,6 +74,13 @@ public class TimeSlice implements IRobinListItem,Parcelable{
                 "startTime=" + startTime +
                 ", endTime=" + endTime +
                 '}';
+    }
+
+    public static TimeSlice newRecord() {
+        TimeSlice timeSlice = new TimeSlice();
+        String startTime = TimeFormatHelper.formatNow();
+        timeSlice.setStartTime(startTime);
+        return timeSlice;
     }
 
     @Override

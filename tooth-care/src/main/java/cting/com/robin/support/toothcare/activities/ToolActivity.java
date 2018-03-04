@@ -10,7 +10,7 @@ public class ToolActivity extends TextActivity {
     protected void onPermissionReady() {
         super.onPermissionReady();
 
-        appendMessage("progress list:\n" + SampleDatas.getProgressRecords(this) + "\n\n");
-        appendMessage("daily record list:\n" + SampleDatas.getDailyRecords(this) + "\n\n");
+//        appendMessage("progress list:\n" + SampleDatas.getInstance().getProgressRecords(this) + "\n\n");
+//        appendMessage("daily record list:\n" + SampleDatas.getInstance().getDailyRecords(this) + "\n\n");
     }
 }

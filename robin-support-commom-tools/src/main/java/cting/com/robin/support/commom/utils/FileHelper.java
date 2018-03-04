@@ -20,7 +20,7 @@ public class FileHelper {
     private static final String TAG = "cting/util/file";
 
     public static final String DIR_ROBIN_TOOL = "/RobinTool/";
-    public static final String DIR = Environment.getExternalStorageDirectory() + DIR_ROBIN_TOOL;
+    public static final String EXTERNAL_DIR = Environment.getExternalStorageDirectory() + DIR_ROBIN_TOOL;
 
 
     private static final File makeDirIfNotExist(String fileName) {

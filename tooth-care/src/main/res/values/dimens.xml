@@ -1,5 +1,6 @@
 <?xml version="1.0" encoding="utf-8"?>
 <resources>
     <dimen name="list_item_layout_container_padding">16dp</dimen>
-    <dimen name="time_slice_width">100dp</dimen>
+    <dimen name="time_slice_width">66dp</dimen>
+    <dimen name="time_slice_add_btn_width">30dp</dimen>
 </resources>

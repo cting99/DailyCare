@@ -1,10 +1,8 @@
 package cting.com.robin.support.toothcare.datagenerator;
 
 import android.content.Context;
-import android.util.Log;
 
 import java.util.ArrayList;
-import java.util.Arrays;
 
 import cting.com.robin.support.toothcare.models.DailyRecord;
 import cting.com.robin.support.toothcare.models.ProgressRecord;
@@ -14,19 +12,57 @@ public class SampleDatas {
 
     public static final String TAG = "cting/tooth/SampleDatas";
 
-    public static final ArrayList<DailyRecord> getDailyRecords(Context context) {
-        return RawFileParser.getDailyRecords(context);
+    private static DataFactory mDataFactory;
+    private static final SampleDatas mInstance = new SampleDatas();
+
+    private SampleDatas() {
+    }
+/*
+    public static SampleDatas getInstance() {
+        return mInstance;
+    }*/
+
+    public static SampleDatas getInstance(Context context) {
+        if (mDataFactory == null) {
+//            setDataFactory(new RawFileParser(context));
+            setDataFactory(new JsonFileParser(context));
+        }
+        return mInstance;
     }
 
-    public static final ArrayList<ProgressRecord> getProgressRecords(Context context) {
-        return RawFileParser.getProgressRecords(context);
+    public static void setDataFactory(DataFactory dataFactory) {
+        mDataFactory = dataFactory;
+        mDataFactory.load();
     }
 
-    public static final int getDayIndex(Context context) {
-        return getDailyRecords(context).size();
+    // daily record
+    public ArrayList<DailyRecord> getDailyRecords() {
+        return mDataFactory.getDailyRecords();
     }
 
-    public static final int getProgressIndex(Context context) {
-        return getProgressRecords(context).size();
+    public DailyRecord getLastDailyRecord() {
+        return mDataFactory.getLastDailyRecord();
+    }
+
+    public int getDayIndex() {
+        return getDailyRecords().size();
+    }
+
+    public void addDailyRecord(DailyRecord dailyRecord) {
+        mDataFactory.addDailyItem(dailyRecord);
+    }
+
+    // progress
+    public ArrayList<ProgressRecord> getProgressRecords() {
+        return mDataFactory.getProgressRecords();
+    }
+
+    public int getProgressIndex() {
+        return getProgressRecords().size();
+    }
+
+
+    public void save(Context context) {
+        mDataFactory.save(context);
     }
 }

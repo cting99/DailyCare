@@ -32,7 +32,7 @@ public class DailyRecordListFragment extends RobinListFragment<DailyRecord, Dail
 
     @Override
     protected ArrayList<DailyRecord> newData() {
-        return SampleDatas.getDailyRecords(getContext());
+        return SampleDatas.getInstance(getContext()).getDailyRecords();
     }
 
     @Override
@@ -42,8 +42,8 @@ public class DailyRecordListFragment extends RobinListFragment<DailyRecord, Dail
 
     @Override
     protected void addNewItem() {
-        int dayIndex = SampleDatas.getDayIndex(getContext());
-        DailyRecord record = DailyRecord.newRecord(dayIndex + 1);
-        DailyRecordDetailActivity.launchWithBundle(getContext(), record.toBundle());
+//        int dayIndex = SampleDatas.getDayIndex(getContext());
+//        DailyRecord record = DailyRecord.newRecord(dayIndex + 1);
+//        DailyRecordDetailActivity.launchWithBundle(getContext(), record.toBundle());
     }
 }

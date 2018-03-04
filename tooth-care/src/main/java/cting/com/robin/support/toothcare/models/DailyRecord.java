@@ -28,7 +28,7 @@ public class DailyRecord implements IRobinListItem, Parcelable {
     @Expose
     private String notes;
     @Expose
-    private ArrayList<TimeSlice> timeSliceList;
+    private ArrayList<TimeSlice> timeSliceList = new ArrayList<>();
     @Expose
     private String totalTime;
 
@@ -106,6 +106,22 @@ public class DailyRecord implements IRobinListItem, Parcelable {
         this.totalTime = totalTime;
     }*/
 
+
+/*
+    public void startTime() {
+        TimeSlice slice = new TimeSlice();
+        slice.setStartTime("00:00");
+        slice.setEndTime("00:00");
+        timeSliceList.add(slice);
+    }*/
+
+    public void addSliceTime(TimeSlice timeSlice) {
+        if (timeSliceList == null) {
+            timeSliceList = new ArrayList<>();
+        }
+        timeSliceList.add(timeSlice);
+    }
+
     @Override
     public String toString() {
         return "DailyRecord{" +
@@ -116,7 +132,6 @@ public class DailyRecord implements IRobinListItem, Parcelable {
                 ", totalTime='" + totalTime + '\'' +
                 '}';
     }
-
 
     public DailyRecord(Bundle bundle) {
         if (bundle != null) {
@@ -139,22 +154,6 @@ public class DailyRecord implements IRobinListItem, Parcelable {
         return bundle;
     }
 
-    public static DailyRecord newRecord(int dayIndex) {
-        DailyRecord today = new DailyRecord();
-        today.setDayIndex(dayIndex);
-        today.setDate(TimeFormatHelper.formatToday());
-        today.startTime();
-        return today;
-    }
-
-    public void startTime() {
-        TimeSlice slice = new TimeSlice();
-        slice.setStartTime("00:00");
-        slice.setEndTime("00:00");
-        timeSliceList = new ArrayList<>();
-        timeSliceList.add(slice);
-    }
-
     @Override
     public int describeContents() {
         return 0;
@@ -168,4 +167,78 @@ public class DailyRecord implements IRobinListItem, Parcelable {
         dest.writeTypedList(timeSliceList);
         dest.writeString(totalTime);
     }
+
+/*
+    public static DailyRecord newRecord(int dayIndex) {
+        DailyRecord today = new DailyRecord();
+        today.setDayIndex(dayIndex);
+        today.setDate(TimeFormatHelper.formatToday());
+        today.setNotes("Today is Invisalign Day " + dayIndex + ",well done!");
+        today.startTime();
+        return today;
+    }*/
+
+    public static DailyRecord newFirstDay() {
+        return new DailyRecord.Builder()
+                .dayIndex(1)
+                .date(TimeFormatHelper.formatToday())
+                .notes("It's your first day, welcome!")
+                .build();
+    }
+
+    public static DailyRecord newToday(int dayIndex) {
+        return new DailyRecord.Builder()
+                .dayIndex(dayIndex)
+                .date(TimeFormatHelper.formatToday())
+                .notes("It's a new day")
+                .build();
+    }
+
+
+    static class Builder{
+        private DailyRecord dailyRecord = new DailyRecord();
+
+        public DailyRecord build() {
+            if (dailyRecord.getTimeSliceList().size() == 0) {
+                TimeSlice slice = new TimeSlice();
+                slice.setStartTime("00:00");
+                slice.setEndTime("00:00");
+                dailyRecord.addSliceTime(slice);
+            }
+            return dailyRecord;
+        }
+
+        public Builder dayIndex(int dayIndex) {
+            dailyRecord.dayIndex = dayIndex;
+            return this;
+        }
+
+        public Builder date(String date) {
+            dailyRecord.date = date;
+            return this;
+        }
+
+        public Builder notes(String notes) {
+            dailyRecord.notes = notes;
+            return this;
+        }
+/*
+        public Builder timeSliceList(ArrayList<TimeSlice> timeSliceList) {
+            dailyRecord.timeSliceList = timeSliceList;
+            return this;
+        }*/
+
+        public Builder timeSlice(TimeSlice slice) {
+            dailyRecord.addSliceTime(slice);
+            return this;
+        }
+/*
+        public Builder timeSlice(String start,String end) {
+            dailyRecord.addSliceTime(new TimeSlice());
+            return this;
+        }*/
+
+
+    }
+
 }
