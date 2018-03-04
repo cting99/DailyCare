@@ -35,7 +35,7 @@ public class SampleDatas {
         mDataFactory.load();
     }
 
-    // daily record
+    // daily record begin
     public ArrayList<DailyRecord> getDailyRecords() {
         return mDataFactory.getDailyRecords();
     }
@@ -51,16 +51,22 @@ public class SampleDatas {
     public void addDailyRecord(DailyRecord dailyRecord) {
         mDataFactory.addDailyItem(dailyRecord);
     }
+    // daily record end
 
-    // progress
+
+    // progress begin
     public ArrayList<ProgressRecord> getProgressRecords() {
         return mDataFactory.getProgressRecords();
+    }
+
+    public ProgressRecord getLastProgressRecord() {
+        return mDataFactory.getLastProgressRecord();
     }
 
     public int getProgressIndex() {
         return getProgressRecords().size();
     }
-
+    // progress end
 
     public void save(Context context) {
         mDataFactory.save(context);

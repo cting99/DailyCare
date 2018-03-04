@@ -6,7 +6,6 @@ import android.support.v4.app.Fragment;
 import android.support.v7.widget.DividerItemDecoration;
 import android.support.v7.widget.LinearLayoutManager;
 import android.support.v7.widget.RecyclerView;
-import android.support.v7.widget.SearchView;
 import android.view.LayoutInflater;
 import android.view.Menu;
 import android.view.MenuInflater;
@@ -21,9 +20,8 @@ import cting.com.robin.support.recyclerview.adapters.RobinListAdapter;
 import cting.com.robin.support.recyclerview.model.IRobinListItem;
 
 public abstract class RobinListFragment<I extends IRobinListItem, B extends ViewDataBinding>
-        extends Fragment
+        extends FragmentWithFragment
         implements RobinListAdapter.Callbacks<I, B> {
-
     public String TAG = "cting/list/";
 
     protected RecyclerView mRecyclerView;
@@ -43,39 +41,6 @@ public abstract class RobinListFragment<I extends IRobinListItem, B extends View
         setDefaultAdapter(this);
         setDataList(newData());
         return view;
-    }
-
-    @Override
-    public void onCreateOptionsMenu(Menu menu, MenuInflater inflater) {
-        super.onCreateOptionsMenu(menu, inflater);
-        inflater.inflate(R.menu.menu_robin_list, menu);
-    }
-
-    @Override
-    public boolean onOptionsItemSelected(MenuItem item) {
-        int i = item.getItemId();
-        if (i == R.id.action_export) {
-            exportData(mDataList);
-        } else if (i == R.id.action_import) {
-            importData();
-        } else if (i == R.id.action_add) {
-            addNewItem();
-        } else if (i == R.id.action_save) {
-            saveData();
-        }
-        return true;
-    }
-
-    protected void exportData(ArrayList<I>dataList) {
-    }
-
-    protected void importData() {
-    }
-
-    protected void addNewItem() {
-    }
-
-    protected void saveData(){
     }
 
     protected void setupRecyclerView(RecyclerView recyclerView) {

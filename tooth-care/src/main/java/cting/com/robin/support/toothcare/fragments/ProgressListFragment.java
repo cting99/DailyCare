@@ -3,6 +3,9 @@ package cting.com.robin.support.toothcare.fragments;
 
 import android.os.Bundle;
 import android.support.annotation.Nullable;
+import android.view.Menu;
+import android.view.MenuInflater;
+import android.view.MenuItem;
 import android.widget.Toast;
 
 import java.util.ArrayList;
@@ -28,6 +31,22 @@ public class ProgressListFragment extends RobinListFragment<ProgressRecord, Prog
     }
 
     @Override
+    public void onCreateOptionsMenu(Menu menu, MenuInflater inflater) {
+        super.onCreateOptionsMenu(menu, inflater);
+        addAddMenu(menu);
+    }
+
+    @Override
+    protected void selectMenuAdd() {
+        //add a new braces record
+        ProgressRecord record = SampleDatas.getInstance(getContext()).getLastProgressRecord();
+
+//        int progressIndex = SampleDatas.getInstance().getProgressIndex(getContext());
+//        ProgressRecord record = ProgressRecord.newRecord(progressIndex + 1);
+//        ProgressDetailActivity.launchWithBundle(getContext(), record.toBundle());
+    }
+
+    @Override
     public void onItemClick(ProgressRecord item) {
         ProgressDetailActivity.launchWithBundle(getContext(), item.toBundle());
     }
@@ -43,15 +62,8 @@ public class ProgressListFragment extends RobinListFragment<ProgressRecord, Prog
     }
 
     @Override
-    protected void exportData(ArrayList<ProgressRecord> dataList) {
-        GsonHelper.writeToGson(getContext(), dataList);
+    protected void selectMenuExport() {
+        GsonHelper.writeToGson(getContext(), mDataList);
 
-    }
-
-    @Override
-    protected void addNewItem() {
-//        int progressIndex = SampleDatas.getInstance().getProgressIndex(getContext());
-//        ProgressRecord record = ProgressRecord.newRecord(progressIndex + 1);
-//        ProgressDetailActivity.launchWithBundle(getContext(), record.toBundle());
     }
 }

@@ -60,10 +60,10 @@ public class DailyRecordDetailFragment extends RobinListFragment<TimeSlice,TimeS
     }
 
     @Override
-    protected void addNewItem() {
+    protected void selectMenuAdd() {
         TimeSlice timeSlice = new TimeSlice();
         String startTime = TimeFormatHelper.formatNow();
-        Log.i(TAG, "addNewItem: " + startTime);
+        Log.i(TAG, "selectMenuAdd: " + startTime);
         timeSlice.setStartTime(startTime);
         mDataList.add(timeSlice);
         setDataList(mDataList);

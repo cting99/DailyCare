@@ -40,9 +40,4 @@ public class JsonFileParser extends DataFactory {
     public void addDailyItem(DailyRecord dailyRecord) {
 
     }
-
-    @Override
-    public boolean save(Context context) {
-        return false;
-    }
 }

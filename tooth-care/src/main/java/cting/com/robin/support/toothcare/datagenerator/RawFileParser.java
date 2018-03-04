@@ -41,11 +41,6 @@ public class RawFileParser extends DataFactory {
         progressRecords.get(0).addRecord(dailyRecord);
     }
 
-    @Override
-    public boolean save(Context context) {
-        return GsonHelper.writeToGson(context, progressRecords);
-    }
-
 
     public void readFile() throws Exception {
         InputStream in = context.getAssets().open(FILE_INVISALIGN_ASSET);

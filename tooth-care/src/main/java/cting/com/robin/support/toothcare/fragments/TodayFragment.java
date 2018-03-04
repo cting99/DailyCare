@@ -3,11 +3,12 @@ package cting.com.robin.support.toothcare.fragments;
 import android.databinding.DataBindingUtil;
 import android.os.Bundle;
 import android.support.annotation.Nullable;
-import android.support.v4.app.Fragment;
 import android.support.v7.widget.LinearLayoutManager;
 import android.support.v7.widget.RecyclerView;
 import android.util.Log;
 import android.view.LayoutInflater;
+import android.view.Menu;
+import android.view.MenuInflater;
 import android.view.View;
 import android.view.ViewGroup;
 
@@ -54,6 +55,16 @@ public class TodayFragment extends RobinListFragment<TimeSlice, TimeSliceAddLayo
     }
 
     @Override
+    public void onCreateOptionsMenu(Menu menu, MenuInflater inflater) {
+        addSaveMenu(menu);
+    }
+
+    @Override
+    protected void selectMenuSave() {
+        SampleDatas.getInstance(getContext()).save(getContext());
+    }
+
+    @Override
     public View onCreateView(LayoutInflater inflater, ViewGroup container, Bundle savedInstanceState) {
         TodayFragmentBinding binding = DataBindingUtil.inflate(inflater, R.layout.today_fragment, container, false);
         binding.setDailyRecord(mTodayRecord);
@@ -88,20 +99,12 @@ public class TodayFragment extends RobinListFragment<TimeSlice, TimeSliceAddLayo
     }
 
     @Override
-    protected void addNewItem() {
-        TimeSlice timeSlice = TimeSlice.newRecord();
-        mDataList.add(timeSlice);
-        setDataList(mDataList);
-    }
-
-    @Override
     public void onClick(View v) {
-        v.setVisibility(View.GONE);
-        addNewItem();
-    }
-
-    @Override
-    protected void saveData() {
-        SampleDatas.getInstance(getContext()).save(getContext());
+//        v.setVisibility(View.GONE);
+        if (v.getId() == R.id.add_new_time_slice_btn) {
+            TimeSlice timeSlice = TimeSlice.newRecord();
+            mDataList.add(timeSlice);
+            setDataList(mDataList);
+        }
     }
 }

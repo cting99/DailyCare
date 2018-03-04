@@ -16,6 +16,7 @@ import cting.com.robin.support.commom.utils.StringHelper;
 import cting.com.robin.support.toothcare.models.DailyRecord;
 import cting.com.robin.support.toothcare.models.ProgressRecord;
 import cting.com.robin.support.toothcare.models.TimeSlice;
+import cting.com.robin.support.toothcare.utils.GsonHelper;
 
 public abstract class DataFactory {
 
@@ -71,7 +72,10 @@ public abstract class DataFactory {
     }
 
 
+    public boolean save(Context context) {
+        return GsonHelper.writeToGson(context, progressRecords);
+    }
+
     public abstract void load();
     public abstract void addDailyItem(DailyRecord dailyRecord);
-    public abstract boolean save(Context context);
 }

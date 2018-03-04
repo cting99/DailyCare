@@ -34,7 +34,7 @@ public class ProgressDetailFragment extends RobinListFragment<DailyRecord, Daily
             progressRecord = new ProgressRecord(bundle);
         }
 //        Log.i(TAG, "onCreate: progressRecord=" + progressRecord);
-        setHasOptionsMenu(true);
+        setHasOptionsMenu(false);
     }
 
     @Override
