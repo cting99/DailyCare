@@ -113,10 +113,12 @@ public class DailyRecord implements IRobinListItem, Parcelable {
         timeSliceList.add(slice);
     }*/
 
+
+    public TimeSlice getLastTimeSliceList() {
+        return timeSliceList.get(timeSliceList.size() - 1);
+    }
+
     public void addSliceTime(TimeSlice timeSlice) {
-        if (timeSliceList == null) {
-            timeSliceList = new ArrayList<>();
-        }
         timeSliceList.add(timeSlice);
     }
 

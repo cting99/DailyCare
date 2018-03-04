@@ -88,6 +88,10 @@ public class TimeSlice extends BaseObservable implements IRobinListItem,Parcelab
         return TextUtils.isEmpty(startTime) && TextUtils.isEmpty(endTime);
     }
 
+    public boolean notFinished() {
+        return !TextUtils.isEmpty(startTime) && TextUtils.isEmpty(endTime);
+    }
+
     @Override
     public int describeContents() {
         return 0;

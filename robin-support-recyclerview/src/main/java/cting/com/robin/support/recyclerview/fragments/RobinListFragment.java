@@ -2,14 +2,10 @@ package cting.com.robin.support.recyclerview.fragments;
 
 import android.databinding.ViewDataBinding;
 import android.os.Bundle;
-import android.support.v4.app.Fragment;
 import android.support.v7.widget.DividerItemDecoration;
 import android.support.v7.widget.LinearLayoutManager;
 import android.support.v7.widget.RecyclerView;
 import android.view.LayoutInflater;
-import android.view.Menu;
-import android.view.MenuInflater;
-import android.view.MenuItem;
 import android.view.View;
 import android.view.ViewGroup;
 
@@ -76,7 +72,7 @@ public abstract class RobinListFragment<I extends IRobinListItem, B extends View
     }
 
     @Override
-    public void bindItemData(I item, B binding) {
+    public void bindItemData(I item, B binding, int position) {
 
     }
 

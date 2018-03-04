@@ -4,7 +4,6 @@ import android.content.Context;
 import android.databinding.DataBindingUtil;
 import android.databinding.ViewDataBinding;
 import android.support.v7.widget.RecyclerView;
-import android.util.Log;
 import android.util.TypedValue;
 import android.view.LayoutInflater;
 import android.view.View;
@@ -66,7 +65,7 @@ public class RobinListAdapter<I extends IRobinListItem, B extends ViewDataBindin
     public void onBindViewHolder(ViewHolder holder, int position) {
         I item = getItem(position);
         holder.binding.setVariable(BR.item, item);
-        callbacks.bindItemData(item, holder.binding);
+        callbacks.bindItemData(item, holder.binding,position);
         holder.binding.executePendingBindings();
     }
 
@@ -112,6 +111,6 @@ public class RobinListAdapter<I extends IRobinListItem, B extends ViewDataBindin
     public interface Callbacks<I extends IRobinListItem, B extends ViewDataBinding>
             extends IClickItem<I> {
         int getItemLayoutId();
-        void bindItemData(I item, B binding);
+        void bindItemData(I item, B binding, int position);
     }
 }

@@ -23,11 +23,14 @@ import cting.com.robin.support.toothcare.models.DailyRecord;
 import cting.com.robin.support.toothcare.models.ProgressRecord;
 import cting.com.robin.support.toothcare.models.TimeSlice;
 import cting.com.robin.support.toothcare.utils.TimeFormatHelper;
+import cting.com.robin.support.toothcare.views.StateButton;
 
 
-public class TodayFragment extends RobinListFragment<TimeSlice, TimeSliceAddLayoutBinding> implements View.OnClickListener {
+public class TodayFragment extends RobinListFragment<TimeSlice, TimeSliceAddLayoutBinding>
+        implements StateButton.Callback {
 
     private DailyRecord mTodayRecord;
+    private TimeSlice mCurrentTimeSlice;
 
     @Override
     public void onCreate(@Nullable Bundle savedInstanceState) {
@@ -50,6 +53,7 @@ public class TodayFragment extends RobinListFragment<TimeSlice, TimeSliceAddLayo
         if (mTodayRecord != lastRecord) {
             SampleData.getInstance().addDailyRecord(mTodayRecord);
         }
+        mCurrentTimeSlice = mTodayRecord.getLastTimeSliceList();
 
         // set title
         int progress = SampleData.getInstance().getProgressIndex();
@@ -108,7 +112,6 @@ public class TodayFragment extends RobinListFragment<TimeSlice, TimeSliceAddLayo
                 mTodayRecord.getTimeSliceList().remove(slice);
                 count -= 1;
             }
-
         }
     }
 
@@ -118,18 +121,29 @@ public class TodayFragment extends RobinListFragment<TimeSlice, TimeSliceAddLayo
     }
 
     @Override
-    public void bindItemData(TimeSlice item, TimeSliceAddLayoutBinding binding) {
-        super.bindItemData(item, binding);
-        binding.setClickListener(this);
+    public void bindItemData(TimeSlice item, TimeSliceAddLayoutBinding binding, int position) {
+        super.bindItemData(item, binding, position);
+        binding.addNewTimeSliceBtn.setCallback(this);
+        binding.addNewTimeSliceBtn.setTimeSlice(item);
+        binding.addNewTimeSliceBtn.setPosition(position, mTodayRecord.getTimeSliceList().size());
     }
 
     @Override
-    public void onClick(View v) {
-//        v.setVisibility(View.GONE);
-        if (v.getId() == R.id.add_new_time_slice_btn) {
-            TimeSlice timeSlice = TimeSlice.newRecord();
-            mDataList.add(timeSlice);
-            setDataList(mDataList);
-        }
+    public void onAdd() {
+        mCurrentTimeSlice = TimeSlice.newRecord();
+        mDataList.add(mCurrentTimeSlice);
+        mAdapter.notifyDataSetChanged();
+    }
+
+    @Override
+    public void onDelete(int position) {
+        mTodayRecord.getTimeSliceList().remove(position);
+        mAdapter.notifyDataSetChanged();
+    }
+
+    @Override
+    public void onDone() {
+        mCurrentTimeSlice.setEndTime(TimeFormatHelper.formatNow());
+        mAdapter.notifyDataSetChanged();
     }
 }
