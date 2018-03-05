@@ -7,7 +7,6 @@ import android.view.Gravity;
 import android.view.View;
 
 import cting.com.robin.support.toothcare.R;
-import cting.com.robin.support.toothcare.models.TimeSlice;
 
 public class StateButton extends android.support.v7.widget.AppCompatButton implements View.OnClickListener {
 
@@ -19,7 +18,7 @@ public class StateButton extends android.support.v7.widget.AppCompatButton imple
 
     private int state = STATE_ADD;
     private Callback callback;
-    private TimeSlice timeSlice;
+    private IEntryState entryState;
     private boolean isLastOne;
     private int position;
 
@@ -44,21 +43,18 @@ public class StateButton extends android.support.v7.widget.AppCompatButton imple
         return state;
     }
 
-    public void setState(int state) {
+    private void setState(int state) {
         this.state = state;
         updateState();
     }
 
-    public Callback getCallback() {
-        return callback;
-    }
 
     public void setCallback(Callback callback) {
         this.callback = callback;
     }
 
-    public void setTimeSlice(TimeSlice timeSlice) {
-        this.timeSlice = timeSlice;
+    public void setEntryState(IEntryState entryState) {
+        this.entryState = entryState;
     }
 
     public void setPosition(int position,int size) {
@@ -68,9 +64,9 @@ public class StateButton extends android.support.v7.widget.AppCompatButton imple
     }
 
     private void updateView() {
-        if (timeSlice.notFinished()) {
+        if (entryState.notFinished()) {
             prepareDone();
-        } else if (!timeSlice.isEmpty()) {
+        } else if (!entryState.isEmpty()) {
             if (isLastOne) {
                 prepareAdd();
             } else {
@@ -79,15 +75,15 @@ public class StateButton extends android.support.v7.widget.AppCompatButton imple
         }
     }
 
-    public void prepareDone() {
+    private void prepareDone() {
         setState(STATE_DONE);
     }
 
-    public void prepareAdd() {
+    private void prepareAdd() {
         setState(STATE_ADD);
     }
 
-    public void prepareDelete() {
+    private void prepareDelete() {
         setState(STATE_DELETE);
     }
 

@@ -10,8 +10,9 @@ import com.google.gson.annotations.Expose;
 import cting.com.robin.support.recyclerview.model.IRobinListItem;
 import cting.com.robin.support.toothcare.BR;
 import cting.com.robin.support.toothcare.utils.TimeFormatHelper;
+import cting.com.robin.support.toothcare.views.IEntryState;
 
-public class TimeSlice extends BaseObservable implements IRobinListItem,Parcelable {
+public class TimeSlice extends BaseObservable implements IRobinListItem,Parcelable, IEntryState {
 
     @Expose
     private String startTime;
@@ -84,10 +85,13 @@ public class TimeSlice extends BaseObservable implements IRobinListItem,Parcelab
         timeSlice.setStartTime(startTime);
         return timeSlice;
     }
+
+    @Override
     public boolean isEmpty() {
         return TextUtils.isEmpty(startTime) && TextUtils.isEmpty(endTime);
     }
 
+    @Override
     public boolean notFinished() {
         return !TextUtils.isEmpty(startTime) && TextUtils.isEmpty(endTime);
     }

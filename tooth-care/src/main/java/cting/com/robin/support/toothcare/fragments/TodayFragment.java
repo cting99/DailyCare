@@ -124,7 +124,7 @@ public class TodayFragment extends RobinListFragment<TimeSlice, TimeSliceAddLayo
     public void bindItemData(TimeSlice item, TimeSliceAddLayoutBinding binding, int position) {
         super.bindItemData(item, binding, position);
         binding.addNewTimeSliceBtn.setCallback(this);
-        binding.addNewTimeSliceBtn.setTimeSlice(item);
+        binding.addNewTimeSliceBtn.setEntryState(item);
         binding.addNewTimeSliceBtn.setPosition(position, mTodayRecord.getTimeSliceList().size());
     }
 
