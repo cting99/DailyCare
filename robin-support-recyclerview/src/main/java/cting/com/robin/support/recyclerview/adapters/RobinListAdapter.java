@@ -65,7 +65,7 @@ public class RobinListAdapter<I extends IRobinListItem, B extends ViewDataBindin
     public void onBindViewHolder(ViewHolder holder, int position) {
         I item = getItem(position);
         holder.binding.setVariable(BR.item, item);
-        callbacks.bindItemData(item, holder.binding,position);
+        callbacks.bindItemData(item, holder.binding, position);
         holder.binding.executePendingBindings();
     }
 
@@ -99,18 +99,21 @@ public class RobinListAdapter<I extends IRobinListItem, B extends ViewDataBindin
 
         @Override
         public boolean onLongClick(View v) {
-            return callbacks.onItemLongClick(getItem(getAdapterPosition()));
+            int position = getAdapterPosition();
+            return callbacks.onItemLongClick(getItem(position),position);
         }
 
         @Override
         public void onClick(View v) {
-            callbacks.onItemClick(getItem(getAdapterPosition()));
+            int position = getAdapterPosition();
+            callbacks.onItemClick(getItem(position),position);
         }
     }
 
     public interface Callbacks<I extends IRobinListItem, B extends ViewDataBinding>
             extends IClickItem<I> {
         int getItemLayoutId();
+
         void bindItemData(I item, B binding, int position);
     }
 }

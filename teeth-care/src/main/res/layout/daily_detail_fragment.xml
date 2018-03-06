@@ -1,0 +1,86 @@
+<?xml version="1.0" encoding="utf-8"?>
+<layout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    xmlns:tools="http://schemas.android.com/tools">
+
+    <data>
+
+        <import type="cting.com.robin.support.teethcare.daily.DailyRecord" />
+
+        <import type="android.view.View.OnClickListener" />
+
+        <variable
+            name="item"
+            type="DailyRecord" />
+
+    </data>
+
+    <android.support.constraint.ConstraintLayout
+        android:layout_width="match_parent"
+        android:layout_height="match_parent"
+        android:padding="18dp">
+
+        <TextView
+            android:id="@+id/date_text"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:gravity="center"
+            android:text="@{item.date}"
+            android:textSize="18sp"
+            android:textStyle="bold"
+            android:focusedByDefault="true"
+            app:layout_constraintStart_toStartOf="parent"
+            app:layout_constraintTop_toTopOf="parent"
+            tools:text="2018/02/28" />
+
+
+        <TextView
+            android:id="@+id/total_cost_text"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_marginStart="8dp"
+            android:text="@{item.total}"
+            app:layout_constraintBottom_toBottomOf="@+id/date_text"
+            app:layout_constraintEnd_toEndOf="parent"
+            app:layout_constraintHorizontal_bias="0.96"
+            app:layout_constraintStart_toEndOf="@+id/date_text"
+            app:layout_constraintTop_toTopOf="@+id/date_text"
+            tools:text="20h 20m" />
+
+        <android.support.design.widget.TextInputLayout
+            android:id="@+id/notes_text"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:layout_marginTop="16dp"
+            android:layout_marginBottom="16dp"
+            app:layout_constraintEnd_toEndOf="@+id/date_text"
+            app:layout_constraintHorizontal_bias="0.0"
+            app:layout_constraintStart_toStartOf="@+id/date_text"
+            app:layout_constraintTop_toBottomOf="@+id/date_text">
+
+            <android.support.design.widget.TextInputEditText
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:hint="备注"
+                android:inputType="text"
+                android:lines="5"
+                android:text="@={item.note}"
+                tools:text="清洁牙套" />
+        </android.support.design.widget.TextInputLayout>
+
+        <android.support.v7.widget.RecyclerView
+            android:id="@+id/recycler_view"
+            android:layout_width="0px"
+            android:layout_height="0px"
+            android:paddingTop="8dp"
+            android:paddingBottom="8dp"
+            android:layout_marginBottom="8dp"
+            app:layout_constraintBottom_toBottomOf="parent"
+            app:layout_constraintEnd_toEndOf="@+id/notes_text"
+            app:layout_constraintStart_toStartOf="@+id/notes_text"
+            app:layout_constraintTop_toBottomOf="@+id/notes_text"
+            android:background="#889cdcd4"/>
+
+
+    </android.support.constraint.ConstraintLayout>
+</layout>

@@ -1,0 +1,64 @@
+<?xml version="1.0" encoding="utf-8"?>
+<layout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    xmlns:tools="http://schemas.android.com/tools">
+
+    <data>
+
+        <import type="cting.com.robin.support.teethcare.daily.detail.TimeSlice" />
+
+        <variable
+            name="item"
+            type="cting.com.robin.support.teethcare.daily.detail.TimeSlice" />
+    </data>
+
+    <android.support.constraint.ConstraintLayout
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:padding="8dp">
+
+        <TextView
+            android:id="@+id/time_duration_text"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_marginEnd="8dp"
+            android:layout_marginStart="8dp"
+            android:text="@{item.diff}"
+            app:layout_constraintBottom_toBottomOf="parent"
+            app:layout_constraintEnd_toStartOf="@+id/end_time_edit"
+            app:layout_constraintStart_toEndOf="@+id/start_time_edit"
+            app:layout_constraintTop_toTopOf="parent"
+            tools:text="1h 20m" />
+
+        <TextView
+            android:id="@+id/start_time_edit"
+            android:layout_width="@dimen/time_slice_width"
+            android:layout_height="wrap_content"
+            android:layout_marginStart="32dp"
+            android:ems="10"
+            android:gravity="center"
+            android:inputType="time"
+            android:text="@{item.from}"
+            app:layout_constraintBottom_toBottomOf="parent"
+            app:layout_constraintStart_toStartOf="parent"
+            app:layout_constraintTop_toTopOf="parent"
+            tools:text="8:30"/>
+
+        <TextView
+            android:id="@+id/end_time_edit"
+            android:layout_width="@dimen/time_slice_width"
+            android:layout_height="wrap_content"
+            android:layout_marginEnd="8dp"
+            android:layout_marginStart="72dp"
+            android:ems="10"
+            android:gravity="center"
+            android:inputType="time"
+            android:text="@{item.to}"
+            app:layout_constraintBottom_toBottomOf="parent"
+            app:layout_constraintEnd_toEndOf="parent"
+            app:layout_constraintStart_toEndOf="@+id/start_time_edit"
+            app:layout_constraintTop_toTopOf="parent"
+            tools:text="9:50" />
+
+    </android.support.constraint.ConstraintLayout>
+</layout>

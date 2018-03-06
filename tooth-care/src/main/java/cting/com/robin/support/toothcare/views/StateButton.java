@@ -7,6 +7,7 @@ import android.view.Gravity;
 import android.view.View;
 
 import cting.com.robin.support.toothcare.R;
+import cting.com.robin.support.toothcare.models.IEntryState;
 
 public class StateButton extends android.support.v7.widget.AppCompatButton implements View.OnClickListener {
 
@@ -60,10 +61,9 @@ public class StateButton extends android.support.v7.widget.AppCompatButton imple
     public void setPosition(int position,int size) {
         this.position = position;
         this.isLastOne = position == size - 1;
-        updateView();
     }
 
-    private void updateView() {
+    public void refresh() {
         if (entryState.notFinished()) {
             prepareDone();
         } else if (!entryState.isEmpty()) {

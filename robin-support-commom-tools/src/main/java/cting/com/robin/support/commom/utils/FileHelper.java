@@ -29,6 +29,14 @@ public class FileHelper {
         if (!dir.exists()) {
             dir.mkdirs();
         }
+        if (!file.exists()) {
+            try {
+                file.createNewFile();
+            } catch (IOException e) {
+                Log.e(TAG, "makeDirIfNotExist: "+e.getLocalizedMessage());
+                e.printStackTrace();
+            }
+        }
         return file;
     }
 

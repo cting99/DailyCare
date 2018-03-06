@@ -1,16 +1,18 @@
 package cting.com.robin.support.recyclerview.activities;
 
-import android.support.design.widget.FloatingActionButton;
 import android.support.v4.app.Fragment;
 import android.support.v7.widget.Toolbar;
-import android.view.View;
 
 import cting.com.robin.support.commom.activities.BasePermissionCheckActivity;
 import cting.com.robin.support.recyclerview.R;
 
 public abstract class RobinListActivity extends BasePermissionCheckActivity{
 
-    public static final String TAG = "cting/list/act";
+    public static String TAG = "cting/act/";
+
+    public RobinListActivity() {
+        TAG += getClass().getSimpleName();
+    }
 
     @Override
     protected void onPermissionReady() {

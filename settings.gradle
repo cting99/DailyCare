@@ -1,1 +1,1 @@
-include ':app', ':robin-support-recyclerview', ':robin-support-commom-tools', ':tooth-care'
+include ':app', ':robin-support-recyclerview', ':robin-support-commom-tools', ':teeth-care'

@@ -56,11 +56,10 @@ public class TodayFragment extends RobinListFragment<TimeSlice, TimeSliceAddLayo
         mCurrentTimeSlice = mTodayRecord.getLastTimeSliceList();
 
         // set title
-        int progress = SampleData.getInstance().getProgressIndex();
         ProgressRecord lastProgress = SampleData.getInstance().getLastProgressRecord();
         getActivity().setTitle(getString(
                 R.string.fragment_title_today,
-                progress,
+                lastProgress.getProgressIndex(),
                 lastProgress.getDayCount()));
 
         Log.i(TAG, "onCreate: today is Day[" + mTodayRecord.getDayIndex() + "]: " + mTodayRecord.getDate());
@@ -126,6 +125,7 @@ public class TodayFragment extends RobinListFragment<TimeSlice, TimeSliceAddLayo
         binding.addNewTimeSliceBtn.setCallback(this);
         binding.addNewTimeSliceBtn.setEntryState(item);
         binding.addNewTimeSliceBtn.setPosition(position, mTodayRecord.getTimeSliceList().size());
+        binding.addNewTimeSliceBtn.refresh();
     }
 
     @Override

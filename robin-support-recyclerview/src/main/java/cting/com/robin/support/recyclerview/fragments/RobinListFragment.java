@@ -16,7 +16,7 @@ import cting.com.robin.support.recyclerview.adapters.RobinListAdapter;
 import cting.com.robin.support.recyclerview.model.IRobinListItem;
 
 public abstract class RobinListFragment<I extends IRobinListItem, B extends ViewDataBinding>
-        extends FragmentWithFragment
+        extends FragmentWithMenu
         implements RobinListAdapter.Callbacks<I, B> {
     public String TAG = "cting/list/";
 
@@ -56,18 +56,20 @@ public abstract class RobinListFragment<I extends IRobinListItem, B extends View
     }
 
     protected void setDataList(ArrayList<I> dataList) {
-        mDataList = dataList;
-        mAdapter.setDataList(mDataList);
-        mAdapter.notifyDataSetChanged();
+        if (mAdapter != null) {
+            mDataList = dataList;
+            mAdapter.setDataList(mDataList);
+            mAdapter.notifyDataSetChanged();
+        }
     }
 
     @Override
-    public void onItemClick(I item) {
+    public void onItemClick(I item, int position) {
 
     }
 
     @Override
-    public boolean onItemLongClick(I item) {
+    public boolean onItemLongClick(I item, int position) {
         return false;
     }
 

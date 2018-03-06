@@ -1,21 +1,13 @@
 package cting.com.robin.support.toothcare.datagenerator;
 
 import android.content.Context;
-import android.text.TextUtils;
-import android.util.Log;
 
-import java.io.BufferedReader;
-import java.io.InputStream;
-import java.io.InputStreamReader;
 import java.util.ArrayList;
 import java.util.Collections;
 import java.util.Comparator;
 
-import cting.com.robin.support.commom.utils.FileHelper;
-import cting.com.robin.support.commom.utils.StringHelper;
 import cting.com.robin.support.toothcare.models.DailyRecord;
 import cting.com.robin.support.toothcare.models.ProgressRecord;
-import cting.com.robin.support.toothcare.models.TimeSlice;
 import cting.com.robin.support.toothcare.utils.GsonHelper;
 
 public abstract class DataFactory {
@@ -52,19 +44,23 @@ public abstract class DataFactory {
     }
 
     public ProgressRecord getLastProgressRecord() {
-        if (progressRecords != null && progressRecords.size() > 0) {
-            return progressRecords.get(0);
-        } else {
-            return null;
+        if (progressRecords.size()== 0) {
+            progressRecords.add(ProgressRecord.newFirstProgress());
         }
-    }
-
-    public ProgressRecord getLastProgress() {
         return progressRecords.get(0);
     }
 
     public int getLastProgressIndex() {
-        return getLastProgress().getProgressIndex();
+        if (progressRecords.size() == 0) {
+            return 0;
+        }
+        return getLastProgressRecord().getProgressIndex();
+    }
+
+    public void addProgressItem(ProgressRecord progressRecord) {
+        int size = progressRecords.size();
+        int index = size == 0 ? 0 : size - 1;
+        progressRecords.add(index, progressRecord);
     }
     // progress record end
 
@@ -75,16 +71,22 @@ public abstract class DataFactory {
     }
 
     public DailyRecord getLastDailyRecord() {
-        if (dailyRecords != null && dailyRecords.size() > 0) {
-            return dailyRecords.get(0);
-        } else {
-            return null;
+        if (dailyRecords.size()== 0) {
+            dailyRecords.add(DailyRecord.newFirstDay());
         }
+        return dailyRecords.get(0);
     }
 
     public void addDailyItem(DailyRecord dailyRecord) {
         dailyRecords.add(dailyRecord);
-        getLastProgress().addRecord(dailyRecord);
+        ProgressRecord progressRecord = getLastProgressRecord();
+        if (progressRecord == null) {
+            progressRecord = new ProgressRecord.Builder()
+                    .progressIndex(1)
+                    .build();
+        }
+        getLastProgressRecord().addRecord(dailyRecord);
+        dailyRecords.add(dailyRecord);
     }
     // daily record end
 
@@ -94,4 +96,5 @@ public abstract class DataFactory {
     }
 
     public abstract void load();
+
 }

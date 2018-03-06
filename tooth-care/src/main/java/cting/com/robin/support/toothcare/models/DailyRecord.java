@@ -41,6 +41,17 @@ public class DailyRecord implements IRobinListItem, Parcelable {
         totalTime = in.readString();
     }
 
+    public DailyRecord(Bundle bundle) {
+        if (bundle != null) {
+            this.dayIndex = bundle.getInt(DAY_INDEX);
+            this.date = bundle.getString(DATE);
+            this.notes = bundle.getString(NOTES);
+            this.timeSliceList = bundle.getParcelableArrayList(TIME_SLICE_LIST);
+            this.totalTime = bundle.getString(TOTAL_TIME);
+        }
+
+    }
+
     public static final Creator<DailyRecord> CREATOR = new Creator<DailyRecord>() {
         @Override
         public DailyRecord createFromParcel(Parcel in) {
@@ -133,18 +144,7 @@ public class DailyRecord implements IRobinListItem, Parcelable {
                 '}';
     }
 
-    public DailyRecord(Bundle bundle) {
-        if (bundle != null) {
-            this.dayIndex = bundle.getInt(DAY_INDEX);
-            this.date = bundle.getString(DATE);
-            this.notes = bundle.getString(NOTES);
-            this.timeSliceList = bundle.getParcelableArrayList(TIME_SLICE_LIST);
-            this.totalTime = bundle.getString(TOTAL_TIME);
-        }
-
-    }
-
-    public Bundle toBundle() {
+        public Bundle toBundle() {
         Bundle bundle = new Bundle();
         bundle.putInt(DAY_INDEX, this.dayIndex);
         bundle.putString(DATE, this.date);
@@ -195,7 +195,7 @@ public class DailyRecord implements IRobinListItem, Parcelable {
     }
 
 
-    static class Builder{
+    public static class Builder{
         private DailyRecord dailyRecord = new DailyRecord();
 
         public DailyRecord build() {

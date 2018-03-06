@@ -8,6 +8,7 @@ import android.support.v4.widget.DrawerLayout;
 import android.support.v7.app.ActionBarDrawerToggle;
 import android.support.v7.widget.Toolbar;
 import android.util.Log;
+import android.view.KeyEvent;
 import android.view.MenuItem;
 
 import org.greenrobot.eventbus.EventBus;
@@ -19,6 +20,7 @@ import butterknife.ButterKnife;
 import cting.com.robin.support.commom.activities.BasePermissionCheckActivity;
 import cting.com.robin.support.toothcare.R;
 import cting.com.robin.support.toothcare.fragments.DailyRecordListFragment;
+import cting.com.robin.support.toothcare.fragments.MainFragment;
 import cting.com.robin.support.toothcare.fragments.ProgressListFragment;
 import cting.com.robin.support.toothcare.fragments.TodayFragment;
 import cting.com.robin.support.toothcare.models.MessageEvent;
@@ -28,7 +30,11 @@ public class AllInOneActivity extends BasePermissionCheckActivity
         implements NavigationView.OnNavigationItemSelectedListener {
 
     protected static final String TAG = "cting/AllInOneActivity";
-    
+    public static final String FRAGMENT_TODAY = "fragment_today";
+    public static final String FRAGMENT_PROGRESS_LIST = "fragment_progress_list";
+    public static final String FRAGMENT_DAILY_RECORD_LIST = "fragment_daily_record";
+    public static final String FRAGMENT_MAIN = "fragment_main";
+
     @BindView(R.id.toolbar)
     Toolbar mToolbar;
     @BindView(R.id.nav_view)
@@ -37,11 +43,13 @@ public class AllInOneActivity extends BasePermissionCheckActivity
     DrawerLayout mDrawer;
 
     private boolean mIsAlreadyLoad = false;
-    private boolean mIsMessageAlreadyRegistered=false;
+    private boolean mIsMessageAlreadyRegistered = false;
 
     private Fragment mTodayFragment;
     private ProgressListFragment mProgressListFragment;
     private DailyRecordListFragment mDailyRecordListFragment;
+    private MainFragment mMainFragment;
+    private Fragment mCurrentFragment;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -88,7 +96,7 @@ public class AllInOneActivity extends BasePermissionCheckActivity
             }
             if (!mIsAlreadyLoad) {
                 Log.i(TAG, "start: start load service");
-                DataLoaderService.startActionLoad(this,DataLoaderService.DATA_SOURCE_EXTERNAL_JSON);
+                DataLoaderService.startActionLoad(this, DataLoaderService.DATA_SOURCE_EXTERNAL_JSON);
                 mIsAlreadyLoad = true;
             }
         }
@@ -106,11 +114,40 @@ public class AllInOneActivity extends BasePermissionCheckActivity
     public void onLoadFinished(MessageEvent msg) {
         if (msg.isLoadFinish()) {
             Log.i(TAG, "onLoadFinished: ");
+            setFragment(FRAGMENT_MAIN);
+        }
+    }
+
+    public void setFragment(String fragment) {
+        if (FRAGMENT_TODAY.equals(fragment)) {
             if (mTodayFragment == null) {
                 mTodayFragment = new TodayFragment();
             }
-            setFragment(mTodayFragment);
+            mCurrentFragment = mTodayFragment;
+            mNavView.setCheckedItem(R.id.nav_today);
+        } else if (FRAGMENT_PROGRESS_LIST.equals(fragment)) {
+            if (mProgressListFragment == null) {
+                mProgressListFragment = new ProgressListFragment();
+            }
+            mCurrentFragment = mProgressListFragment;
+            mNavView.setCheckedItem(R.id.nav_progress_list);
+        } else if (FRAGMENT_DAILY_RECORD_LIST.equals(fragment)) {
+            if (mDailyRecordListFragment == null) {
+                mDailyRecordListFragment = new DailyRecordListFragment();
+            }
+            mCurrentFragment = mDailyRecordListFragment;
+            mNavView.setCheckedItem(R.id.nav_daily_record_list);
+        } else if (FRAGMENT_MAIN.equals(fragment)) {
+            if (mMainFragment == null) {
+                mMainFragment = new MainFragment();
+            }
+            mCurrentFragment = mMainFragment;
+            mNavView.setCheckedItem(R.id.nav_homepage);
         }
+        if (mCurrentFragment != null) {
+            setFragment(mCurrentFragment);
+        }
+
     }
 
     protected void setFragment(Fragment fragment) {
@@ -123,6 +160,8 @@ public class AllInOneActivity extends BasePermissionCheckActivity
     public void onBackPressed() {
         if (mDrawer.isDrawerOpen(GravityCompat.START)) {
             mDrawer.closeDrawer(GravityCompat.START);
+        } else if (mCurrentFragment != mMainFragment) {
+            setFragment(FRAGMENT_MAIN);
         } else {
             super.onBackPressed();
         }
@@ -135,20 +174,13 @@ public class AllInOneActivity extends BasePermissionCheckActivity
         int id = item.getItemId();
 
         if (id == R.id.nav_today) {
-            if (mTodayFragment == null) {
-                mTodayFragment = new TodayFragment();
-            }
-            setFragment(mTodayFragment);
+            setFragment(FRAGMENT_TODAY);
         } else if (id == R.id.nav_progress_list) {
-            if (mProgressListFragment == null) {
-                mProgressListFragment = new ProgressListFragment();
-            }
-            setFragment(mProgressListFragment);
+            setFragment(FRAGMENT_PROGRESS_LIST);
         } else if (id == R.id.nav_daily_record_list) {
-            if (mDailyRecordListFragment == null) {
-                mDailyRecordListFragment = new DailyRecordListFragment();
-            }
-            setFragment(mDailyRecordListFragment);
+            setFragment(FRAGMENT_DAILY_RECORD_LIST);
+        } else if (id == R.id.nav_homepage) {
+            setFragment(FRAGMENT_MAIN);
         } else if (id == R.id.nav_backup_data) {
 
         }

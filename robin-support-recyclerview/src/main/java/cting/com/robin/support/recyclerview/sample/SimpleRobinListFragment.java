@@ -32,12 +32,12 @@ public class SimpleRobinListFragment extends RobinListFragment<SimpleListItem,Si
 
 
     @Override
-    public void onItemClick(SimpleListItem item) {
+    public void onItemClick(SimpleListItem item, int position) {
         Toast.makeText(getContext(), "click " + item, Toast.LENGTH_SHORT).show();
     }
 
     @Override
-    public boolean onItemLongClick(SimpleListItem item) {
+    public boolean onItemLongClick(SimpleListItem item, int position) {
         return false;
     }
 }

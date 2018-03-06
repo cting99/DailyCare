@@ -41,7 +41,7 @@
             android:layout_marginEnd="8dp"
             android:layout_marginStart="8dp"
             android:layout_marginTop="16dp"
-            android:text="@{@string/progress_detail_daycount_and_totaltime(item.dayCount,item.totalTime)}"
+            android:text="@{@string/progress_detail_daycount_and_totaltime(item.dayCount,item.total)}"
             app:layout_constraintBottom_toTopOf="@+id/recycler_view"
             app:layout_constraintEnd_toEndOf="parent"
             app:layout_constraintStart_toStartOf="parent"

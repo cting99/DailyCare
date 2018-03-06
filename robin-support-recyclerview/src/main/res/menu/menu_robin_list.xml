@@ -11,21 +11,21 @@
     <item
         android:id="@+id/action_export"
         android:icon="@android:drawable/stat_sys_upload_done"
-        android:title="@string/ic_menu_title_export"
+        android:title="@string/menu_title_export"
         app:showAsAction="never"/>
     <item
         android:id="@+id/action_import"
         android:icon="@android:drawable/stat_sys_download_done"
-        android:title="@string/ic_menu_title_import"
+        android:title="@string/menu_title_import"
         app:showAsAction="never"/>
     <item
         android:id="@+id/action_save"
         android:icon="@android:drawable/ic_menu_save"
-        android:title="@string/ic_menu_title_save"
+        android:title="@string/menu_title_save"
         app:showAsAction="always"/>
     <item
         android:id="@+id/action_add"
         android:icon="@android:drawable/ic_menu_add"
-        android:title="@string/ic_menu_title_add"
+        android:title="@string/menu_title_add"
         app:showAsAction="always"/>
 </menu>

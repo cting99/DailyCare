@@ -10,7 +10,6 @@ import com.google.gson.annotations.Expose;
 import cting.com.robin.support.recyclerview.model.IRobinListItem;
 import cting.com.robin.support.toothcare.BR;
 import cting.com.robin.support.toothcare.utils.TimeFormatHelper;
-import cting.com.robin.support.toothcare.views.IEntryState;
 
 public class TimeSlice extends BaseObservable implements IRobinListItem,Parcelable, IEntryState {
 

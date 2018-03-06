@@ -12,7 +12,7 @@
     <string name="fragment_title_today">今天 No.<xliff:g id="progressIndex">%d</xliff:g>/<xliff:g id="dayInProgress">%d</xliff:g></string>
 
     <string name="progress_detail_title">隐适美 第<xliff:g id="progressIndex">%s</xliff:g>副</string>
-    <string name="progress_detail_daycount_and_totaltime">你已经带了<xliff:g id="dayCount">%s</xliff:g>天，时长 <xliff:g id="totalTime">%s</xliff:g></string>
+    <string name="progress_detail_daycount_and_totaltime">你已经带了<xliff:g id="dayCount">%s</xliff:g>天，时长 <xliff:g id="total">%s</xliff:g></string>
 
 
     <string name="navigation_drawer_open">Open navigation drawer</string>
@@ -25,5 +25,6 @@
     <string name="drawer_nav_backup_title">备份数据</string>
     <string name="fragment_title_progress_list">牙套</string>
     <string name="fragment_title_daily_list">隐适美每一天</string>
+    <string name="drawer_nav_homepage_title">主页</string>
 
 </resources>

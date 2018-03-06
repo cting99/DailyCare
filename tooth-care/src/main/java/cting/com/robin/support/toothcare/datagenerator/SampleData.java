@@ -1,6 +1,7 @@
 package cting.com.robin.support.toothcare.datagenerator;
 
 import android.content.Context;
+import android.support.v4.app.FragmentActivity;
 import android.util.Log;
 
 import java.util.ArrayList;
@@ -65,9 +66,14 @@ public class SampleData {
     public int getProgressIndex() {
         return mDataFactory.getLastProgressIndex();
     }
+
+    public void addProgressRecord(ProgressRecord progressRecord) {
+        mDataFactory.addProgressItem(progressRecord);
+    }
     // progress end
 
     public void save(Context context) {
         mDataFactory.save(context);
     }
+
 }

@@ -26,6 +26,14 @@ public class ProgressRecord implements IRobinListItem {
     public ProgressRecord() {
     }
 
+    public ProgressRecord(Bundle bundle) {
+        if (bundle != null) {
+            this.progressIndex = bundle.getInt(PROGRESS_INDEX);
+            this.dailyRecords = bundle.getParcelableArrayList(DAILYRECORDS);
+        }
+    }
+
+
     public int getProgressIndex() {
         return progressIndex;
     }
@@ -67,13 +75,6 @@ public class ProgressRecord implements IRobinListItem {
     }
 
 
-    public ProgressRecord(Bundle bundle) {
-        if (bundle != null) {
-            this.progressIndex = bundle.getInt(PROGRESS_INDEX);
-            this.dailyRecords = bundle.getParcelableArrayList(DAILYRECORDS);
-        }
-    }
-
     public Bundle toBundle() {
         Bundle bundle = new Bundle();
         bundle.putInt(PROGRESS_INDEX, progressIndex);
@@ -90,5 +91,32 @@ public class ProgressRecord implements IRobinListItem {
 
     public void addRecord(DailyRecord dailyRecord) {
         dailyRecords.add(dailyRecord);
+    }
+
+    public static ProgressRecord newFirstProgress() {
+        return new ProgressRecord.Builder()
+                .progressIndex(1)
+                .build();
+    }
+
+
+    public static class Builder {
+        private ProgressRecord progressRecord = new ProgressRecord();
+
+        public ProgressRecord build() {
+            return progressRecord;
+        }
+
+        public Builder progressIndex(int progressIndex) {
+            progressRecord.progressIndex = progressIndex;
+            return this;
+        }
+
+        public Builder newRecordList(DailyRecord dailyRecord) {
+            if (dailyRecord != null) {
+                progressRecord.addRecord(dailyRecord);
+            }
+            return this;
+        }
     }
 }

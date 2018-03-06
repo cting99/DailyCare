@@ -4,6 +4,8 @@
     tools:showIn="navigation_view">
 
     <group android:checkableBehavior="single">
+        <item android:id="@+id/nav_homepage"
+            android:title="@string/drawer_nav_homepage_title"/>
         <item android:id="@+id/nav_today"
             android:title="@string/drawer_nav_today_title"/>
         <item android:id="@+id/nav_progress_list"
