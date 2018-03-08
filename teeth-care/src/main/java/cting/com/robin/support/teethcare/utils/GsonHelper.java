@@ -25,7 +25,6 @@ public class GsonHelper {
         String fileName = FILE_INVISALIGN_DAILY_JSON;
         Gson gson = new GsonBuilder()
                 .excludeFieldsWithoutExposeAnnotation()
-                .serializeNulls()
                 .setDateFormat(TimeFormatHelper.DATA_FORMAT)
                 .setPrettyPrinting()
                 .create();
@@ -42,7 +41,6 @@ public class GsonHelper {
         String fileName = FILE_INVISALIGN_BRACES_JSON;
         Gson gson = new GsonBuilder()
                 .excludeFieldsWithoutExposeAnnotation()
-                .serializeNulls()
                 .setDateFormat(TimeFormatHelper.DATA_FORMAT)
                 .setPrettyPrinting()
                 .create();
@@ -58,33 +56,47 @@ public class GsonHelper {
 
     public static class BracesWrapper {
         @Expose
-        private ArrayList<BracesRecord> list;
+        private ArrayList<BracesRecord> braces;
 
         public BracesWrapper() {
         }
 
-        public void setList(ArrayList<BracesRecord> list) {
-            this.list = list;
+        public void setList(ArrayList<BracesRecord> braces) {
+            this.braces = braces;
         }
 
         public ArrayList<BracesRecord> getList() {
-            return list;
+            return braces;
         }
     }
 
     public static class DailyWrapper {
         @Expose
-        private ArrayList<DailyRecord> list;
+        private ArrayList<DailyRecord> day;
 
         public DailyWrapper() {
         }
 
-        public void setList(ArrayList<DailyRecord> list) {
-            this.list = list;
+        public void setList(ArrayList<DailyRecord> day) {
+            this.day = day;
         }
 
         public ArrayList<DailyRecord> getList() {
-            return list;
+            return day;
         }
     }
+
+    public static class Wrapper<T> {
+        @Expose
+        private ArrayList<T> list;
+
+        public ArrayList<T> getList() {
+            return list;
+        }
+
+        public void setList(ArrayList<T> list) {
+            this.list = list;
+        }
+    }
+
 }

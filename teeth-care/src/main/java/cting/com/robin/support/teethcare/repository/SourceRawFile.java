@@ -1,6 +1,7 @@
 package cting.com.robin.support.teethcare.repository;
 
 import android.content.Context;
+import android.support.annotation.NonNull;
 import android.text.TextUtils;
 import android.util.Log;
 
@@ -12,7 +13,7 @@ import java.util.Arrays;
 import cting.com.robin.support.commom.utils.StringHelper;
 import cting.com.robin.support.teethcare.braces.BracesRecord;
 import cting.com.robin.support.teethcare.daily.DailyRecord;
-import cting.com.robin.support.teethcare.daily.detail.TimeSlice;
+import cting.com.robin.support.teethcare.utils.TimeFormatHelper;
 
 class SourceRawFile extends DataGenerator {
     public static final String FILE_INVISALIGN_ASSET = "invisalign_raw.txt";
@@ -41,21 +42,17 @@ class SourceRawFile extends DataGenerator {
             String[] items = line.trim().split("\t");
 //            Log.i(TAG, "readFile: read items=" + Arrays.toString(items));
             if (isBracesLine(items)) {
-                //read new braces
+                // read new braces
                 braces = readBracesRecord(items);
-                mBracesList.add(braces);
             } else if (isDailyRecordLine(items)) {
-                //read new daily
+                // read new daily
                 daily = readDailyRecord(items);
-                mDailyList.add(daily);
-
-                //start this braces
+                // update this braces
                 if (braces != null) {
-                    if (TextUtils.isEmpty(braces.getDateSlice().getFrom())) {
-                        braces.setFromDate(daily.getDate());
-                    } else {
-                        braces.setToDate(daily.getDate());
+                    if (TextUtils.isEmpty(braces.getDate())) {
+                        braces.setDate(daily.getDate());
                     }
+                    braces.setDayCount(braces.getDayCount() + 1);
                 }
             }
         }
@@ -68,11 +65,18 @@ class SourceRawFile extends DataGenerator {
     }
 
     private BracesRecord readBracesRecord(String[] items) {
-        int bracesIndex = StringHelper.getNumbers(items[0]);
-        BracesRecord braces = new BracesRecord.Builder()
-                .index(bracesIndex)
-                .build();
+        BracesRecord braces = new BracesRecord();
+        braces.setIndex(StringHelper.getNumbers(items[0]));
+        braces.setTotalTime(formatTotalTime(items[1]));
+        mBracesList.add(braces);
+        Log.i(TAG, "readBracesRecord: " + braces);
         return braces;
+    }
+
+    @NonNull
+    private String formatTotalTime(String time) {
+        //format 18:55 as 18h 55m
+        return time.replace(":", "h ") + "m";
     }
 
     private boolean isDailyRecordLine(String[] lineItems) {
@@ -80,33 +84,33 @@ class SourceRawFile extends DataGenerator {
     }
 
     private DailyRecord readDailyRecord(String[] lineItems) {
-        DailyRecord.Builder builder= new DailyRecord.Builder()
-                .index(mDailyList.size() + 1)
-                .date(lineItems[1])
-                .note(lineItems[3]);
+        DailyRecord daily = new DailyRecord();
+        daily.setIndex(mDailyList.size() + 1);
+        daily.setDate(TimeFormatHelper.reFormat(lineItems[1], "yyyy/M/d", TimeFormatHelper.DATA_FORMAT));
+        daily.setTotalTime(formatTotalTime(lineItems[2]));
+        daily.setNote(lineItems[3]);
 
-        int count = lineItems.length;
-        String from;
-        String to;
-        if ("0:00".equals(lineItems[count - 1])) {
-            lineItems[count - 1] = "24:00";
-        }
-        for (int i = 4; i < count; i++) {
-            from = lineItems[i];
-            if (TextUtils.isEmpty(from)) {
+        int totalSize = lineItems.length;
+        StringBuilder sb = new StringBuilder();
+
+        for (int i = 4; i < totalSize; i++) {
+            if (TextUtils.isEmpty(lineItems[i])) {
                 continue;
             }
-            if (i + 1 >= count) {
-                to = "24:00";
+            if (i == totalSize - 1) {
+                if ("0:00".equals(lineItems[i])) {
+                    sb.append("24:00");
+                } else {
+                    sb.append(lineItems[i]);
+                }
             } else {
-                to = lineItems[++i];
+                sb.append(lineItems[i]);
+                sb.append(",");
             }
-            TimeSlice timeSlice = new TimeSlice.Builder()
-                    .from(from)
-                    .to(to)
-                    .build();
-            builder.timeSlice(timeSlice);
         }
-        return builder.build();
+        daily.setLine(sb.toString());
+        mDailyList.add(daily);
+        Log.i(TAG, "readDailyRecord: " + daily);
+        return daily;
     }
 }

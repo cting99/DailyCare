@@ -16,6 +16,17 @@ public class TimeFormatHelper {
     public static final String TIME_FORMAT_ERROR = "--";
     public static final String DATA_FORMAT = "yyyy/MM/dd";
 
+    public static String reFormat(String dateStr, String pattern, String newPattern) {
+        SimpleDateFormat format = new SimpleDateFormat(pattern);
+        try{
+            Date date = format.parse(dateStr);
+            return new SimpleDateFormat(newPattern).format(date);
+        } catch (Exception e){
+            e.printStackTrace();
+        }
+        return dateStr;
+    }
+
     private static final String format(long time, String pattern) {
         return new SimpleDateFormat(pattern).format(new Date(time));
     }

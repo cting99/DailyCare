@@ -2,11 +2,9 @@ package cting.com.robin.support.teethcare.braces;
 
 import java.util.ArrayList;
 
-import cting.com.robin.support.recyclerview.fragments.RobinListFragment;
 import cting.com.robin.support.teethcare.R;
 import cting.com.robin.support.teethcare.databinding.BracesRecordListItemBinding;
 import cting.com.robin.support.teethcare.models.MyListFragment;
-import cting.com.robin.support.teethcare.repository.DataGenerator;
 import cting.com.robin.support.teethcare.repository.MySource;
 
 public class BracesListFragment extends MyListFragment<BracesRecord,BracesRecordListItemBinding> {

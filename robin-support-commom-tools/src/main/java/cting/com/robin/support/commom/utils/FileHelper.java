@@ -6,7 +6,9 @@ import android.support.annotation.NonNull;
 import android.support.annotation.RawRes;
 import android.util.Log;
 
+import java.io.BufferedOutputStream;
 import java.io.BufferedReader;
+import java.io.ByteArrayOutputStream;
 import java.io.File;
 import java.io.FileInputStream;
 import java.io.FileNotFoundException;
@@ -86,7 +88,7 @@ public class FileHelper {
         }
     }
 
-    private static String readFromInputStream(InputStream inputStream) {
+    public static String readFromInputStream(InputStream inputStream) {
         StringBuilder sb = new StringBuilder();
         try {
             BufferedReader reader = new BufferedReader(new InputStreamReader(inputStream));
@@ -108,6 +110,32 @@ public class FileHelper {
             }
         }
         return sb.toString();
+    }
+
+    public static String readStream(InputStream stream){
+        byte[] buffer = new byte[1024];
+        ByteArrayOutputStream byteArray = new ByteArrayOutputStream();
+        BufferedOutputStream out = null;
+        try {
+            int length = 0;
+            out = new BufferedOutputStream(byteArray);
+            while ((length = stream.read(buffer)) > 0) {
+                out.write(buffer, 0, length);
+            }
+            out.flush();
+            return byteArray.toString();
+        } catch (IOException e) {
+            e.printStackTrace();
+            return null;
+        } finally {
+            if (out != null) {
+                try {
+                    out.close();
+                } catch (IOException e) {
+                    e.printStackTrace();
+                }
+            }
+        }
     }
 
     public static String readFromRaw(Context context, @RawRes int rawId) {

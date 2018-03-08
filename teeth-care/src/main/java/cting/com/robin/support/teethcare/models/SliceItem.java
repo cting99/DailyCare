@@ -10,9 +10,7 @@ import cting.com.robin.support.teethcare.BR;
 
 public abstract class SliceItem extends BaseObservable
         implements IRobinListItem{
-    @Expose
     protected String from;
-    @Expose
     protected String to;
     protected String diff;
 
@@ -49,9 +47,13 @@ public abstract class SliceItem extends BaseObservable
     @Bindable
     public abstract long getDiffInNumeric();
 
+
     @Override
     public String toString() {
-        return from +" ~ "+ to;
+        return "SliceItem{" +
+                "from='" + from + '\'' +
+                ", to='" + to + '\'' +
+                ", diff='" + diff + '\'' +
+                '}';
     }
-
 }

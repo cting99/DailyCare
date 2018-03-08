@@ -24,6 +24,7 @@
             android:layout_marginEnd="8dp"
             android:layout_marginStart="8dp"
             android:text="@{item.diff}"
+            android:textColor="@color/daily_detail_total_time_color"
             app:layout_constraintBottom_toBottomOf="parent"
             app:layout_constraintEnd_toStartOf="@+id/end_time_edit"
             app:layout_constraintStart_toEndOf="@+id/start_time_edit"
@@ -42,7 +43,7 @@
             app:layout_constraintBottom_toBottomOf="parent"
             app:layout_constraintStart_toStartOf="parent"
             app:layout_constraintTop_toTopOf="parent"
-            tools:text="8:30"/>
+            tools:text="8:30" />
 
         <TextView
             android:id="@+id/end_time_edit"

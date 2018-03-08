@@ -1,20 +1,16 @@
 package cting.com.robin.support.teethcare.daily;
 
-import android.content.DialogInterface;
-import android.support.v7.app.AlertDialog;
-
 import java.util.ArrayList;
 
 import cting.com.robin.support.teethcare.R;
 import cting.com.robin.support.teethcare.daily.detail.DailyDetailActivity;
 import cting.com.robin.support.teethcare.databinding.DailyRecordListItemBinding;
 import cting.com.robin.support.teethcare.models.MyListFragment;
-import cting.com.robin.support.teethcare.repository.MyRepositoryService;
 import cting.com.robin.support.teethcare.repository.MySource;
 
 public class DailyListFragment extends MyListFragment<DailyRecord, DailyRecordListItemBinding>
-implements DialogInterface.OnClickListener{
-    private int mSelectedDay;
+/*implements DialogInterface.OnClickListener*/{
+//    private int mSelectedDay;
 
     @Override
     protected ArrayList<DailyRecord> newData() {
@@ -35,7 +31,7 @@ implements DialogInterface.OnClickListener{
     public void onItemClick(DailyRecord item, int position) {
         DailyDetailActivity.launch(getContext(), item, position == 0);
     }
-
+/*
     @Override
     public boolean onItemLongClick(DailyRecord item, int position) {
         mSelectedDay = item.getIndex();
@@ -53,5 +49,5 @@ implements DialogInterface.OnClickListener{
             MySource.getInstance().getGenerator().deleteDay(mSelectedDay);
             MyRepositoryService.startActionSave(getContext());
         }
-    }
+    }*/
 }

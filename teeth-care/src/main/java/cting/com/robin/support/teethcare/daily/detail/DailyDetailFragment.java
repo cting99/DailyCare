@@ -1,6 +1,5 @@
 package cting.com.robin.support.teethcare.daily.detail;
 
-import android.content.Intent;
 import android.databinding.DataBindingUtil;
 import android.databinding.ViewDataBinding;
 import android.os.Bundle;
@@ -31,6 +30,8 @@ import cting.com.robin.support.teethcare.repository.DataGenerator;
 import cting.com.robin.support.teethcare.repository.MessageEvent;
 import cting.com.robin.support.teethcare.repository.MyRepositoryService;
 import cting.com.robin.support.teethcare.repository.MySource;
+import cting.com.robin.support.teethcare.utils.TimeFormatHelper;
+import cting.com.robin.support.teethcare.utils.TimeSliceHelper;
 import cting.com.robin.support.teethcare.views.StateButton;
 
 public class DailyDetailFragment<B extends ViewDataBinding> extends RobinListFragment<TimeSlice, B> implements StateButton.Callback {
@@ -38,6 +39,7 @@ public class DailyDetailFragment<B extends ViewDataBinding> extends RobinListFra
     public static final String ACTION_EDIT = "action_edit";
     public static final String DAILY_RECORD = "daily_record";
     public static final String DAILY_RECORD_DATE = "date";
+
     private DailyRecord mDailyRecord;
     private boolean mIsEditMode = false;
     private DataGenerator mGenerator;
@@ -92,24 +94,38 @@ public class DailyDetailFragment<B extends ViewDataBinding> extends RobinListFra
 
     @Override
     protected void selectMenuEdit() {
-        mIsEditMode = true;
+        changeEditMode(true);
+    }
+
+    @Override
+    protected void selectMenuSave() {
+        Log.d(TAG, "selectMenuSave,before: " + mDailyRecord);
+        String line = TimeSliceHelper.toLine(mDataList);
+        mDailyRecord.setLine(line);
+        mDailyRecord.setTotalTime(TimeSliceHelper.calculateTotalTime(line));
+        // TODO: update braces as well
+//        MySource.getInstance().getGenerator().getBracesByDay(mDailyRecord.getDate());
+        Log.d(TAG, "selectMenuSave, after:" + mDailyRecord);
+        MyRepositoryService.startActionSave(getContext());
+        mBinding.setItem(mDailyRecord);//update total time
+
+        changeEditMode(false);
+//        Toast.makeText(getContext(), "save " + mDailyRecord.getDate(), Toast.LENGTH_SHORT).show();
+    }
+
+    private void changeEditMode(boolean editMode) {
+        mIsEditMode = editMode;
         getActivity().finish();
         DailyDetailActivity.launch(getContext(), mDailyRecord, mIsEditMode);
     }
 
     @Override
-    protected void selectMenuSave() {
-        MyRepositoryService.startActionSave(getContext());
-        mBinding.setItem(mDailyRecord);//update total time
-//        Toast.makeText(getContext(), "save " + mDailyRecord.getDate(), Toast.LENGTH_SHORT).show();
-    }
-
-    @Override
     public View onCreateView(LayoutInflater inflater, ViewGroup container, Bundle savedInstanceState) {
-        mBinding = DataBindingUtil.inflate(inflater,
-                R.layout.daily_detail_fragment, container, false);
+        mBinding = DataBindingUtil.inflate(inflater,R.layout.daily_detail_fragment,
+                container, false);
 //        View view = inflater.inflate(R.layout.daily_detail_fragment, container, false);
         mBinding.setItem(mDailyRecord);
+        mBinding.setEditMode(mIsEditMode);
         setupRecyclerView(mBinding.recyclerView);
         setDefaultAdapter(this);
         setDataList(newData());
@@ -128,7 +144,9 @@ public class DailyDetailFragment<B extends ViewDataBinding> extends RobinListFra
     @Override
     protected ArrayList<TimeSlice> newData() {
         if (mDailyRecord != null) {
-            return (ArrayList<TimeSlice>) mDailyRecord.getSliceList();
+            ArrayList<TimeSlice> list = TimeSliceHelper.generateListFromLine(mDailyRecord.getLine());
+            Log.i(TAG, "newData: list=" + list);
+            return list;
         }
         return null;
     }
@@ -156,7 +174,9 @@ public class DailyDetailFragment<B extends ViewDataBinding> extends RobinListFra
 
     @Override
     public void onAdd() {
-        TimeSlice slice=new TimeSlice.Builder().newNow().build();
+        TimeSlice slice = new TimeSlice();
+        slice.setFrom(TimeFormatHelper.formatNow());
+        slice.setTo("");
         mDataList.add(slice);//always add at last position
         mAdapter.notifyDataSetChanged();
     }

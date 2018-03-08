@@ -40,7 +40,6 @@ public class MySource {
 
     private DataGenerator getDataGenerator(Context context) {
         DataGenerator dg;
-
         // try external json
         dg = new SourceLocalJson();
         if (!dg.checkEmpty(context)) {

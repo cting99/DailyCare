@@ -6,6 +6,7 @@
     <data>
 
         <import type="cting.com.robin.support.teethcare.braces.BracesRecord" />
+
         <variable
             name="item"
             type="BracesRecord" />
@@ -20,8 +21,10 @@
             android:id="@+id/progress_title_text"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
-            android:layout_marginBottom="8dp"
-            android:text="@{@string/progress_record_day_index(item.index, item.total)}"
+            android:layout_marginStart="16dp"
+            android:text="@{@string/progress_record_day_index(item.index, item.dayCount)}"
+            android:textSize="19sp"
+            android:textStyle="bold"
             app:layout_constraintBottom_toBottomOf="parent"
             app:layout_constraintStart_toStartOf="parent"
             app:layout_constraintTop_toTopOf="parent"
@@ -31,15 +34,11 @@
             android:id="@+id/progress_total_cost_text"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
-            android:layout_marginBottom="8dp"
             android:layout_marginEnd="8dp"
-            android:text="@{item.getDateSliceString}"
+            android:text="@{item.totalTime}"
             app:layout_constraintBottom_toBottomOf="@+id/progress_title_text"
             app:layout_constraintEnd_toEndOf="parent"
-            app:layout_constraintHorizontal_bias="0.813"
-            app:layout_constraintStart_toEndOf="@+id/progress_title_text"
             app:layout_constraintTop_toTopOf="@+id/progress_title_text"
-            app:layout_constraintVertical_bias="0.0"
             tools:text="162h 33m" />
     </android.support.constraint.ConstraintLayout>
 </layout>

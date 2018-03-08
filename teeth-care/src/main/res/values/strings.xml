@@ -1,6 +1,6 @@
 <resources xmlns:xliff="urn:oasis:names:tc:xliff:document:1.2">
     <string name="app_name">toothcare</string>
-    <string name="progress_record_day_index">No.<xliff:g id="progressIndex">%s</xliff:g> (<xliff:g id="dayCount">%s</xliff:g> Days)</string>
+    <string name="progress_record_day_index">No.<xliff:g id="bracesIndex">%s</xliff:g>/<xliff:g id="dayCount">%s</xliff:g></string>
     <string name="daily_record_day_index">Day <xliff:g id="dayIndex">%s</xliff:g></string>
     <string name="activity_label_braces_list">隐适美牙套记录</string>
     <string name="activity_label_daily_record_list">隐适美每日记录</string>
@@ -15,19 +15,11 @@
     <string name="progress_detail_title">隐适美 第<xliff:g id="progressIndex">%s</xliff:g>副</string>
     <string name="progress_detail_daycount_and_totaltime">你已经带了<xliff:g id="dayCount">%s</xliff:g>天，时长 <xliff:g id="total">%s</xliff:g></string>
 
-
-    <string name="navigation_drawer_open">Open navigation drawer</string>
-    <string name="navigation_drawer_close">Close navigation drawer</string>
-
-    <string name="action_settings">Settings</string>
-    <string name="drawer_nav_today_title">今天</string>
-    <string name="drawer_nav_progress_list_title">牙套进度</string>
-    <string name="drawer_nav_daily_record_list_title">隐适美每一天</string>
-    <string name="drawer_nav_backup_title">备份数据</string>
     <string name="fragment_title_progress_list">牙套</string>
     <string name="fragment_title_daily_list">隐适美每一天</string>
     <string name="drawer_nav_homepage_title">主页</string>
     <string name="menu_title_switch">切换</string>
     <string name="activity_label_main">隐适美</string>
+    <string name="daily_detail_note_hint">备注</string>
 
 </resources>

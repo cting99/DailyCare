@@ -7,6 +7,7 @@ import android.view.MenuItem;
 
 import cting.com.robin.support.recyclerview.activities.RobinListActivity;
 import cting.com.robin.support.recyclerview.fragments.RobinListFragment;
+import cting.com.robin.support.teethcare.MainActivity;
 import cting.com.robin.support.teethcare.daily.DailyListActivity;
 import cting.com.robin.support.teethcare.daily.DailyRecord;
 
@@ -33,7 +34,7 @@ public class DailyDetailActivity extends RobinListActivity {
         switch (item.getItemId()) {
             case android.R.id.home:
                 Intent intent = new Intent();
-                intent.setClass(this, DailyListActivity.class);
+                intent.setClass(this, MainActivity.class);
                 startActivity(intent);
                 finish();
                 break;

@@ -42,37 +42,41 @@ public class MyRepositoryService extends IntentService {
 
     @Override
     protected void onHandleIntent(@Nullable Intent intent) {
-        Log.i(TAG, "onHandleIntent: " + intent);
+//        Log.i(TAG, "onHandleIntent: " + intent);
         if (intent != null) {
             final String action = intent.getAction();
             Log.i(TAG, "onHandleIntent: action=" + action);
             if (ACTION_LOAD.equals(action)) {
                 handleActionLoad();
+                testHttp();
             } else if (ACTION_SAVE.equals(action)) {
                 handleActionSave();
             }
         }
     }
 
+    private void testHttp() {
+    }
+
     private void handleActionLoad() {
-        Log.i(TAG, "handleActionLoad:  start---------");
+        Log.i(TAG, "handleActionLoad:  start");
         MySource.getInstance().initAndOnlyOnce(this);
 
         MessageEvent msg = new MessageEvent();
         msg.setFinish(true);
         msg.setMessage(MESSAGE_LOAD);
         EventBus.getDefault().postSticky(msg);
-        Log.i(TAG, "handleActionLoad:  end-----------");
+        Log.i(TAG, "handleActionLoad:  end");
     }
 
     private void handleActionSave() {
-        Log.i(TAG, "handleActionSave:  start---------");
+        Log.i(TAG, "handleActionSave:  start");
         MySource.getInstance().save(this);
 
         MessageEvent msg = new MessageEvent();
         msg.setFinish(true);
         msg.setMessage(MESSAGE_SAVE);
         EventBus.getDefault().postSticky(msg);
-        Log.i(TAG, "handleActionSave:  end---------");
+        Log.i(TAG, "handleActionSave:  end");
     }
 }

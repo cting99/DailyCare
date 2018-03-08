@@ -63,7 +63,8 @@ public abstract class DataGenerator {
 
     public void updateLastBraces(String date) {
         if (mBracesList.size() > 0) {
-            mBracesList.get(0).setToDate(date);
+//            mBracesList.get(0).setToDate(date);
+            //TODO
         }
     }
 
@@ -90,6 +91,7 @@ public abstract class DataGenerator {
 
     public void addDay(DailyRecord today) {
         mDailyList.add(0, today);//add at index 0 for this descending ordered list
+        updateLastBraces(today.getDate());
     }
 
     public void deleteDay(int dayIndex) {
@@ -101,6 +103,10 @@ public abstract class DataGenerator {
                     count--;
                 }
             }
+            /*count = mBracesList.size();
+            for (int i = 0; i < count; i++) {
+
+            }*/
         }
 
     }
