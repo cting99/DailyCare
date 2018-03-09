@@ -8,6 +8,10 @@ import cting.com.robin.support.teethcare.utils.TimeSliceHelper;
 
 class SourceSample extends DataGenerator {
 
+    public SourceSample() {
+        super("Sample data");
+    }
+
     @Override
     public void forceLoad(Context context) {
         super.forceLoad(context);

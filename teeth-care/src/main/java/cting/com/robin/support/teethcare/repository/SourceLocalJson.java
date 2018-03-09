@@ -27,6 +27,10 @@ import static cting.com.robin.support.teethcare.utils.GsonHelper.FILE_INVISALIGN
 class SourceLocalJson extends DataGenerator {
     public static final String TAG = "cting/SourceLocalJson";
 
+    public SourceLocalJson() {
+        super("Backup-Json-file");
+    }
+
     @Override
     public void forceLoad(Context context) {
         super.forceLoad(context);
@@ -34,7 +38,7 @@ class SourceLocalJson extends DataGenerator {
         mDailyList = readDaily(context);
     }
 
-    public static final ArrayList<DailyRecord> readDaily(Context context) {
+    public final ArrayList<DailyRecord> readDaily(Context context) {
         String fileName = FILE_INVISALIGN_DAILY_JSON;
         FileReader reader = null;
         try {
@@ -47,7 +51,7 @@ class SourceLocalJson extends DataGenerator {
                     .setPrettyPrinting()
                     .create();
             DailyWrapper items = gson.fromJson(reader, DailyWrapper.class);
-            Log.i(TAG, "readDaily: " + items.getList().size());
+            Log.i(TAG, "readDaily size: " + items.getList().size());
             return items.getList();
         } catch (FileNotFoundException e) {
             Log.e(TAG, "readFromJson,exception1:" + e.getLocalizedMessage());
@@ -66,7 +70,7 @@ class SourceLocalJson extends DataGenerator {
     }
 
 
-    public static final ArrayList<BracesRecord> readBraces(Context context) {
+    public final ArrayList<BracesRecord> readBraces(Context context) {
         String fileName = FILE_INVISALIGN_BRACES_JSON;
         FileReader reader = null;
         try {
@@ -79,7 +83,7 @@ class SourceLocalJson extends DataGenerator {
                     .setPrettyPrinting()
                     .create();
             BracesWrapper items = gson.fromJson(reader, BracesWrapper.class);
-            Log.i(TAG, "readBraces: " + items.getList().size());
+            Log.i(TAG, "readBraces size: " + items.getList().size());
             return items.getList();
         } catch (FileNotFoundException e) {
             Log.e(TAG, "readFromJson,exception1:" + e.getLocalizedMessage());

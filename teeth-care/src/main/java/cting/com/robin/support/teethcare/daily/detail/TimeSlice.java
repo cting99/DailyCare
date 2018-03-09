@@ -3,7 +3,7 @@ package cting.com.robin.support.teethcare.daily.detail;
 import android.databinding.Bindable;
 import android.text.TextUtils;
 
-import cting.com.robin.support.teethcare.models.IEntryState;
+import cting.com.robin.support.teethcare.views.IEntryState;
 import cting.com.robin.support.teethcare.models.SliceItem;
 import cting.com.robin.support.teethcare.utils.TimeFormatHelper;
 

@@ -24,6 +24,7 @@ import java.util.ArrayList;
 import cting.com.robin.support.recyclerview.fragments.RobinListFragment;
 import cting.com.robin.support.teethcare.R;
 import cting.com.robin.support.teethcare.daily.DailyRecord;
+import cting.com.robin.support.teethcare.database.SourceDatabase;
 import cting.com.robin.support.teethcare.databinding.DailyDetailFragmentBinding;
 import cting.com.robin.support.teethcare.databinding.TimeSliceEditLayoutBinding;
 import cting.com.robin.support.teethcare.repository.DataGenerator;
@@ -42,16 +43,18 @@ public class DailyDetailFragment<B extends ViewDataBinding> extends RobinListFra
 
     private DailyRecord mDailyRecord;
     private boolean mIsEditMode = false;
-    private DataGenerator mGenerator;
     private DailyDetailFragmentBinding mBinding;
+    private SourceDatabase mDBSource;
 
     @Override
     public void onCreate(@Nullable Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         Bundle bundle = getArguments();
         if (bundle != null && bundle.containsKey(DAILY_RECORD_DATE)) {
-            mGenerator = MySource.getInstance().getGenerator();
-            mDailyRecord = mGenerator.getDayByDate(bundle.getString(DAILY_RECORD_DATE));
+            String date = bundle.getString(DAILY_RECORD_DATE);
+            mDBSource = new SourceDatabase(getContext());
+            mDBSource.open();
+            mDailyRecord = mDBSource.queryTheDaily(date);;
             mIsEditMode = bundle.getBoolean(ACTION_EDIT);
             Log.i(TAG, "onCreate: date=" + mDailyRecord.getDate() + ", mIsEditMode=" + mIsEditMode);
             getActivity().setTitle(String.valueOf(mDailyRecord.getIndex()));
@@ -64,24 +67,32 @@ public class DailyDetailFragment<B extends ViewDataBinding> extends RobinListFra
     }
 
     @Override
+    public void onDestroy() {
+        super.onDestroy();
+        if (mDBSource != null) {
+            mDBSource.close();
+        }
+    }
+
+    @Override
     public void onResume() {
         super.onResume();
-        EventBus.getDefault().register(this);
+//        EventBus.getDefault().register(this);
     }
 
     @Override
     public void onPause() {
         super.onPause();
-        EventBus.getDefault().unregister(this);
+//        EventBus.getDefault().unregister(this);
     }
-
+/*
     @Subscribe(threadMode = ThreadMode.MAIN)
     public void onSaveFinished(MessageEvent msg) {
         Log.i(TAG, "onSaveFinished: " + msg.getMessage() + " " + msg.isFinish());
         if (msg.isFinish() && MyRepositoryService.MESSAGE_SAVE.equals(msg.getMessage())) {
             Toast.makeText(getContext(), "save finished from " + msg.getMessage(), Toast.LENGTH_SHORT).show();
         }
-    }
+    }*/
 
     @Override
     public void onCreateOptionsMenu(Menu menu, MenuInflater inflater) {
@@ -104,9 +115,8 @@ public class DailyDetailFragment<B extends ViewDataBinding> extends RobinListFra
         mDailyRecord.setLine(line);
         mDailyRecord.setTotalTime(TimeSliceHelper.calculateTotalTime(line));
         // TODO: update braces as well
-//        MySource.getInstance().getGenerator().getBracesByDay(mDailyRecord.getDate());
+        mDBSource.updateDaily(mDailyRecord);
         Log.d(TAG, "selectMenuSave, after:" + mDailyRecord);
-        MyRepositoryService.startActionSave(getContext());
         mBinding.setItem(mDailyRecord);//update total time
 
         changeEditMode(false);

@@ -1,8 +1,13 @@
 package cting.com.robin.support.teethcare.repository;
 
-public class MessageEvent {
+import java.util.ArrayList;
+
+import cting.com.robin.support.teethcare.models.IRecord;
+
+public class MessageEvent<T extends IRecord> {
     private String message;
     private boolean isFinish = false;
+    private ArrayList<T> list;
 
     public MessageEvent() {
     }
@@ -13,6 +18,14 @@ public class MessageEvent {
 
     public void setMessage(String message) {
         this.message = message;
+    }
+
+    public ArrayList<T> getList() {
+        return list;
+    }
+
+    public void setList(ArrayList<T> list) {
+        this.list = list;
     }
 
     public boolean isFinish() {

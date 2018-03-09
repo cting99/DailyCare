@@ -3,7 +3,6 @@
     package="cting.com.robin.support.teethcare">
 
     <uses-permission android:name="android.permission.WRITE_EXTERNAL_STORAGE" />
-
     <uses-permission android:name="android.permission.INTERNET" />
     <uses-permission android:name="android.permission.ACCESS_NETWORK_STATE" />
 
@@ -14,7 +13,8 @@
         android:roundIcon="@mipmap/ic_launcher_round"
         android:supportsRtl="true"
         android:theme="@style/AppTheme">
-        <activity android:name=".MainActivity"
+        <activity
+            android:name=".MainActivity"
             android:label="@string/activity_label_main"
             android:launchMode="singleTask"
             android:theme="@style/AppTheme.NoActionBar">
@@ -42,7 +42,8 @@
                 <action android:name="android.intent.action.MAIN" />
             </intent-filter>
         </activity>
-        <activity android:name=".daily.detail.DailyDetailActivity"
+        <activity
+            android:name=".daily.detail.DailyDetailActivity"
             android:parentActivityName=".daily.DailyListActivity"
             android:theme="@style/AppTheme.NoActionBar">
             <intent-filter>
@@ -50,7 +51,10 @@
             </intent-filter>
         </activity>
 
-        <service android:name=".repository.MyRepositoryService" android:exported="false"/>
+        <service
+            android:name=".repository.MyRepositoryService"
+            android:exported="false" />
+
     </application>
 
 </manifest>

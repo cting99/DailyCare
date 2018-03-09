@@ -1,21 +1,16 @@
 package cting.com.robin.support.teethcare.braces;
 
-import java.util.ArrayList;
-
 import cting.com.robin.support.teethcare.R;
 import cting.com.robin.support.teethcare.databinding.BracesRecordListItemBinding;
-import cting.com.robin.support.teethcare.models.MyListFragment;
-import cting.com.robin.support.teethcare.repository.MySource;
+import cting.com.robin.support.teethcare.MyListFragment;
+
+import static cting.com.robin.support.teethcare.repository.MyRepositoryService.DATA_TAG_BRACES_LIST;
 
 public class BracesListFragment extends MyListFragment<BracesRecord,BracesRecordListItemBinding> {
-    @Override
-    protected ArrayList<BracesRecord> newData() {
-        return null;
-    }
 
     @Override
-    protected ArrayList<BracesRecord> loadDataFromService() {
-        return MySource.getInstance().getGenerator().getBracesRecords(getContext());
+    protected String getDataTag() {
+        return DATA_TAG_BRACES_LIST;
     }
 
     @Override

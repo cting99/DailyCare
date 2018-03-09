@@ -1,25 +1,19 @@
 package cting.com.robin.support.teethcare.daily;
 
-import java.util.ArrayList;
-
 import cting.com.robin.support.teethcare.R;
 import cting.com.robin.support.teethcare.daily.detail.DailyDetailActivity;
 import cting.com.robin.support.teethcare.databinding.DailyRecordListItemBinding;
-import cting.com.robin.support.teethcare.models.MyListFragment;
-import cting.com.robin.support.teethcare.repository.MySource;
+import cting.com.robin.support.teethcare.MyListFragment;
+
+import static cting.com.robin.support.teethcare.repository.MyRepositoryService.DATA_TAG_DAILY_LIST;
 
 public class DailyListFragment extends MyListFragment<DailyRecord, DailyRecordListItemBinding>
 /*implements DialogInterface.OnClickListener*/{
-//    private int mSelectedDay;
+    //    private int mSelectedDay;
 
     @Override
-    protected ArrayList<DailyRecord> newData() {
-        return null;
-    }
-
-    @Override
-    protected ArrayList<DailyRecord> loadDataFromService() {
-        return MySource.getInstance().getGenerator().getDailyRecords(getContext());
+    protected String getDataTag() {
+        return DATA_TAG_DAILY_LIST;
     }
 
     @Override

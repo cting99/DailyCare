@@ -8,31 +8,48 @@ import android.util.Log;
 
 import org.greenrobot.eventbus.EventBus;
 
+import java.util.ArrayList;
+
+import cting.com.robin.support.teethcare.database.SourceDatabase;
+import cting.com.robin.support.teethcare.models.IRecord;
+import cting.com.robin.support.teethcare.utils.GsonHelper;
+
 public class MyRepositoryService extends IntentService {
 
     public static final String TAG = "cting/RepositoryService";
 
     public static final String ACTION_LOAD = "cting.com.robin.support.teethcare.action.MESSAGE_LOAD";
     private static final String ACTION_SAVE = "cting.com.robin.support.teethcare.action.SAVE";
+    private static final String ACTION_CHECK_DATABASE = "cting.com.robin.support.teethcare.action.CHECK_DATABASE";
 
-    public static final String EXTRA_DATA_FROM = "DATA_FROM";
-    public static final String DATA_SOURCE_RAW_FILE = "raw_file";
-    public static final String DATA_SOURCE_EXTERNAL_JSON = "external_json";
-    public static final String MESSAGE_LOAD = "MESSAGE_LOAD";
     public static final String MESSAGE_SAVE = "SAVE";
+
+    public static final String EXTRA_DATA_TAG = "DATA_TAG";
+    public static final String DATA_TAG_DAILY_LIST = "DAILY_LIST";
+    public static final String DATA_TAG_BRACES_LIST = "BRACES_LIST";
+
+    private SourceDatabase mDBSource;
 
 
     public MyRepositoryService() {
         super("Invisalign data service");
     }
 
-    public static void startActionLoad(Context context) {
-        Log.i(TAG, "startActionLoad: ");
+
+    public static void startActionCheckDatabase(Context context) {
+        Log.i(TAG, "startActionCheckDatabase: ");
         Intent intent = new Intent(context, MyRepositoryService.class);
-        intent.setAction(ACTION_LOAD);
+        intent.setAction(ACTION_CHECK_DATABASE);
         context.startService(intent);
     }
 
+    public static void startActionLoad(Context context, String dataTag) {
+        Log.i(TAG, "startActionLoad: ");
+        Intent intent = new Intent(context, MyRepositoryService.class);
+        intent.setAction(ACTION_LOAD);
+        intent.putExtra(EXTRA_DATA_TAG, dataTag);
+        context.startService(intent);
+    }
     public static void startActionSave(Context context) {
         Log.i(TAG, "startActionSave: ");
         Intent intent = new Intent(context, MyRepositoryService.class);
@@ -46,37 +63,57 @@ public class MyRepositoryService extends IntentService {
         if (intent != null) {
             final String action = intent.getAction();
             Log.i(TAG, "onHandleIntent: action=" + action);
+            mDBSource = new SourceDatabase(this);
+            mDBSource.open();
             if (ACTION_LOAD.equals(action)) {
-                handleActionLoad();
-                testHttp();
+                String tag = intent.getStringExtra(EXTRA_DATA_TAG);
+                if (DATA_TAG_DAILY_LIST.equals(tag)) {
+                    sendLoadFinishMsg(tag, true, mDBSource.queryDaily(""));
+                } else if (DATA_TAG_BRACES_LIST.equals(tag)) {
+                    sendLoadFinishMsg(tag, true, mDBSource.queryBraces(-1));
+                } else {
+                    sendLoadFinishMsg(tag, false, null);
+                }
             } else if (ACTION_SAVE.equals(action)) {
                 handleActionSave();
+            } else if (ACTION_CHECK_DATABASE.equals(action)) {
+                handleActionCheckDatabase();
             }
+            mDBSource.close();
         }
     }
 
-    private void testHttp() {
+    private void handleActionCheckDatabase() {
+        if (mDBSource.getDailyCount() == 0 && mDBSource.getRecordCount() == 0) {
+            DataGenerator generator = MySource.getDataGenerator(this);
+            mDBSource.insertDailyList(generator.getDailyRecords(this));
+            mDBSource.insertBracesList(generator.getBracesRecords(this));
+            Log.d(TAG, "handleActionCheckDatabase finish: Initialize data to database from " + generator.getName());
+        } else {
+            Log.i(TAG, "handleActionCheckDatabase: db already initialized!");
+        }
+
     }
 
-    private void handleActionLoad() {
-        Log.i(TAG, "handleActionLoad:  start");
-        MySource.getInstance().initAndOnlyOnce(this);
-
-        MessageEvent msg = new MessageEvent();
-        msg.setFinish(true);
-        msg.setMessage(MESSAGE_LOAD);
-        EventBus.getDefault().postSticky(msg);
-        Log.i(TAG, "handleActionLoad:  end");
+    private <T extends IRecord> void sendLoadFinishMsg(String dataTag, boolean finished, ArrayList<T> list) {
+        Log.i(TAG, "sendLoadFinishMsg," + dataTag + ":" + finished);
+        MessageEvent<T> msg = new MessageEvent();
+        msg.setFinish(finished);
+        msg.setMessage(dataTag);
+        msg.setList(list);
+        EventBus.getDefault().post(msg);
     }
 
     private void handleActionSave() {
-        Log.i(TAG, "handleActionSave:  start");
-        MySource.getInstance().save(this);
+        Log.i(TAG, "handleActionSave,start");
+//        MySource.getInstance().save(this);
+        GsonHelper.saveDaily(this, mDBSource.queryDaily(null));
+        GsonHelper.saveBraces(this, mDBSource.queryBraces(-1));
 
         MessageEvent msg = new MessageEvent();
         msg.setFinish(true);
         msg.setMessage(MESSAGE_SAVE);
-        EventBus.getDefault().postSticky(msg);
-        Log.i(TAG, "handleActionSave:  end");
+        EventBus.getDefault().post(msg);
+        Log.i(TAG, "handleActionSave,end");
     }
 }

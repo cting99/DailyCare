@@ -1,12 +1,6 @@
 package cting.com.robin.support.teethcare.braces;
 
-import android.support.annotation.NonNull;
-
 import com.google.gson.annotations.Expose;
-
-import java.util.ArrayList;
-import java.util.Collections;
-
 import cting.com.robin.support.teethcare.models.IRecord;
 
 public class BracesRecord extends IRecord{

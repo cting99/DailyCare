@@ -9,29 +9,30 @@ import android.widget.Toast;
 import cting.com.robin.support.teethcare.braces.BracesRecord;
 import cting.com.robin.support.teethcare.daily.DailyRecord;
 import cting.com.robin.support.teethcare.daily.detail.DailyDetailActivity;
-import cting.com.robin.support.teethcare.repository.DataGenerator;
-import cting.com.robin.support.teethcare.repository.MyRepositoryService;
-import cting.com.robin.support.teethcare.repository.MySource;
+import cting.com.robin.support.teethcare.database.SourceDatabase;
 import cting.com.robin.support.teethcare.utils.TimeFormatHelper;
 
 public class AddNewDayManager implements DialogInterface.OnClickListener {
     private static final boolean ALWAYS_ASK = true;
-    public int mCurrentDayIndex;
-    public String mTodayDate;
-    public int mLastBracesIndex;
-    public DailyRecord mToday;
-    DataGenerator mGenerator;
+    private int mCurrentDayIndex;
+    private String mTodayDate;
+    private int mLastBracesIndex;
+    private DailyRecord mToday;
 
-    public Context mContext;
+    private SourceDatabase mDBSource;
+    private Context mContext;
+
     public AddNewDayManager(Context context) {
         mContext = context;
     }
 
     public void gotoToday() {
-        mGenerator = MySource.getInstance().getGenerator();
 //        Toast.makeText(this, "goto today!", Toast.LENGTH_SHORT).show();
-        BracesRecord lastBraces = mGenerator.getLastBraces(mContext);
-        DailyRecord lastDay = mGenerator.getLastDay(mContext);
+        mDBSource = new SourceDatabase(mContext);
+        mDBSource.open();
+        BracesRecord lastBraces = mDBSource.queryLastBraces(mContext);
+        DailyRecord lastDay = mDBSource.queryLastDay(mContext);
+        mDBSource.close();
         mToday = null;
         mTodayDate = TimeFormatHelper.formatToday();
         if (lastBraces == null) {
@@ -90,7 +91,9 @@ public class AddNewDayManager implements DialogInterface.OnClickListener {
         braces.setIndex(index);
         braces.setDate(mTodayDate);
         braces.setTotalTime("0h");
-        mGenerator.addBraces(braces);
+        mDBSource.open();
+        mDBSource.insertBraces(braces);
+        mDBSource.close();
         Log.d(MainActivity.TAG, "addNewBraces: " + braces);
 
         addNewDay(mCurrentDayIndex);
@@ -103,10 +106,13 @@ public class AddNewDayManager implements DialogInterface.OnClickListener {
         mToday.setLine("00:00,00:00");
         mToday.setTotalTime("0h");
         mToday.setDate(mTodayDate);
-        mGenerator.addDay(mToday);
+
+        mDBSource.open();
+        mDBSource.insertDaily(mToday);
+        mDBSource.close();
         Log.d(MainActivity.TAG, "addNewDay: " + mToday);
 
-        MyRepositoryService.startActionSave(mContext);
+//        MyRepositoryService.startActionSave(mContext);
         return mToday;
     }
 }

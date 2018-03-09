@@ -7,7 +7,6 @@ import android.view.Gravity;
 import android.view.View;
 
 import cting.com.robin.support.teethcare.R;
-import cting.com.robin.support.teethcare.models.IEntryState;
 
 public class StateButton extends android.support.v7.widget.AppCompatButton implements View.OnClickListener {
 

@@ -1,9 +1,14 @@
-package cting.com.robin.support.teethcare.models;
+package cting.com.robin.support.teethcare;
 
+import android.content.Context;
 import android.databinding.ViewDataBinding;
 import android.os.Bundle;
 import android.support.annotation.Nullable;
+import android.text.TextUtils;
 import android.util.Log;
+import android.view.LayoutInflater;
+import android.view.View;
+import android.view.ViewGroup;
 
 import org.greenrobot.eventbus.EventBus;
 import org.greenrobot.eventbus.Subscribe;
@@ -13,43 +18,49 @@ import java.util.ArrayList;
 
 import cting.com.robin.support.recyclerview.fragments.RobinListFragment;
 import cting.com.robin.support.recyclerview.model.IRobinListItem;
+import cting.com.robin.support.teethcare.daily.DailyRecord;
+import cting.com.robin.support.teethcare.models.IRecord;
 import cting.com.robin.support.teethcare.repository.MessageEvent;
 import cting.com.robin.support.teethcare.repository.MyRepositoryService;
 
-public abstract class MyListFragment<I extends IRobinListItem, B extends ViewDataBinding> extends RobinListFragment<I,B> {
+public abstract class MyListFragment<I extends IRecord, B extends ViewDataBinding> extends RobinListFragment<I,B> {
     @Override
     protected ArrayList<I> newData() {
         return null;
     }
 
+    protected abstract String getDataTag();
+
     @Override
-    public void onCreate(@Nullable Bundle savedInstanceState) {
-        super.onCreate(savedInstanceState);
-        MyRepositoryService.startActionLoad(getContext());
+    public void onActivityCreated(@Nullable Bundle savedInstanceState) {
+        super.onActivityCreated(savedInstanceState);
+
     }
 
     @Override
     public void onResume() {
         super.onResume();
-        setDataList(mDataList);//notify data change
+        Log.w(TAG, "onActivityCreated: start load action------");
+        MyRepositoryService.startActionLoad(getContext(),getDataTag());
         EventBus.getDefault().register(this);
+//        setDataList(mDataList);//notify data change
     }
 
     @Override
     public void onPause() {
         super.onPause();
         EventBus.getDefault().unregister(this);
-        setDataList(mDataList);//refresh list
+//        setDataList(mDataList);//refresh list
     }
 
+
     @Subscribe(threadMode = ThreadMode.MAIN)
-    public void onLoadFinished(MessageEvent msg) {
+    public void onLoadFinished(MessageEvent<I> msg) {
         Log.i(TAG, "onLoadFinished: " + msg.getMessage() + " " + msg.isFinish());
-        if (msg.isFinish() && MyRepositoryService.MESSAGE_LOAD.equals(msg.getMessage())) {
-            mDataList = loadDataFromService();
+        if (msg.isFinish() && TextUtils.equals(getDataTag(), msg.getMessage())) {
+            mDataList = msg.getList();
             setDataList(mDataList);
         }
     }
 
-    protected abstract ArrayList<I> loadDataFromService();
 }

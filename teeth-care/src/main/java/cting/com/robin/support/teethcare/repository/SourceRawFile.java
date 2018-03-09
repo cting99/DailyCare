@@ -19,6 +19,10 @@ class SourceRawFile extends DataGenerator {
     public static final String FILE_INVISALIGN_ASSET = "invisalign_raw.txt";
     public static final String TAG = "cting/SourceRawFile";
 
+    public SourceRawFile() {
+        super("Default raw file");
+    }
+
     @Override
     public void forceLoad(Context context) {
         super.forceLoad(context);

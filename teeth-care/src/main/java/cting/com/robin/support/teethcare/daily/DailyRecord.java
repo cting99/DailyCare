@@ -18,7 +18,6 @@ public class DailyRecord extends IRecord{
     public DailyRecord() {
     }
 
-
     @Bindable
     public String getNote() {
         return note;
@@ -36,9 +35,20 @@ public class DailyRecord extends IRecord{
     public void setLine(String line) {
         this.line = line;
     }
-
+/*
     @Override
     public String toString() {
         return "Day[" + index + "] " + date + ", " + totalTime + ", {" + line + "}, " + note;
+    }*/
+
+    @Override
+    public String toString() {
+        return "DailyRecord{" +
+                "index=" + index +
+                ", note='" + note + '\'' +
+                ", date='" + date + '\'' +
+                ", line='" + line + '\'' +
+                ", totalTime='" + totalTime + '\'' +
+                '}';
     }
 }
