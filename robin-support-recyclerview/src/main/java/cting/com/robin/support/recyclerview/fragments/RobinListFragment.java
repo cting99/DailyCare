@@ -75,7 +75,6 @@ public abstract class RobinListFragment<I extends IRobinListItem, B extends View
 
     @Override
     public void bindItemData(I item, B binding, int position) {
-
     }
 
 }

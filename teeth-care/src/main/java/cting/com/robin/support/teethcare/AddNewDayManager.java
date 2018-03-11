@@ -3,6 +3,7 @@ package cting.com.robin.support.teethcare;
 import android.app.AlertDialog;
 import android.content.Context;
 import android.content.DialogInterface;
+import android.text.TextUtils;
 import android.util.Log;
 import android.widget.Toast;
 
@@ -14,11 +15,7 @@ import cting.com.robin.support.teethcare.utils.TimeFormatHelper;
 
 public class AddNewDayManager implements DialogInterface.OnClickListener {
     private static final boolean ALWAYS_ASK = true;
-    private int mCurrentDayIndex;
-    private String mTodayDate;
-    private int mLastBracesIndex;
-    private DailyRecord mToday;
-
+    public static final String TAG = "cting/NewDay";
     private SourceDatabase mDBSource;
     private Context mContext;
 
@@ -27,11 +24,41 @@ public class AddNewDayManager implements DialogInterface.OnClickListener {
     }
 
     public void gotoToday() {
+        mDBSource = new SourceDatabase(mContext);
+        DailyRecord lastDay = mDBSource.queryLastDay();
+        String lastDate = lastDay.getDate();
+        String todayDate = TimeFormatHelper.formatToday();
+        int dayIndex = -1;
+        if (TimeFormatHelper.isSameDay(lastDate, todayDate)) {
+            //today exist
+            dayIndex = lastDay.getIndex();
+        } else {
+            //create today and all absent days between today and last day
+            Log.w(TAG, "gotoToday: insert buntch of days from " + lastDate + " to " + todayDate);
+            Toast.makeText(mContext, "insert buntch of days from " + lastDate + " to " + todayDate, Toast.LENGTH_SHORT).show();
+            dayIndex = mDBSource.insertAbsentItems(lastDate, todayDate);
+        }
+        goNow(dayIndex);
+    }
+
+    public void goNow(int dayIndex) {
+        if (dayIndex >= 0) {
+            DailyDetailActivity.launch(mContext, dayIndex, true);
+        }
+    }
+
+    @Override
+    public void onClick(DialogInterface dialog, int which) {
+
+    }
+/*
+    public void gotoToday() {
 //        Toast.makeText(this, "goto today!", Toast.LENGTH_SHORT).show();
         mDBSource = new SourceDatabase(mContext);
         mDBSource.open();
-        BracesRecord lastBraces = mDBSource.queryLastBraces(mContext);
-        DailyRecord lastDay = mDBSource.queryLastDay(mContext);
+        //TODO
+        BracesRecord lastBraces = null;//mDBSource.queryLastBraces(mContext);
+        DailyRecord lastDay = null;//mDBSource.queryLastDay(mContext);
         mDBSource.close();
         mToday = null;
         mTodayDate = TimeFormatHelper.formatToday();
@@ -64,11 +91,7 @@ public class AddNewDayManager implements DialogInterface.OnClickListener {
         goNow();
     }
 
-    public void goNow() {
-        if (mToday != null) {
-            DailyDetailActivity.launch(mContext, mToday, true);
-        }
-    }
+
 
     @Override
     public void onClick(DialogInterface dialog, int which) {
@@ -89,11 +112,12 @@ public class AddNewDayManager implements DialogInterface.OnClickListener {
     public BracesRecord addNewBraces(int index) {
         BracesRecord braces = new BracesRecord();
         braces.setIndex(index);
-        braces.setDate(mTodayDate);
-        braces.setTotalTime("0h");
-        mDBSource.open();
-        mDBSource.insertBraces(braces);
-        mDBSource.close();
+//        braces.setDate(mTodayDate);
+//        braces.setTotalTime("0h");
+        //TODO
+//        mDBSource.open();
+//        mDBSource.insertBraces(braces);
+//        mDBSource.close();
         Log.d(MainActivity.TAG, "addNewBraces: " + braces);
 
         addNewDay(mCurrentDayIndex);
@@ -103,16 +127,17 @@ public class AddNewDayManager implements DialogInterface.OnClickListener {
     public DailyRecord addNewDay(int index) {
         mToday = new DailyRecord();
         mToday.setIndex(index);
-        mToday.setLine("00:00,00:00");
+//        mToday.setLine("00:00,00:00");
         mToday.setTotalTime("0h");
         mToday.setDate(mTodayDate);
 
-        mDBSource.open();
-        mDBSource.insertDaily(mToday);
-        mDBSource.close();
+        //TODO
+//        mDBSource.open();
+//        mDBSource.insertDaily(mToday);
+//        mDBSource.close();
         Log.d(MainActivity.TAG, "addNewDay: " + mToday);
 
-//        MyRepositoryService.startActionSave(mContext);
+//        MyRepositoryService.startActionBackup(mContext);
         return mToday;
-    }
+    }*/
 }

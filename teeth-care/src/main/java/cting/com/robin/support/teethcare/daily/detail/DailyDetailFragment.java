@@ -15,22 +15,13 @@ import android.view.View;
 import android.view.ViewGroup;
 import android.widget.Toast;
 
-import org.greenrobot.eventbus.EventBus;
-import org.greenrobot.eventbus.Subscribe;
-import org.greenrobot.eventbus.ThreadMode;
-
 import java.util.ArrayList;
 
 import cting.com.robin.support.recyclerview.fragments.RobinListFragment;
 import cting.com.robin.support.teethcare.R;
-import cting.com.robin.support.teethcare.daily.DailyRecord;
 import cting.com.robin.support.teethcare.database.SourceDatabase;
 import cting.com.robin.support.teethcare.databinding.DailyDetailFragmentBinding;
 import cting.com.robin.support.teethcare.databinding.TimeSliceEditLayoutBinding;
-import cting.com.robin.support.teethcare.repository.DataGenerator;
-import cting.com.robin.support.teethcare.repository.MessageEvent;
-import cting.com.robin.support.teethcare.repository.MyRepositoryService;
-import cting.com.robin.support.teethcare.repository.MySource;
 import cting.com.robin.support.teethcare.utils.TimeFormatHelper;
 import cting.com.robin.support.teethcare.utils.TimeSliceHelper;
 import cting.com.robin.support.teethcare.views.StateButton;
@@ -39,9 +30,9 @@ public class DailyDetailFragment<B extends ViewDataBinding> extends RobinListFra
 
     public static final String ACTION_EDIT = "action_edit";
     public static final String DAILY_RECORD = "daily_record";
-    public static final String DAILY_RECORD_DATE = "date";
+    public static final String DAILY_RECORD_DAY_INDEX = "day_index";
 
-    private DailyRecord mDailyRecord;
+    private DailyDetailRecord mDetailRecord;
     private boolean mIsEditMode = false;
     private DailyDetailFragmentBinding mBinding;
     private SourceDatabase mDBSource;
@@ -50,20 +41,23 @@ public class DailyDetailFragment<B extends ViewDataBinding> extends RobinListFra
     public void onCreate(@Nullable Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         Bundle bundle = getArguments();
-        if (bundle != null && bundle.containsKey(DAILY_RECORD_DATE)) {
-            String date = bundle.getString(DAILY_RECORD_DATE);
-            mDBSource = new SourceDatabase(getContext());
-            mDBSource.open();
-            mDailyRecord = mDBSource.queryTheDaily(date);;
-            mIsEditMode = bundle.getBoolean(ACTION_EDIT);
-            Log.i(TAG, "onCreate: date=" + mDailyRecord.getDate() + ", mIsEditMode=" + mIsEditMode);
-            getActivity().setTitle(String.valueOf(mDailyRecord.getIndex()));
-            getActivity().setTitle(getString(R.string.daily_detail_fragment_title, mDailyRecord.getIndex()));
-            setHasOptionsMenu(true);
-        } else {
+        if (bundle == null || !bundle.containsKey(DAILY_RECORD_DAY_INDEX)) {
             Toast.makeText(getContext(), "Not exist!", Toast.LENGTH_SHORT).show();
             getActivity().finish();
         }
+        int dayIndex = bundle.getInt(DAILY_RECORD_DAY_INDEX);
+        mDBSource = new SourceDatabase(getContext());
+        mDetailRecord = mDBSource.queryDayDetailRecord(dayIndex);
+        if (mDetailRecord == null) {
+            Log.e(TAG, "onCreate: no this record,dayIndex=" + dayIndex);
+            Toast.makeText(getContext(), "onCreate: no this record,dayIndex=" + dayIndex, Toast.LENGTH_SHORT).show();
+            getActivity().finish();
+        }
+        mIsEditMode = bundle.getBoolean(ACTION_EDIT);
+        Log.i(TAG, "onCreate,detail record: " + mDetailRecord + ", mIsEditMode=" + mIsEditMode);
+        getActivity().setTitle(String.valueOf(mDetailRecord.getIndex()));
+        getActivity().setTitle(getString(R.string.daily_detail_fragment_title, mDetailRecord.getIndex()));
+        setHasOptionsMenu(true);
     }
 
     @Override
@@ -110,31 +104,31 @@ public class DailyDetailFragment<B extends ViewDataBinding> extends RobinListFra
 
     @Override
     protected void selectMenuSave() {
-        Log.d(TAG, "selectMenuSave,before: " + mDailyRecord);
+        Log.i(TAG, "selectMenuSave,before: " + mDetailRecord);
         String line = TimeSliceHelper.toLine(mDataList);
-        mDailyRecord.setLine(line);
-        mDailyRecord.setTotalTime(TimeSliceHelper.calculateTotalTime(line));
-        // TODO: update braces as well
-        mDBSource.updateDaily(mDailyRecord);
-        Log.d(TAG, "selectMenuSave, after:" + mDailyRecord);
-        mBinding.setItem(mDailyRecord);//update total time
+        mDetailRecord.setTimeLine(line);
+        mDetailRecord.setTotalTime(TimeSliceHelper.calculateTotalTime(line));
+        int count = mDBSource.updateDaily(mDetailRecord);
+        Log.i(TAG, "selectMenuSave, after:" + mDetailRecord);
+        Log.i(TAG, "selectMenuSave, save success:" + (count > 0));
+        mBinding.setItem(mDetailRecord);//update total time
 
         changeEditMode(false);
-//        Toast.makeText(getContext(), "save " + mDailyRecord.getDate(), Toast.LENGTH_SHORT).show();
+//        Toast.makeText(getContext(), "save " + mDetailRecord.getDate(), Toast.LENGTH_SHORT).show();
     }
 
     private void changeEditMode(boolean editMode) {
         mIsEditMode = editMode;
         getActivity().finish();
-        DailyDetailActivity.launch(getContext(), mDailyRecord, mIsEditMode);
+        DailyDetailActivity.launch(getContext(), mDetailRecord.getIndex(), mIsEditMode);
     }
 
     @Override
     public View onCreateView(LayoutInflater inflater, ViewGroup container, Bundle savedInstanceState) {
-        mBinding = DataBindingUtil.inflate(inflater,R.layout.daily_detail_fragment,
+        mBinding = DataBindingUtil.inflate(inflater, R.layout.daily_detail_fragment,
                 container, false);
 //        View view = inflater.inflate(R.layout.daily_detail_fragment, container, false);
-        mBinding.setItem(mDailyRecord);
+        mBinding.setItem(mDetailRecord);
         mBinding.setEditMode(mIsEditMode);
         setupRecyclerView(mBinding.recyclerView);
         setDefaultAdapter(this);
@@ -153,8 +147,8 @@ public class DailyDetailFragment<B extends ViewDataBinding> extends RobinListFra
 
     @Override
     protected ArrayList<TimeSlice> newData() {
-        if (mDailyRecord != null) {
-            ArrayList<TimeSlice> list = TimeSliceHelper.generateListFromLine(mDailyRecord.getLine());
+        if (mDetailRecord != null) {
+            ArrayList<TimeSlice> list = TimeSliceHelper.generateListFromLine(mDetailRecord.getTimeLine());
             Log.i(TAG, "newData: list=" + list);
             return list;
         }

@@ -1,9 +1,6 @@
 package cting.com.robin.support.teethcare;
 
-import android.content.Context;
 import android.os.Bundle;
-import android.os.PersistableBundle;
-import android.support.annotation.Nullable;
 import android.support.design.widget.FloatingActionButton;
 import android.support.v4.app.Fragment;
 import android.support.v7.widget.Toolbar;
@@ -25,7 +22,6 @@ import cting.com.robin.support.teethcare.braces.BracesListFragment;
 import cting.com.robin.support.teethcare.daily.DailyListFragment;
 import cting.com.robin.support.teethcare.repository.MessageEvent;
 import cting.com.robin.support.teethcare.repository.MyRepositoryService;
-import cting.com.robin.support.teethcare.utils.GsonHelper;
 
 public class MainActivity extends BasePermissionCheckActivity {
     private static final String FRAGMENT_DAILY = "fragment_daily";
@@ -48,12 +44,12 @@ public class MainActivity extends BasePermissionCheckActivity {
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
-        MyRepositoryService.startActionCheckDatabase(this);
     }
 
     @Override
     protected void onPermissionReady() {
         super.onPermissionReady();
+        MyRepositoryService.startActionCheckDatabase(this);
         setContentView(R.layout.activity_main);
         unbinder = ButterKnife.bind(this);
         addNewDayManager = new AddNewDayManager(this);
@@ -75,12 +71,11 @@ public class MainActivity extends BasePermissionCheckActivity {
 
     @Override
     public boolean onCreateOptionsMenu(Menu menu) {
-        MenuItem item = menu.add(0, ITEM_ID_SWITCH, 0, R.string.menu_title_switch)
-                .setIcon(android.R.drawable.ic_dialog_info);
+        MenuItem item = menu.add(0, ITEM_ID_SWITCH, 0, R.string.menu_title_switch);
         item.setShowAsAction(MenuItem.SHOW_AS_ACTION_ALWAYS);
 
         item = menu.add(0, ITEM_ID_BACKUP, 0, R.string.menu_title_backup);
-        item.setShowAsAction(MenuItem.SHOW_AS_ACTION_NEVER);
+        item.setShowAsAction(MenuItem.SHOW_AS_ACTION_ALWAYS);
         return true;
     }
 
@@ -95,8 +90,10 @@ public class MainActivity extends BasePermissionCheckActivity {
             }
             return true;
         } else if (id == ITEM_ID_BACKUP) {
-            EventBus.getDefault().register(this);
-            MyRepositoryService.startActionSave(this);
+            if (!EventBus.getDefault().isRegistered(this)) {
+                EventBus.getDefault().register(this);
+            }
+            MyRepositoryService.startActionBackup(this);
             return true;
         }
         return super.onOptionsItemSelected(item);

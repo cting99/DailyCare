@@ -1,14 +1,10 @@
 package cting.com.robin.support.teethcare;
 
-import android.content.Context;
 import android.databinding.ViewDataBinding;
 import android.os.Bundle;
 import android.support.annotation.Nullable;
 import android.text.TextUtils;
 import android.util.Log;
-import android.view.LayoutInflater;
-import android.view.View;
-import android.view.ViewGroup;
 
 import org.greenrobot.eventbus.EventBus;
 import org.greenrobot.eventbus.Subscribe;
@@ -17,8 +13,6 @@ import org.greenrobot.eventbus.ThreadMode;
 import java.util.ArrayList;
 
 import cting.com.robin.support.recyclerview.fragments.RobinListFragment;
-import cting.com.robin.support.recyclerview.model.IRobinListItem;
-import cting.com.robin.support.teethcare.daily.DailyRecord;
 import cting.com.robin.support.teethcare.models.IRecord;
 import cting.com.robin.support.teethcare.repository.MessageEvent;
 import cting.com.robin.support.teethcare.repository.MyRepositoryService;

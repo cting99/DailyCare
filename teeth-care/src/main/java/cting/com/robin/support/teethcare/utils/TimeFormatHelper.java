@@ -1,8 +1,12 @@
 package cting.com.robin.support.teethcare.utils;
 
 import android.text.TextUtils;
+import android.text.format.DateUtils;
 
+import java.text.DateFormat;
+import java.text.ParseException;
 import java.text.SimpleDateFormat;
+import java.util.Calendar;
 import java.util.Date;
 
 public class TimeFormatHelper {
@@ -15,6 +19,7 @@ public class TimeFormatHelper {
     public static final String TIME_FORMAT = "HH:mm";
     public static final String TIME_FORMAT_ERROR = "--";
     public static final String DATA_FORMAT = "yyyy/MM/dd";
+    public static final String DATE_RANGE_FORMAT = "yyyy/MM/dd -- yyyy/MM/dd";
 
     public static String reFormat(String dateStr, String pattern, String newPattern) {
         SimpleDateFormat format = new SimpleDateFormat(pattern);
@@ -48,6 +53,29 @@ public class TimeFormatHelper {
     }
 
 
+    public static boolean isToday(String dateStr) {
+        SimpleDateFormat dateFormat = new SimpleDateFormat(DATA_FORMAT);
+        try {
+            Date date = dateFormat.parse(dateStr);
+            return DateUtils.isToday(date.getTime());
+        } catch (ParseException e) {
+            e.printStackTrace();
+            return false;
+        }
+    }
+
+    public static boolean isSameDay(String dateStr1, String dateStr2) {
+        SimpleDateFormat dateFormat = new SimpleDateFormat(DATA_FORMAT);
+        try {
+            Date date1 = dateFormat.parse(dateStr1);
+            Date date2 = dateFormat.parse(dateStr2);
+            return date1.getTime() == date2.getTime();
+        } catch (ParseException e) {
+            e.printStackTrace();
+            return false;
+        }
+    }
+
     public static final long getDuration(String startTimeText, String endTimeText) {
         return getDuration(startTimeText, endTimeText, "HH:mm");
     }
@@ -76,6 +104,25 @@ public class TimeFormatHelper {
         return formatDuration(endTime - startTime);
     }
 
+    public static String minutesToHourMinutes(int timeInMinutes) {
+        StringBuilder sb = new StringBuilder();
+        int hour = (int) (timeInMinutes / 60);
+        int minutes = (int) (timeInMinutes - hour * 60);
+        if (hour > 0) {
+            sb.append(hour).append("h");
+            if (minutes > 0) {
+                sb.append(" ");
+            }
+        }
+        if (minutes > 0) {
+            sb.append(minutes).append("m");
+        }
+        if (sb.length() == 0) {
+            sb.append("0m");
+        }
+        return sb.toString();
+    }
+
     public static final String formatDuration(long duration) {
         int hour = (int) (duration / ONE_HOUR);
         int minute = (int) (duration % ONE_HOUR / ONE_MINUTE);
@@ -94,13 +141,28 @@ public class TimeFormatHelper {
     }
 
     public static int getDayCountByDate(String startDateText, String endDateText) {
-        return getDayCountByDate(startDateText, endDateText, DATA_FORMAT) + 1;
+        return getDayCountByDate(startDateText, endDateText, DATA_FORMAT);
     }
 
     public static int getDayCountByDate(String startDateText, String endDateText, String format) {
         long durationMillions = getDuration(startDateText, endDateText, format);
         int dayCount = (int) (durationMillions / ONE_DAY);
         return dayCount;
+    }
+
+    public static String formatDateRange(String startDateText, int dayCount) {
+        SimpleDateFormat format = new SimpleDateFormat(DATA_FORMAT);
+        String endDateText = "";
+        try {
+            Calendar calendar = Calendar.getInstance();
+            calendar.setTime(format.parse(startDateText));
+            calendar.add(Calendar.DATE, dayCount);
+            endDateText = format.format(calendar.getTime());
+        } catch (ParseException e) {
+            e.printStackTrace();
+        }finally {
+            return startDateText + " ~ " + endDateText;
+        }
     }
 
 

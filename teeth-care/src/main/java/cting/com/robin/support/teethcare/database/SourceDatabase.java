@@ -1,228 +1,249 @@
 package cting.com.robin.support.teethcare.database;
 
 
-import android.content.ContentValues;
 import android.content.Context;
 import android.database.Cursor;
 import android.database.DatabaseUtils;
 import android.database.sqlite.SQLiteDatabase;
 import android.database.sqlite.SQLiteOpenHelper;
-import android.text.TextUtils;
+import android.util.Log;
 
+import java.text.ParseException;
+import java.text.SimpleDateFormat;
 import java.util.ArrayList;
+import java.util.Calendar;
+import java.util.Date;
 
 import cting.com.robin.support.teethcare.braces.BracesRecord;
 import cting.com.robin.support.teethcare.daily.DailyRecord;
-import cting.com.robin.support.teethcare.utils.DBSelectionHelper;
+import cting.com.robin.support.teethcare.daily.detail.DailyDetailRecord;
+import cting.com.robin.support.teethcare.repository.DataGenerator;
+import cting.com.robin.support.teethcare.repository.MySource;
+import cting.com.robin.support.teethcare.utils.TimeFormatHelper;
 
-import static cting.com.robin.support.teethcare.database.BracesTable.*;
-import static cting.com.robin.support.teethcare.database.DailyTable.*;
+import static cting.com.robin.support.teethcare.braces.BracesRecord.BRACES_PROJECTION;
+import static cting.com.robin.support.teethcare.daily.DailyRecord.DAILY_PROJECTION;
+import static cting.com.robin.support.teethcare.database.DailyTeeth.*;
 
 public class SourceDatabase {
+    public static final String TAG = "cting/SourceDatabase";
 
-    public static final String ORDER_BY_DATE_DESC = COLUMN_DATE + " DESC";
+    public static final String ORDER_BY_DATE_DESC = COLUMN_DAY_DATE + " DESC";
+    public static final String ORDER_BY_BRACES_DESC = COLUMN_BRACES_INDEX + " DESC";
+    public static final String ORDER_BY_DAY_INDEX_DESC = COLUMN_DAY_INDEX + " DESC";
     private Context mContext;
-    private SQLiteDatabase mDatabase;
+    private SQLiteDatabase mDB;
     private SQLiteOpenHelper mOpenHelper;
 
     public SourceDatabase(Context context) {
         mContext = context;
         mOpenHelper = new MyDBHelper(mContext);
-        mDatabase = mOpenHelper.getWritableDatabase();
+        mDB = mOpenHelper.getWritableDatabase();
     }
 
     public void open() {
-        mDatabase = mOpenHelper.getWritableDatabase();
+        mDB = mOpenHelper.getWritableDatabase();
     }
 
     public void close() {
-        mDatabase.close();
+        mDB.close();
     }
 
-
-    private ContentValues dailyRecordToValues(DailyRecord record) {
-        ContentValues values = new ContentValues();
-        values.put(COLUMN_INDEX, record.getIndex());
-        values.put(COLUMN_DATE, record.getDate());
-        values.put(COLUMN_TOTAL_TIME, record.getTotalTime());
-        values.put(COLUMN_NOTE, record.getNote());
-        values.put(COLUMN_LINE, record.getLine());
-        return values;
+    public long getCount() {
+        return DatabaseUtils.queryNumEntries(mDB, TABLE, null);
     }
 
-    private DailyRecord cursorToDailyRecord(Cursor cursor) {
-        DailyRecord record = new DailyRecord();
-        record.setIndex(cursor.getInt(cursor.getColumnIndex(COLUMN_INDEX)));
-        record.setDate(cursor.getString(cursor.getColumnIndex(COLUMN_DATE)));
-        record.setTotalTime(cursor.getString(cursor.getColumnIndex(COLUMN_TOTAL_TIME)));
-        record.setNote(cursor.getString(cursor.getColumnIndex(COLUMN_NOTE)));
-        record.setLine(cursor.getString(cursor.getColumnIndex(COLUMN_LINE)));
-        return record;
+    public void initDB(Context context) {
+        DataGenerator generator = MySource.getDataGenerator(context);
+        Log.i(TAG, "initDB from " + generator.getName());
+        insertBatchItems(generator.getList(context));
     }
 
-    public long insertDaily(DailyRecord record) {
-        ContentValues values = dailyRecordToValues(record);
-        return mDatabase.insert(TABLE_DAILY_RECORD, null, values);
+    public long insertItem(DBItem item) {
+        if (item == null) {
+            Log.w(TAG, "insertItem: item empty");
+            return 0;
+        }
+        open();
+        long ret = mDB.insert(TABLE, null, item.toValues());
+        close();
+        return ret;
     }
 
-    public boolean insertDailyList(ArrayList<DailyRecord> list) {
-        mDatabase.beginTransaction();
+    private void insertDefaultFirstItem() {
+        DBItem item = DBItem.Builder.createDefault();
+        Log.i(TAG, "insertDefaultFirstItem: " + item);
+        insertItem(item);
+    }
+
+    public boolean insertBatchItems(ArrayList<DBItem> items) {
+        if (items == null || items.size() == 0) {
+            Log.w(TAG, "insertBatchItems: items empty");
+            return true;
+        }
+        open();
+        mDB.beginTransaction();
         boolean flag = true;
         try {
-            for (DailyRecord record : list) {
-                if (insertDaily(record) < 0) {
+            for (DBItem item : items) {
+                if (mDB.insert(TABLE, null, item.toValues()) < 0) {
                     flag = false;
+                    Log.e(TAG, "insertBatchItems failure: " + item);
                     break;
                 }
             }
             if (flag) {
-                mDatabase.setTransactionSuccessful();
+                mDB.setTransactionSuccessful();
             }
             return true;
         } catch (Exception e) {
             e.printStackTrace();
             return false;
         } finally {
-            mDatabase.endTransaction();
+            mDB.endTransaction();
+            Log.i(TAG, "insertBatchItems: success=" + flag + ",count=" + items.size());
+            close();
         }
     }
 
-    public ArrayList<DailyRecord> queryDaily(String date) {
-        String where = TextUtils.isEmpty(date) ? null : COLUMN_DATE + "=" + date;
-        Cursor cursor = mDatabase.query(TABLE_DAILY_RECORD, DailyTable.ALL_COLUMNS,
-                where, null, null, null, ORDER_BY_DATE_DESC);
-        return cursorToDailyList(cursor);
+    // startDate exist,create the day after startDate until the endDate
+    // return dayIndex
+    public int insertAbsentItems(String startDate, String endDate) {
+        ArrayList<DBItem> items = new ArrayList<>();
+        SimpleDateFormat format = new SimpleDateFormat(TimeFormatHelper.DATA_FORMAT);
+        Calendar calendar = Calendar.getInstance();
+        try {
+            int dayCount = TimeFormatHelper.getDayCountByDate(startDate, endDate);
+            calendar.setTime(format.parse(startDate));
+            for (int i = 0; i < dayCount; i++) {
+                calendar.add(Calendar.DATE, 1);
+                String date = format.format(calendar.getTimeInMillis());
+                items.add(DBItem.Builder.buildSimple(date));
+            }
+            insertBatchItems(items);
+            return queryLastDayIndex();
+        } catch (ParseException e) {
+            e.printStackTrace();
+        }
+        return -1;
     }
 
-    private ArrayList<DailyRecord> cursorToDailyList(Cursor cursor) {
-        ArrayList<DailyRecord> records = new ArrayList<>();
+    public ArrayList<DailyRecord> queryDays() {
+        open();
+        Cursor cursor = mDB.query(TABLE, DAILY_PROJECTION,
+                null, null, null, null, ORDER_BY_DATE_DESC);
+        ArrayList<DailyRecord> list = new ArrayList<>();
         if (cursor != null) {
             while (cursor.moveToNext()) {
-                records.add(cursorToDailyRecord(cursor));
+                list.add(DailyRecord.fromCursor(cursor));
             }
             cursor.close();
         }
-        return records;
+        close();
+        return list;
     }
 
-    public long getDailyCount() {
-        return DatabaseUtils.queryNumEntries(mDatabase, TABLE_DAILY_RECORD, null);
+    //select day_index from daily_teeth order by day_index DESC limit 1;
+    private int queryLastDayIndex() {
+        open();
+        Cursor cursor = mDB.query(TABLE, new String[]{COLUMN_DAY_INDEX}, null, null,
+                null, null, ORDER_BY_DAY_INDEX_DESC, "1");
+        try {
+            if (cursor != null && cursor.moveToNext()) {
+                return cursor.getInt(0);
+            } else {
+                return -1;
+            }
+        } finally {
+            close();
+        }
     }
 
+    //select * from daily_teeth order by day_index DESC limit 1;
+    public DailyRecord queryLastDay() {
+        open();
+        Cursor cursor = mDB.query(TABLE, DAILY_PROJECTION, null, null,
+                null, null, ORDER_BY_DAY_INDEX_DESC, "1");
+        try {
+            if (cursor != null && cursor.moveToNext()) {
+                DailyRecord record = DailyRecord.fromCursor(cursor);
+                cursor.close();
+                return record;
+            } else {
+                insertDefaultFirstItem();
+                return queryLastDay();
+            }
+        } finally {
+            close();
+        }
+    }
 
-    public DailyRecord queryTheDaily(String date) {
-        Cursor cursor = mDatabase.query(DailyTable.TABLE_DAILY_RECORD, DailyTable.ALL_COLUMNS,
-                COLUMN_DATE + "=?", new String[]{date}, null,
-                null, null, "1");
-        if (cursor != null && cursor.moveToNext()) {
-            DailyRecord record = cursorToDailyRecord(cursor);
-            cursor.close();
-            return record;
+    public int updateDaily(DailyDetailRecord detailRecord) {
+        open();
+        int count = mDB.update(TABLE, detailRecord.toValues(detailRecord),
+                COLUMN_DAY_INDEX + "=?", new String[]{String.valueOf(detailRecord.getIndex())});
+        close();
+        return count;
+    }
+
+    // select day_index,day_date,time_minutes,note,time_line from daily_teeth where day_index=xx order by day_index limit 1
+    public DailyDetailRecord queryDayDetailRecord(int dayIndex) {
+        open();
+        Cursor cursor = mDB.query(TABLE, DailyDetailRecord.DAILY_DETAIL_PROJECTION,
+                COLUMN_DAY_INDEX + "=?", new String[]{String.valueOf(dayIndex)},
+                null, null, ORDER_BY_DAY_INDEX_DESC, "1");
+        try {
+            if (cursor != null && cursor.moveToNext()) {
+                DailyDetailRecord record = DailyDetailRecord.detailFromCursor(cursor);
+                cursor.close();
+                return record;
+            }
+        } finally {
+            close();
         }
         return null;
-    }
-
-    public DailyRecord queryLastDay(Context mContext) {
-        Cursor cursor = mDatabase.query(DailyTable.TABLE_DAILY_RECORD, DailyTable.ALL_COLUMNS,
-                DBSelectionHelper.getMaxClause(TABLE_DAILY_RECORD, COLUMN_DATE),
-                null, null,null, null, "1");
-        if (cursor != null && cursor.moveToNext()) {
-            DailyRecord record = cursorToDailyRecord(cursor);
-            cursor.close();
-            return record;
-        }
-        return null;
-    }
-
-    public void updateDaily(DailyRecord record) {
-        mDatabase.update(DailyTable.TABLE_DAILY_RECORD, dailyRecordToValues(record)
-                , COLUMN_INDEX + "=?", new String[]{String.valueOf(record.getIndex())});
     }
 
 
     /*
-    *   Braces records
+    * select braces_index,
+    *       COUNT(braces_index) as braces_day_count,
+    *       MIN(day_date) as braces_start_day,
+    *       MAX(day_date) as braces_end_day,
+    *       SUM(time_minutes) as braces_total_time,
+    *       note
+    * from daily_teeth
+    * order by braces_index desc;
     * */
-
-    /*private static final String wrapWithQuoteMark(String string) {
-        return "\"" + string + "\"";
-    }*/
-
-    private ContentValues bracesRecordToValues(BracesRecord record) {
-        ContentValues values = new ContentValues();
-        values.put(COLUMN_INDEX, record.getIndex());
-        values.put(COLUMN_DATE, record.getDate());
-        values.put(COLUMN_TOTAL_TIME, record.getTotalTime());
-        values.put(COLUMN_DAY_COUNT, record.getDayCount());
-        return values;
-    }
-
-    private BracesRecord cursorToBraces(Cursor cursor) {
-        BracesRecord record = new BracesRecord();
-        record.setIndex(cursor.getInt(cursor.getColumnIndex(COLUMN_INDEX)));
-        record.setDate(cursor.getString(cursor.getColumnIndex(COLUMN_DATE)));
-        record.setTotalTime(cursor.getString(cursor.getColumnIndex(COLUMN_TOTAL_TIME)));
-        record.setDayCount(cursor.getInt(cursor.getColumnIndex(COLUMN_DAY_COUNT)));
-        return record;
-    }
-
-    private ArrayList<BracesRecord> cursorToBracesList(Cursor cursor) {
-        ArrayList<BracesRecord> records = new ArrayList<>();
+    public ArrayList<BracesRecord> queryBraces() {
+        open();
+        Cursor cursor = mDB.query(TABLE, BRACES_PROJECTION,
+                null, null, COLUMN_BRACES_INDEX, null, ORDER_BY_BRACES_DESC);
+        ArrayList<BracesRecord> list = new ArrayList<>();
         if (cursor != null) {
             while (cursor.moveToNext()) {
-                records.add(cursorToBraces(cursor));
+                list.add(BracesRecord.fromCursor(cursor));
             }
             cursor.close();
         }
-        return records;
+        close();
+        Log.i(TAG, "queryBraces, size:" + list.size());
+        return list;
     }
 
-    public long insertBraces(BracesRecord record) {
-        return mDatabase.insert(TABLE_BRACES_RECORD, null, bracesRecordToValues(record));
-    }
-
-    public boolean insertBracesList(ArrayList<BracesRecord> list) {
-        mDatabase.beginTransaction();
-        boolean flag = true;
-        try {
-            for (BracesRecord record : list) {
-                if (insertBraces(record) < 0) {
-                    flag = false;
-                    break;
-                }
+    public ArrayList<DBItem> queryAll() {
+        open();
+        ArrayList<DBItem> list = new ArrayList<>();
+        Cursor cursor = mDB.query(TABLE, DailyTeeth.ALL_COLUMNS,
+                null, null, null, null, null);
+        if (cursor != null) {
+            while (cursor.moveToNext()) {
+                list.add(DBItem.fromCursor(cursor));
             }
-            if (flag) {
-                mDatabase.setTransactionSuccessful();
-            }
-            return true;
-        } catch (Exception e) {
-            e.printStackTrace();
-            return false;
-        } finally {
-            mDatabase.endTransaction();
-        }
-    }
-
-    public ArrayList<BracesRecord> queryBraces(int i) {
-        String where = i > 0 ? (COLUMN_INDEX + "=" + i) : null;
-        Cursor cursor = mDatabase.query(TABLE_BRACES_RECORD, BracesTable.ALL_COLUMNS,
-                where, null, null, null, ORDER_BY_DATE_DESC);
-        return cursorToBracesList(cursor);
-    }
-
-    public long getRecordCount() {
-        return DatabaseUtils.queryNumEntries(mDatabase, TABLE_BRACES_RECORD, null);
-    }
-
-    public BracesRecord queryLastBraces(Context mContext) {
-        Cursor cursor = mDatabase.query(TABLE_BRACES_RECORD, BracesTable.ALL_COLUMNS,
-                DBSelectionHelper.getMaxClause(TABLE_BRACES_RECORD, COLUMN_INDEX),
-                null, null, null, null, "1");
-        if (cursor != null && cursor.moveToNext()) {
-            BracesRecord record = cursorToBraces(cursor);
             cursor.close();
-            return record;
         }
-        return null;
+        Log.i(TAG, "queryAll, size:" + list.size());
+        close();
+        return list;
     }
 }

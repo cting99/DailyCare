@@ -8,14 +8,13 @@ import android.view.MenuItem;
 import cting.com.robin.support.recyclerview.activities.RobinListActivity;
 import cting.com.robin.support.recyclerview.fragments.RobinListFragment;
 import cting.com.robin.support.teethcare.MainActivity;
-import cting.com.robin.support.teethcare.daily.DailyListActivity;
-import cting.com.robin.support.teethcare.daily.DailyRecord;
 
 import static cting.com.robin.support.teethcare.daily.detail.DailyDetailFragment.ACTION_EDIT;
 import static cting.com.robin.support.teethcare.daily.detail.DailyDetailFragment.DAILY_RECORD;
-import static cting.com.robin.support.teethcare.daily.detail.DailyDetailFragment.DAILY_RECORD_DATE;
+import static cting.com.robin.support.teethcare.daily.detail.DailyDetailFragment.DAILY_RECORD_DAY_INDEX;
 
 public class DailyDetailActivity extends RobinListActivity {
+
 
     @Override
     protected void onPermissionReady() {
@@ -44,10 +43,10 @@ public class DailyDetailActivity extends RobinListActivity {
         return super.onOptionsItemSelected(item);
     }
 
-    public static void launch(Context context, DailyRecord item, boolean editMode) {
+    public static void launch(Context context, int dayIndex, boolean editMode) {
         Intent intent = new Intent(context, DailyDetailActivity.class);
         Bundle bundle = new Bundle();
-        bundle.putString(DAILY_RECORD_DATE, item.getDate());
+        bundle.putInt(DAILY_RECORD_DAY_INDEX, dayIndex);
         bundle.putBoolean(ACTION_EDIT, editMode);
         intent.putExtra(DAILY_RECORD, bundle);
         context.startActivity(intent);
