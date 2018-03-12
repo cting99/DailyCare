@@ -6,6 +6,7 @@ import android.database.Cursor;
 import android.database.DatabaseUtils;
 import android.database.sqlite.SQLiteDatabase;
 import android.database.sqlite.SQLiteOpenHelper;
+import android.text.TextUtils;
 import android.util.Log;
 
 import java.text.ParseException;
@@ -17,6 +18,7 @@ import java.util.Date;
 import cting.com.robin.support.teethcare.braces.BracesRecord;
 import cting.com.robin.support.teethcare.daily.DailyRecord;
 import cting.com.robin.support.teethcare.daily.detail.DailyDetailRecord;
+import cting.com.robin.support.teethcare.daily.today.LastDayRecord;
 import cting.com.robin.support.teethcare.repository.DataGenerator;
 import cting.com.robin.support.teethcare.repository.MySource;
 import cting.com.robin.support.teethcare.utils.TimeFormatHelper;
@@ -41,16 +43,20 @@ public class SourceDatabase {
         mDB = mOpenHelper.getWritableDatabase();
     }
 
-    public void open() {
+    private void open() {
         mDB = mOpenHelper.getWritableDatabase();
     }
 
-    public void close() {
+    private void close() {
         mDB.close();
     }
 
     public long getCount() {
         return DatabaseUtils.queryNumEntries(mDB, TABLE, null);
+    }
+
+    public SQLiteDatabase getDB() {
+        return mDB;
     }
 
     public void initDB(Context context) {
@@ -65,9 +71,20 @@ public class SourceDatabase {
             return 0;
         }
         open();
-        long ret = mDB.insert(TABLE, null, item.toValues());
+        long rowId = mDB.insert(TABLE, null, item.toValues());
         close();
-        return ret;
+        return rowId;
+    }
+
+    public long insertItem(String date, int bracesIndex) {
+        if (TextUtils.isEmpty(date)) {
+            Log.w(TAG, "insertItem: date empty");
+            return 0;
+        }
+        open();
+        long rowId = mDB.insert(TABLE, null, DBItem.Builder.buildSimple(date, bracesIndex).toValues());
+        close();
+        return rowId;
     }
 
     private void insertDefaultFirstItem() {
@@ -76,17 +93,19 @@ public class SourceDatabase {
         insertItem(item);
     }
 
-    public boolean insertBatchItems(ArrayList<DBItem> items) {
+    public long insertBatchItems(ArrayList<DBItem> items) {
         if (items == null || items.size() == 0) {
             Log.w(TAG, "insertBatchItems: items empty");
-            return true;
+            return -1;
         }
         open();
         mDB.beginTransaction();
         boolean flag = true;
+        long lastRowId = -1;
         try {
             for (DBItem item : items) {
-                if (mDB.insert(TABLE, null, item.toValues()) < 0) {
+                lastRowId = mDB.insert(TABLE, null, item.toValues());
+                if (lastRowId < 0) {
                     flag = false;
                     Log.e(TAG, "insertBatchItems failure: " + item);
                     break;
@@ -95,10 +114,10 @@ public class SourceDatabase {
             if (flag) {
                 mDB.setTransactionSuccessful();
             }
-            return true;
+            return lastRowId;
         } catch (Exception e) {
             e.printStackTrace();
-            return false;
+            return -1;
         } finally {
             mDB.endTransaction();
             Log.i(TAG, "insertBatchItems: success=" + flag + ",count=" + items.size());
@@ -106,32 +125,49 @@ public class SourceDatabase {
         }
     }
 
-    // startDate exist,create the day after startDate until the endDate
-    // return dayIndex
-    public int insertAbsentItems(String startDate, String endDate) {
-        ArrayList<DBItem> items = new ArrayList<>();
-        SimpleDateFormat format = new SimpleDateFormat(TimeFormatHelper.DATA_FORMAT);
-        Calendar calendar = Calendar.getInstance();
-        try {
-            int dayCount = TimeFormatHelper.getDayCountByDate(startDate, endDate);
-            calendar.setTime(format.parse(startDate));
-            for (int i = 0; i < dayCount; i++) {
-                calendar.add(Calendar.DATE, 1);
-                String date = format.format(calendar.getTimeInMillis());
-                items.add(DBItem.Builder.buildSimple(date));
-            }
-            insertBatchItems(items);
-            return queryLastDayIndex();
-        } catch (ParseException e) {
-            e.printStackTrace();
-        }
-        return -1;
-    }
+//    // startDate exist,create the day after startDate until the endDate
+//    // return dayIndex
+//    public int insertAbsentItems(String startDate, String endDate) {
+//        ArrayList<DBItem> items = new ArrayList<>();
+//        SimpleDateFormat format = new SimpleDateFormat(TimeFormatHelper.DATA_FORMAT);
+//        Calendar calendar = Calendar.getInstance();
+//        try {
+//            int dayCount = TimeFormatHelper.getDayCountByDate(startDate, endDate);
+//            calendar.setTime(format.parse(startDate));
+//            for (int i = 0; i < dayCount; i++) {
+//                calendar.add(Calendar.DATE, 1);
+//                String date = format.format(calendar.getTimeInMillis());
+//                items.add(DBItem.Builder.buildSimple(date));
+//            }
+//            insertBatchItems(items);
+//            return queryLastDayIndex();
+//        } catch (ParseException e) {
+//            e.printStackTrace();
+//        }
+//        return -1;
+//    }
 
     public ArrayList<DailyRecord> queryDays() {
         open();
         Cursor cursor = mDB.query(TABLE, DAILY_PROJECTION,
                 null, null, null, null, ORDER_BY_DATE_DESC);
+        ArrayList<DailyRecord> list = new ArrayList<>();
+        if (cursor != null) {
+            while (cursor.moveToNext()) {
+                list.add(DailyRecord.fromCursor(cursor));
+            }
+            cursor.close();
+        }
+        close();
+        return list;
+    }
+
+
+    public ArrayList<DailyRecord> queryDays(int bracesIndex) {
+        open();
+        Cursor cursor = mDB.query(TABLE, DAILY_PROJECTION,
+                COLUMN_BRACES_INDEX + "=?", new String[]{String.valueOf(bracesIndex)},
+                null, null, ORDER_BY_DATE_DESC);
         ArrayList<DailyRecord> list = new ArrayList<>();
         if (cursor != null) {
             while (cursor.moveToNext()) {
@@ -160,13 +196,14 @@ public class SourceDatabase {
     }
 
     //select * from daily_teeth order by day_index DESC limit 1;
-    public DailyRecord queryLastDay() {
+    //select braces_index,day_date,COUNT(braces_index) from daily_teeth group by braces_index order by day_index DESC limit 1;
+    public LastDayRecord queryLastDay() {
         open();
-        Cursor cursor = mDB.query(TABLE, DAILY_PROJECTION, null, null,
-                null, null, ORDER_BY_DAY_INDEX_DESC, "1");
+        Cursor cursor = mDB.query(TABLE, LastDayRecord.LAST_DAY_PROJECTION, null, null,
+                COLUMN_BRACES_INDEX, null, ORDER_BY_DAY_INDEX_DESC, "1");
         try {
             if (cursor != null && cursor.moveToNext()) {
-                DailyRecord record = DailyRecord.fromCursor(cursor);
+                LastDayRecord record = LastDayRecord.fromCursor(cursor);
                 cursor.close();
                 return record;
             } else {

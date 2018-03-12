@@ -55,7 +55,6 @@ public class DailyDetailFragment<B extends ViewDataBinding> extends RobinListFra
         }
         mIsEditMode = bundle.getBoolean(ACTION_EDIT);
         Log.i(TAG, "onCreate,detail record: " + mDetailRecord + ", mIsEditMode=" + mIsEditMode);
-        getActivity().setTitle(String.valueOf(mDetailRecord.getIndex()));
         getActivity().setTitle(getString(R.string.daily_detail_fragment_title, mDetailRecord.getIndex()));
         setHasOptionsMenu(true);
     }
@@ -63,9 +62,6 @@ public class DailyDetailFragment<B extends ViewDataBinding> extends RobinListFra
     @Override
     public void onDestroy() {
         super.onDestroy();
-        if (mDBSource != null) {
-            mDBSource.close();
-        }
     }
 
     @Override

@@ -34,16 +34,20 @@ public abstract class MyListFragment<I extends IRecord, B extends ViewDataBindin
     @Override
     public void onResume() {
         super.onResume();
-        Log.w(TAG, "onActivityCreated: start load action------");
-        MyRepositoryService.startActionLoad(getContext(),getDataTag());
-        EventBus.getDefault().register(this);
+        Log.w(TAG, "onActivityCreated: start load action:" + getDataTag());
+        if (!TextUtils.isEmpty(getDataTag())) {
+            MyRepositoryService.startActionLoad(getContext(),getDataTag());
+            EventBus.getDefault().register(this);
+        }
 //        setDataList(mDataList);//notify data change
     }
 
     @Override
     public void onPause() {
         super.onPause();
-        EventBus.getDefault().unregister(this);
+        if (EventBus.getDefault().isRegistered(this)) {
+            EventBus.getDefault().unregister(this);
+        }
 //        setDataList(mDataList);//refresh list
     }
 

@@ -1,6 +1,7 @@
 package cting.com.robin.support.teethcare.braces;
 
 import cting.com.robin.support.teethcare.R;
+import cting.com.robin.support.teethcare.daily.DailyListActivity;
 import cting.com.robin.support.teethcare.databinding.BracesListItemBinding;
 import cting.com.robin.support.teethcare.MyListFragment;
 
@@ -16,5 +17,11 @@ public class BracesListFragment extends MyListFragment<BracesRecord,BracesListIt
     @Override
     public int getItemLayoutId() {
         return R.layout.braces_list_item;
+    }
+
+    @Override
+    public void onItemClick(BracesRecord item, int position) {
+        DailyListActivity.launch(getContext(), item.getIndex());
+        getActivity().overridePendingTransition(R.anim.slide_in_right, R.anim.slide_out_left);
     }
 }

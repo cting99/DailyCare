@@ -166,9 +166,9 @@ public class DBItem {
                     .build();
         }
 
-        public static DBItem buildSimple(String date) {
+        public static DBItem buildSimple(String date, int bracesIndex) {
             return new Builder()
-                    .bracesIndex(100)   // not decide current braces index
+                    .bracesIndex(bracesIndex)   // not decide current braces index
                     .dayDate(date)
                     .timeLine("00:00")
                     .timeMinutes(0)

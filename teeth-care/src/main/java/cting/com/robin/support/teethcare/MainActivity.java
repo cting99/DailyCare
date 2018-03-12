@@ -3,6 +3,9 @@ package cting.com.robin.support.teethcare;
 import android.os.Bundle;
 import android.support.design.widget.FloatingActionButton;
 import android.support.v4.app.Fragment;
+import android.support.v4.app.FragmentManager;
+import android.support.v4.app.FragmentStatePagerAdapter;
+import android.support.v4.view.ViewPager;
 import android.support.v7.widget.Toolbar;
 import android.util.Log;
 import android.view.Menu;
@@ -20,26 +23,30 @@ import butterknife.Unbinder;
 import cting.com.robin.support.commom.activities.BasePermissionCheckActivity;
 import cting.com.robin.support.teethcare.braces.BracesListFragment;
 import cting.com.robin.support.teethcare.daily.DailyListFragment;
+import cting.com.robin.support.teethcare.daily.today.NewDayManager;
 import cting.com.robin.support.teethcare.repository.MessageEvent;
 import cting.com.robin.support.teethcare.repository.MyRepositoryService;
+import cting.com.robin.support.teethcare.transformers.DepthPageTransformer;
 
 public class MainActivity extends BasePermissionCheckActivity {
-    private static final String FRAGMENT_DAILY = "fragment_daily";
-    private static final String FRAGMENT_BRACES = "fragment_braces";
+    private static final int FRAGMENT_DAILY = 0;
+    private static final int FRAGMENT_BRACES = 1;
     private static final int ITEM_ID_SWITCH = 0;
     private static final int ITEM_ID_BACKUP = 1;
-    private AddNewDayManager addNewDayManager;
+    private NewDayManager addNewDayManager;
 
     @BindView(R.id.today_btn)
     FloatingActionButton todayBtn;
     @BindView(R.id.toolbar)
     Toolbar toolbar;
+    @BindView(R.id.view_pager)
+    ViewPager viewPager;
 
     private Unbinder unbinder;
 
-    private DailyListFragment mDailyFragment;
-    private BracesListFragment mBracesFragment;
-    private String mCurrentFragment = FRAGMENT_DAILY;
+//    private DailyListFragment mDailyFragment;
+//    private BracesListFragment mBracesFragment;
+    private int mCurrentFragment = FRAGMENT_DAILY;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -52,9 +59,10 @@ public class MainActivity extends BasePermissionCheckActivity {
         MyRepositoryService.startActionCheckDatabase(this);
         setContentView(R.layout.activity_main);
         unbinder = ButterKnife.bind(this);
-        addNewDayManager = new AddNewDayManager(this);
+        addNewDayManager = new NewDayManager(this);
         setSupportActionBar(toolbar);
-        setFragment(mCurrentFragment);
+        viewPager.setPageTransformer(true, new DepthPageTransformer());
+        viewPager.setAdapter(new MyViewPagerAdapter(getSupportFragmentManager()));
     }
 
     @Override
@@ -71,10 +79,10 @@ public class MainActivity extends BasePermissionCheckActivity {
 
     @Override
     public boolean onCreateOptionsMenu(Menu menu) {
-        MenuItem item = menu.add(0, ITEM_ID_SWITCH, 0, R.string.menu_title_switch);
-        item.setShowAsAction(MenuItem.SHOW_AS_ACTION_ALWAYS);
+//        MenuItem item = menu.add(0, ITEM_ID_SWITCH, 0, R.string.menu_title_switch);
+//        item.setShowAsAction(MenuItem.SHOW_AS_ACTION_ALWAYS);
 
-        item = menu.add(0, ITEM_ID_BACKUP, 0, R.string.menu_title_backup);
+        MenuItem item = menu.add(0, ITEM_ID_BACKUP, 0, R.string.menu_title_backup);
         item.setShowAsAction(MenuItem.SHOW_AS_ACTION_ALWAYS);
         return true;
     }
@@ -82,14 +90,14 @@ public class MainActivity extends BasePermissionCheckActivity {
     @Override
     public boolean onOptionsItemSelected(MenuItem item) {
         int id = item.getItemId();
-        if (id == ITEM_ID_SWITCH) {
+        /*if (id == ITEM_ID_SWITCH) {
             if (mCurrentFragment == FRAGMENT_DAILY) {
                 setFragment(FRAGMENT_BRACES);
             } else if (mCurrentFragment == FRAGMENT_BRACES) {
                 setFragment(FRAGMENT_DAILY);
             }
             return true;
-        } else if (id == ITEM_ID_BACKUP) {
+        } else */if (id == ITEM_ID_BACKUP) {
             if (!EventBus.getDefault().isRegistered(this)) {
                 EventBus.getDefault().register(this);
             }
@@ -97,6 +105,14 @@ public class MainActivity extends BasePermissionCheckActivity {
             return true;
         }
         return super.onOptionsItemSelected(item);
+    }
+
+    @Override
+    protected void onStop() {
+        super.onStop();
+        if (EventBus.getDefault().isRegistered(this)) {
+            EventBus.getDefault().unregister(this);
+        }
     }
 
     @Subscribe(threadMode = ThreadMode.MAIN)
@@ -107,27 +123,27 @@ public class MainActivity extends BasePermissionCheckActivity {
         }
     }
 
-    private void setFragment(String fragment) {
-        if (FRAGMENT_DAILY.equals(fragment)) {
-            if (mDailyFragment == null) {
-                mDailyFragment = new DailyListFragment();
-                Log.w(TAG, "setFragment: new DailyListFragment");
-            }
-            setFragment(mDailyFragment);
-            mCurrentFragment = fragment;
-        } else if (FRAGMENT_BRACES.equals(fragment)) {
-            if (mBracesFragment == null) {
-                mBracesFragment = new BracesListFragment();
-                Log.w(TAG, "setFragment: new BracesListFragment");
-            }
-            setFragment(mBracesFragment);
-            mCurrentFragment = fragment;
+    private class MyViewPagerAdapter extends FragmentStatePagerAdapter {
+        public MyViewPagerAdapter(FragmentManager fm) {
+            super(fm);
         }
-    }
 
-    private void setFragment(Fragment fragment) {
-        getSupportFragmentManager().beginTransaction()
-                .replace(R.id.fragment_container, fragment)
-                .commit();
+        @Override
+        public Fragment getItem(int position) {
+            switch (position) {
+                case FRAGMENT_BRACES:
+                    return new BracesListFragment();
+                case FRAGMENT_DAILY:
+                    return new DailyListFragment();
+                default:
+                    throw new RuntimeException("position " + position + " invalid");
+            }
+        }
+
+        @Override
+        public int getCount() {
+            return 2;
+        }
+
     }
 }
