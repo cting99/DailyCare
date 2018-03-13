@@ -20,7 +20,7 @@ import butterknife.BindView;
 import butterknife.ButterKnife;
 import butterknife.OnClick;
 import butterknife.Unbinder;
-import cting.com.robin.support.commom.activities.BasePermissionCheckActivity;
+import cting.com.robin.support.common.activities.BasePermissionCheckActivity;
 import cting.com.robin.support.teethcare.braces.BracesListFragment;
 import cting.com.robin.support.teethcare.daily.DailyListFragment;
 import cting.com.robin.support.teethcare.daily.today.NewDayManager;

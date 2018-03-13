@@ -3,7 +3,7 @@ package cting.com.robin.support.recyclerview.activities;
 import android.support.v4.app.Fragment;
 import android.support.v7.widget.Toolbar;
 
-import cting.com.robin.support.commom.activities.BasePermissionCheckActivity;
+import cting.com.robin.support.common.activities.BasePermissionCheckActivity;
 import cting.com.robin.support.recyclerview.R;
 
 public abstract class RobinListActivity extends BasePermissionCheckActivity{

@@ -9,7 +9,7 @@ import com.google.gson.annotations.Expose;
 
 import java.util.ArrayList;
 
-import cting.com.robin.support.commom.utils.FileHelper;
+import cting.com.robin.support.common.utils.FileHelper;
 import cting.com.robin.support.teethcare.database.DBItem;
 
 public class GsonHelper {

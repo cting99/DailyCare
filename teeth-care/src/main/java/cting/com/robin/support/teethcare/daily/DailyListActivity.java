@@ -19,6 +19,7 @@ public class DailyListActivity extends RobinListActivity {
     @Override
     protected void onPermissionReady() {
         super.onPermissionReady();
+        getSupportActionBar().setDisplayHomeAsUpEnabled(true);
         Fragment fragment = new DailyListFragment();
         Bundle bundle = getIntent().getBundleExtra(BRACES_RECORD);
         fragment.setArguments(bundle);

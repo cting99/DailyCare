@@ -15,6 +15,7 @@
         android:theme="@style/AppTheme">
         <activity
             android:name=".MainActivity"
+            android:configChanges="orientation"
             android:label="@string/activity_label_main"
             android:launchMode="singleTask"
             android:theme="@style/AppTheme.NoActionBar">
@@ -26,8 +27,10 @@
         </activity>
         <activity
             android:name=".daily.DailyListActivity"
+            android:configChanges="orientation|screenSize"
             android:label="@string/activity_label_daily_record_list"
-            android:launchMode="singleTask"
+            android:launchMode="singleTop"
+            android:parentActivityName=".MainActivity"
             android:theme="@style/AppTheme.NoActionBar">
             <intent-filter>
                 <action android:name="android.intent.action.MAIN" />
@@ -35,6 +38,7 @@
         </activity>
         <activity
             android:name=".braces.BracesListActivity"
+            android:configChanges="orientation|screenSize"
             android:label="@string/activity_label_braces_list"
             android:launchMode="singleTop"
             android:theme="@style/AppTheme.NoActionBar">
@@ -44,6 +48,7 @@
         </activity>
         <activity
             android:name=".daily.detail.DailyDetailActivity"
+            android:configChanges="orientation|screenSize"
             android:parentActivityName=".daily.DailyListActivity"
             android:theme="@style/AppTheme.NoActionBar">
             <intent-filter>
