@@ -53,6 +53,7 @@ public class DailyDetailRecord extends DailyRecord {
         record.setDate(cursor.getString(cursor.getColumnIndex(COLUMN_DAY_DATE)));
         int timeInMinutes = cursor.getInt(cursor.getColumnIndex(COLUMN_TIME_MINUTES));
         record.setTotalTime(TimeFormatHelper.minutesToHourMinutes(timeInMinutes));
+        record.setNote(cursor.getString(cursor.getColumnIndex(COLUMN_NOTE)));
         record.setTimeLine(cursor.getString(cursor.getColumnIndex(COLUMN_TIME_LINE)));
         return record;
     }
