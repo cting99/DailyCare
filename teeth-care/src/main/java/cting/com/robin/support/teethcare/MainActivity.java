@@ -63,6 +63,7 @@ public class MainActivity extends BasePermissionCheckActivity {
         setSupportActionBar(toolbar);
         viewPager.setPageTransformer(true, new DepthPageTransformer());
         viewPager.setAdapter(new MyViewPagerAdapter(getSupportFragmentManager()));
+        viewPager.setCurrentItem(FRAGMENT_BRACES);
     }
 
     @Override
